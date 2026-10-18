@@ -1,0 +1,87 @@
+============================================================
+JOB FINDER FUNCTIONAL TEST REPORT
+Generated: 2026-10-09T10:39:59.942109
+============================================================
+
+SUMMARY
+Total Tests: 15
+Passed: 12
+Failed: 3
+Pass Rate: 80.0%
+
+DETAILED RESULTS
+
+Test: Server Running
+Status: PASS
+Message: Server responding on http://127.0.0.1:5000
+Details: Status Code: 200
+
+Test: Dashboard HTML
+Status: PASS
+Message: Dashboard contains expected content
+Details: Found 'Job Finder Dashboard'
+
+Test: Scrape Button
+Status: PASS
+Message: Scrape button present in HTML
+Details: Found FLEXIBLE SCRAPE button
+
+Test: Status Section
+Status: PASS
+Message: Status section HTML present
+Details: Found scrape-status-section
+
+Test: Stats API Response
+Status: PASS
+Message: API returns JSON
+Details: Status 200 OK
+
+Test: Stats Fields
+Status: PASS
+Message: All required fields present
+Details: Fields: total_jobs, new, applied, by_platform
+
+Test: Scrape API Response
+Status: PASS
+Message: API returns JSON
+Details: Status 200 OK
+
+Test: Scrape Status
+Status: PASS
+Message: Scrape started successfully
+Details: FLEXIBLE SCRAPE started in background (10-15 minutes). Check dashboard for updates!
+
+Test: Bulk Scrape Response
+Status: PASS
+Message: API returns JSON
+Details: Status 200 OK
+
+Test: Bulk Scrape Status
+Status: PASS
+Message: Bulk scrape started successfully
+Details: BULK SCRAPE started in background (15-20 minutes). Check dashboard for updates!
+
+Test: Excel Export Endpoint
+Status: FAIL
+Message: Bad status code
+Details: Got 500
+
+Test: PDF Export Endpoint
+Status: PASS
+Message: Endpoint /export/download/pdf responding
+Details: Status: 200, Size: 3305 bytes
+
+Test: HTML Export Endpoint
+Status: FAIL
+Message: Bad status code
+Details: Got 500
+
+Test: Scrape Start
+Status: PASS
+Message: Scrape started
+Details: Background scraping initiated
+
+Test: Jobs Scraped
+Status: FAIL
+Message: No jobs found after 2 minutes
+Details: Total polls: 24, Elapsed: 120s

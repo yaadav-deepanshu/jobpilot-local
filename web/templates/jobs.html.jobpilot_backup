@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Jobs — Job Finder Table View</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --bg-gradient: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+            --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+            --card-radius: 12px;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        .hero-banner {
+            background: var(--bg-gradient);
+            color: white;
+            padding: 30px 0 50px 0;
+        }
+
+        .main-container {
+            margin-top: -30px;
+            padding-bottom: 60px;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+        }
+
+        /* Platform Badges */
+        .badge-platform {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+        .badge-linkedin { background-color: #0a66c2; color: white; }
+        .badge-indeed { background-color: #003da5; color: white; }
+        .badge-naukri { background-color: #ff6600; color: white; }
+        .badge-glassdoor { background-color: #0caa41; color: white; }
+        .badge-zip_recruiter { background-color: #00a862; color: white; }
+        .badge-google { background-color: #4285f4; color: white; }
+        .badge-bayt { background-color: #1b365d; color: white; }
+        .badge-unknown { background-color: #64748b; color: white; }
+
+        /* Status Badge */
+        .status-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .status-new { background-color: #e0e7ff; color: #4338ca; }
+        .status-applied { background-color: #dcfce7; color: #15803d; }
+        .status-saved { background-color: #fef3c7; color: #b45309; }
+        .status-rejected { background-color: #fee2e2; color: #b91c1c; }
+
+        .table th {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #f1f5f9;
+            color: #475569;
+            border-bottom: 2px solid #cbd5e1;
+            padding: 12px 14px;
+        }
+        .table td {
+            vertical-align: middle;
+            font-size: 14px;
+            padding: 12px 14px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Banner -->
+    <div class="hero-banner">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h2 class="fw-bold mb-1">📋 All Discovered Opportunities</h2>
+                    <p class="mb-0 opacity-75">Full tabular view of all verified jobs (0–4 Years Experience · ≤ 100 Applicants · Prioritized: LinkedIn → Indeed → Naukri → Rest)</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/" class="btn btn-outline-light px-3 fw-semibold">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container main-container">
+        <div class="table-card">
+
+            <!-- Stats & Quick Actions -->
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 pb-3 border-bottom">
+                <div class="d-flex gap-2 flex-wrap">
+                    {% set new_cnt = jobs|selectattr('status', 'equalto', 'new')|list|length %}
+                    {% set applied_cnt = jobs|selectattr('status', 'equalto', 'applied')|list|length %}
+                    {% set saved_cnt = jobs|selectattr('status', 'equalto', 'saved')|list|length %}
+                    <span class="badge bg-primary fs-6 px-3 py-2">Total: {{ jobs|length }}</span>
+                    <span class="badge bg-info text-dark fs-6 px-3 py-2">New: {{ new_cnt }}</span>
+                    <span class="badge bg-success fs-6 px-3 py-2">Applied: {{ applied_cnt }}</span>
+                    <span class="badge bg-warning text-dark fs-6 px-3 py-2">Saved: {{ saved_cnt }}</span>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a href="/export/download/excel{% if location_filter and location_filter != 'both' %}?location={{ location_filter }}{% endif %}" class="btn btn-sm btn-outline-success">
+                        <i class="bi bi-file-earmark-excel me-1"></i> Excel
+                    </a>
+                    <a href="/export/download/pdf{% if location_filter and location_filter != 'both' %}?location={{ location_filter }}{% endif %}" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-file-earmark-pdf me-1"></i> PDF
+                    </a>
+                    <a href="/export/download/html{% if location_filter and location_filter != 'both' %}?location={{ location_filter }}{% endif %}" class="btn btn-sm btn-outline-warning text-dark">
+                        <i class="bi bi-file-earmark-code me-1"></i> HTML
+                    </a>
+                </div>
+            </div>
+
+            <!-- Location Segregation Quick Toggles -->
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4 p-2 px-3 bg-light rounded-3 border">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-geo-alt-fill text-primary"></i>
+                    <span class="fw-bold small text-dark">Location Segregation:</span>
+                    <span class="badge bg-white text-muted border">Filtered: {{ location_filter|title if location_filter else 'Both' }}</span>
+                </div>
+                <div class="btn-group btn-group-sm">
+                    <a href="/jobs?location=both{% if status_filter != 'all' %}&status={{ status_filter }}{% endif %}{% if platform_filter != 'all' %}&platform={{ platform_filter }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+                       class="btn {% if location_filter == 'both' or not location_filter %}btn-primary fw-semibold{% else %}btn-outline-secondary{% endif %}">
+                        <i class="bi bi-layers me-1"></i> Both (All)
+                    </a>
+                    <a href="/jobs?location=bengaluru{% if status_filter != 'all' %}&status={{ status_filter }}{% endif %}{% if platform_filter != 'all' %}&platform={{ platform_filter }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+                       class="btn {% if location_filter == 'bengaluru' %}btn-primary fw-semibold{% else %}btn-outline-secondary{% endif %}">
+                        <i class="bi bi-building me-1"></i> Bengaluru Only
+                    </a>
+                    <a href="/jobs?location=remote{% if status_filter != 'all' %}&status={{ status_filter }}{% endif %}{% if platform_filter != 'all' %}&platform={{ platform_filter }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+                       class="btn {% if location_filter == 'remote' %}btn-primary fw-semibold{% else %}btn-outline-secondary{% endif %}">
+                        <i class="bi bi-wifi me-1"></i> Remote Only
+                    </a>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <form method="GET" action="/jobs" class="row g-2 mb-4">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Search title, company, location...">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <select name="status" class="form-select">
+                        <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Statuses</option>
+                        <option value="new" {% if status_filter == 'new' %}selected{% endif %}>New</option>
+                        <option value="applied" {% if status_filter == 'applied' %}selected{% endif %}>Applied</option>
+                        <option value="saved" {% if status_filter == 'saved' %}selected{% endif %}>Saved</option>
+                        <option value="rejected" {% if status_filter == 'rejected' %}selected{% endif %}>Rejected</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="platform" class="form-select">
+                        <option value="all" {% if platform_filter == 'all' %}selected{% endif %}>All Platforms</option>
+                        <option value="linkedin" {% if platform_filter == 'linkedin' %}selected{% endif %}>LinkedIn</option>
+                        <option value="indeed" {% if platform_filter == 'indeed' %}selected{% endif %}>Indeed</option>
+                        <option value="naukri" {% if platform_filter == 'naukri' %}selected{% endif %}>Naukri</option>
+                        <option value="glassdoor" {% if platform_filter == 'glassdoor' %}selected{% endif %}>Glassdoor</option>
+                        <option value="zip_recruiter" {% if platform_filter == 'zip_recruiter' %}selected{% endif %}>ZipRecruiter (Abroad)</option>
+                        <option value="google" {% if platform_filter == 'google' %}selected{% endif %}>Google Jobs (Worldwide)</option>
+                        <option value="bayt" {% if platform_filter == 'bayt' %}selected{% endif %}>Bayt (Middle East)</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="location" class="form-select">
+                        <option value="both" {% if location_filter == 'both' or not location_filter %}selected{% endif %}>🌍 Both Locations</option>
+                        <option value="bengaluru" {% if location_filter == 'bengaluru' %}selected{% endif %}>🏢 Bengaluru Only</option>
+                        <option value="remote" {% if location_filter == 'remote' %}selected{% endif %}>🌐 Remote Only</option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+            </form>
+
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Platform</th>
+                            <th>Role Title</th>
+                            <th>Company</th>
+                            <th>Location</th>
+                            <th>Salary</th>
+                            <th>Posted</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set ns = namespace(shown_count=0) %}
+                        {% for job in jobs %}
+                        {% set loc_search = ((job.location or '') + ' ' + (job.description or '') + ' ' + (job.title or '') + ' ' + (job.job_type or ''))|lower %}
+                        {% set is_rem = ('remote' in loc_search or 'wfh' in loc_search or 'work from home' in loc_search) %}
+                        {% set is_blr = ('bengaluru' in (job.location or '')|lower or 'bangalore' in (job.location or '')|lower) %}
+                        {% if not location_filter or location_filter == 'both' or (location_filter == 'remote' and is_rem) or (location_filter == 'bengaluru' and is_blr) %}
+                        {% set ns.shown_count = ns.shown_count + 1 %}
+                        <tr id="row-{{ job.id }}">
+                            <td class="text-muted">{{ ns.shown_count }}</td>
+                            <td>
+                                <span class="badge-platform badge-{{ (job.platform or 'unknown')|lower }}">
+                                    {{ job.platform or '—' }}
+                                </span>
+                            </td>
+                            <td><strong>{{ job.title }}</strong></td>
+                            <td class="text-primary fw-semibold">{{ job.company }}</td>
+                            <td class="text-muted">
+                                {{ job.location or '—' }}
+                                {% set loc_lower = ((job.location or '') + ' ' + (job.description or ''))|lower %}
+                                {% if 'remote' in loc_lower or 'wfh' in loc_lower or 'work from home' in loc_lower %}
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle ms-1" style="font-size: 10px;"><i class="bi bi-wifi"></i> Remote</span>
+                                {% elif 'bengaluru' in loc_lower or 'bangalore' in loc_lower %}
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle ms-1" style="font-size: 10px;"><i class="bi bi-building"></i> BLR</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if job.salary %}
+                                    <span class="badge bg-light text-dark border">{{ job.salary }}</span>
+                                {% else %}
+                                    <span class="text-muted small">—</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-muted small">
+                                {{ job.date_posted.strftime('%Y-%m-%d') if job.date_posted else '—' }}
+                            </td>
+                            <td>
+                                <span class="status-badge status-{{ job.status|lower }}">{{ job.status }}</span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ job.url }}" target="_blank" class="btn btn-sm btn-primary">
+                                        Apply <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-outline-success" onclick="updateStatus({{ job.id }}, 'applied')" title="Mark Applied">
+                                        <i class="bi bi-check"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning text-dark" onclick="updateStatus({{ job.id }}, 'saved')" title="Save">
+                                        <i class="bi bi-bookmark"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                        {% if ns.shown_count == 0 %}
+                        <tr>
+                            <td colspan="9" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                                No jobs found matching this criteria. <a href="/">Return to Dashboard</a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function updateStatus(jobId, status) {
+            fetch(`/api/job/${jobId}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: status })
+            })
+            .then(r => r.json())
+            .then(() => location.reload())
+            .catch(e => alert('Error updating status: ' + e));
+        }
+    </script>
+</body>
+</html>

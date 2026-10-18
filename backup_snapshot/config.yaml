@@ -1,0 +1,104 @@
+# Job Finder Configuration
+# Your profile and search preferences
+
+profile:
+  name: "Deepanshu Yadav"
+  email: "yaadav.deepanshu@gmail.com"
+  phone: "+91 8728081860"
+  linkedin_url: "https://linkedin.com/in/yourprofile"
+  resume_file: "resume.pdf"
+
+search:
+  roles:
+    - "Cloud Engineer"
+    - "DevOps Engineer"
+    - "Site Reliability Engineer"
+    - "SRE"
+    - "System Engineer"
+    - "Platform Engineer"
+    - "Infrastructure Engineer"
+
+  location: "Bengaluru"
+  remote: true
+  hybrid: true
+
+  # Job filters
+  max_applicants: 100
+  min_experience_years: 0
+  max_experience_years: 4
+
+  exclude_keywords:
+    - "internship"
+    - "volunteer"
+    - "unpaid"
+    - "part-time"
+    - "principal"
+    - "director"
+    - "architect"
+    - "manager"
+    - "staff"
+    - "head of"
+
+  salary_min: 0
+  salary_max: 0
+
+platforms:
+  linkedin:
+    enabled: true
+    search_url: "https://www.linkedin.com/jobs/search/"
+
+  indeed:
+    enabled: true
+    country: "IN"
+
+  naukri:
+    enabled: true
+
+  glassdoor:
+    enabled: true
+
+  zip_recruiter:
+    enabled: true
+
+  google:
+    enabled: true
+
+  bayt:
+    enabled: true
+
+  wellfound:
+    enabled: true
+
+  cutshort:
+    enabled: true
+
+  foundit:
+    enabled: true
+
+ai:
+  enabled: true
+  provider: "anthropic"
+
+  # For Anthropic Claude
+  anthropic_api_key: "${CLAUDE_API_KEY}"
+  anthropic_model: "claude-3-5-sonnet-20241022"
+
+  # For OpenAI GPT
+  openai_api_key: "${OPENAI_API_KEY}"
+  openai_model: "gpt-4"
+
+  # Resume tailoring settings
+  resume_tailoring:
+    enabled: true
+    strategy: "keyword_match"
+
+app:
+  host: "127.0.0.1"
+  port: 5050
+  debug: false
+  db_file: "jobs.db"
+
+scheduler:
+  enabled: true
+  scrape_interval_hours: 6
+  timezone: "Asia/Kolkata"

@@ -1,0 +1,305 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Job Finder Report</title>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <style>
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                    }
+                    body {
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        min-height: 100vh;
+                        padding: 40px 20px;
+                    }
+                    .container {
+                        max-width: 1200px;
+                        margin: 0 auto;
+                        background: white;
+                        border-radius: 10px;
+                        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                        padding: 40px;
+                    }
+                    h1 {
+                        color: #667eea;
+                        margin-bottom: 10px;
+                        font-size: 32px;
+                    }
+                    .timestamp {
+                        color: #999;
+                        font-size: 14px;
+                        margin-bottom: 30px;
+                    }
+                    .stats {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                        gap: 20px;
+                        margin: 30px 0;
+                    }
+                    .stat-card {
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        padding: 20px;
+                        border-radius: 8px;
+                        text-align: center;
+                    }
+                    .stat-card h3 {
+                        font-size: 28px;
+                        margin: 10px 0;
+                    }
+                    .stat-card p {
+                        font-size: 14px;
+                        opacity: 0.9;
+                    }
+                    .charts {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+                        gap: 30px;
+                        margin: 40px 0;
+                    }
+                    .chart-container {
+                        background: #f9f9f9;
+                        padding: 20px;
+                        border-radius: 8px;
+                    }
+                    .jobs-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 30px;
+                    }
+                    .jobs-table th {
+                        background: #667eea;
+                        color: white;
+                        padding: 15px;
+                        text-align: left;
+                        font-weight: bold;
+                    }
+                    .jobs-table td {
+                        padding: 12px 15px;
+                        border-bottom: 1px solid #ddd;
+                    }
+                    .jobs-table tr:hover {
+                        background: #f5f5f5;
+                    }
+                    .platform-badge {
+                        display: inline-block;
+                        padding: 5px 10px;
+                        border-radius: 20px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        color: white;
+                    }
+                    .platform-linkedin { background: #0A66C2; }
+                    .platform-indeed { background: #003DA5; }
+                    .platform-naukri { background: #FF6600; }
+                    .platform-glassdoor { background: #1A73E8; }
+                    .platform-wellfound { background: #FF5733; }
+                    .platform-cutshort { background: #2ECC71; }
+                    .platform-foundit { background: #9B59B6; }
+                    .status-badge {
+                        display: inline-block;
+                        padding: 5px 10px;
+                        border-radius: 5px;
+                        font-size: 12px;
+                    }
+                    .status-new { background: #e3f2fd; color: #1976d2; }
+                    .status-applied { background: #e8f5e9; color: #388e3c; }
+                    .status-rejected { background: #ffebee; color: #c62828; }
+                    .job-url {
+                        color: #667eea;
+                        text-decoration: none;
+                        word-break: break-all;
+                    }
+                    .job-url:hover {
+                        text-decoration: underline;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>📊 Job Finder Report</h1>
+                    <div class="timestamp">Generated on 2026-10-09 13:35:51</div>
+
+                    <div class="stats">
+                        <div class="stat-card">
+                            <p>Total Jobs</p>
+                            <h3>9</h3>
+                        </div>
+                        <div class="stat-card">
+                            <p>Applied</p>
+                            <h3>2</h3>
+                        </div>
+                        <div class="stat-card">
+                            <p>Pending</p>
+                            <h3>7</h3>
+                        </div>
+                        <div class="stat-card">
+                            <p>Platforms</p>
+                            <h3>2</h3>
+                        </div>
+                    </div>
+
+                    <div class="charts">
+                        <div class="chart-container">
+                            <h3>Jobs by Platform</h3>
+                            <canvas id="platformChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Status Distribution</h3>
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+
+                    <h2 style="margin-top: 40px; color: #667eea;">Job Listings</h2>
+                    <table class="jobs-table">
+                        <thead>
+                            <tr>
+                                <th>Platform</th>
+                                <th>Title</th>
+                                <th>Company</th>
+                                <th>Location</th>
+                                <th>Link</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            
+                            <tr>
+                                <td><span class="platform-badge platform-linkedin">linkedin</span></td>
+                                <td>DevOps Engineer</td>
+                                <td>TestCorp</td>
+                                <td>Bengaluru</td>
+                                <td><a href="https://example.com/j1" class="job-url" target="_blank">View Job</a></td>
+                                <td><span class="status-badge status-new">new</span></td>
+                            </tr>
+                
+                            <tr>
+                                <td><span class="platform-badge platform-linkedin">linkedin</span></td>
+                                <td>J1</td>
+                                <td>C1</td>
+                                <td>None</td>
+                                <td><a href="https://x.com/1" class="job-url" target="_blank">View Job</a></td>
+                                <td><span class="status-badge status-new">new</span></td>
+                            </tr>
+                
+                            <tr>
+                                <td><span class="platform-badge platform-linkedin">linkedin</span></td>
+                                <td>J2</td>
+                                <td>C2</td>
+                                <td>None</td>
+                                <td><a href="https://x.com/2" class="job-url" target="_blank">View Job</a></td>
+                                <td><span class="status-badge status-applied">applied</span></td>
+                            </tr>
+                
+                            <tr>
+                                <td><span class="platform-badge platform-indeed">indeed</span></td>
+                                <td>J3</td>
+                                <td>C3</td>
+                                <td>None</td>
+                                <td><a href="https://x.com/3" class="job-url" target="_blank">View Job</a></td>
+                                <td><span class="status-badge status-new">new</span></td>
+                            </tr>
+                
+                            <tr>
+                                <td><span class="platform-badge platform-linkedin">linkedin</span></td>
+                                <td>Full Lifecycle DevOps</td>
+                                <td>IntegrationTestCo</td>
+                                <td>Bengaluru</td>
+                                <td><a href="https://example.com/lifecycle" class="job-url" target="_blank">View Job</a></td>
+                                <td><span class="status-badge status-applied">applied</span></td>
+                            </tr>
+                
+                            <tr>
+                                <td><span class="platform-badge platform-indeed">indeed</span></td>
+                                <td>Test Job 0</td>
+                                <td>Co 0</td>
+                                <td>None</td>
+                                <td><a href="https://x.com/int0" class="job-url" target="_blank">View Job</a></td>
+                                <td><span class="status-badge status-new">new</span></td>
+                            </tr>
+                
+                            <tr>
+                                <td><span class="platform-badge platform-indeed">indeed</span></td>
+                                <td>Test Job 1</td>
+                                <td>Co 1</td>
+                                <td>None</td>
+                                <td><a href="https://x.com/int1" class="job-url" target="_blank">View Job</a></td>
+                                <td><span class="status-badge status-new">new</span></td>
+                            </tr>
+                
+                            <tr>
+                                <td><span class="platform-badge platform-indeed">indeed</span></td>
+                                <td>Test Job 2</td>
+                                <td>Co 2</td>
+                                <td>None</td>
+                                <td><a href="https://x.com/int2" class="job-url" target="_blank">View Job</a></td>
+                                <td><span class="status-badge status-new">new</span></td>
+                            </tr>
+                
+                            <tr>
+                                <td><span class="platform-badge platform-linkedin">linkedin</span></td>
+                                <td>Export Test</td>
+                                <td>ExportCo</td>
+                                <td>None</td>
+                                <td><a href="https://x.com/export1" class="job-url" target="_blank">View Job</a></td>
+                                <td><span class="status-badge status-new">new</span></td>
+                            </tr>
+                
+                        </tbody>
+                    </table>
+
+                    <script>
+                        // Platform Chart
+                        const platformCtx = document.getElementById('platformChart').getContext('2d');
+                        new Chart(platformCtx, {
+                            type: 'pie',
+                            data: {
+                                labels: ["linkedin", "indeed"],
+                                datasets: [{
+                                    data: [np.int64(5), np.int64(4)],
+                                    backgroundColor: [
+                                        '#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe', '#43e97b', '#fa709a'
+                                    ]
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom'
+                                    }
+                                }
+                            }
+                        });
+
+                        // Status Chart
+                        const statusCtx = document.getElementById('statusChart').getContext('2d');
+                        new Chart(statusCtx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ["new", "applied"],
+                                datasets: [{
+                                    data: [np.int64(7), np.int64(2)],
+                                    backgroundColor: ['#e3f2fd', '#e8f5e9', '#ffebee']
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom'
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+                </div>
+            </body>
+            </html>
+            

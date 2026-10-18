@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobPilot — Autonomous Career Navigation & Job Discovery Engine</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --jp-primary: #4f46e5;
+            --jp-primary-hover: #4338ca;
+            --jp-primary-light: #eef2ff;
+            --jp-secondary: #06b6d4;
+            --jp-accent: #f43f5e;
+            --jp-success: #10b981;
+            --jp-warning: #f59e0b;
+            --jp-danger: #ef4444;
+            --jp-danger-dark: #dc2626;
+            --jp-dark: #0f172a;
+            --jp-dark-surface: #1e293b;
+            --jp-bg: #f8fafc;
+            --jp-border: #e2e8f0;
+            --jp-card-bg: #ffffff;
+            --jp-card-radius: 14px;
+            --jp-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
+            --jp-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+            --jp-shadow-lg: 0 12px 30px -4px rgba(15, 23, 42, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--jp-bg);
+            color: #334155;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top Navigation Bar */
+        .jp-navbar {
+            background: rgba(15, 23, 42, 0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
+        .jp-brand-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+        .jp-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #06b6d4 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+            font-size: 18px;
+        }
+        .jp-nav-status {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            color: #34d399;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .status-pulse-dot {
+            width: 7px;
+            height: 7px;
+            background-color: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #10b981;
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        /* Hero Header Section */
+        .jp-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #312e81 100%);
+            color: #ffffff;
+            padding: 38px 0 64px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .jp-hero::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.18) 0%, rgba(6, 182, 212, 0.05) 50%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .jp-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #c7d2fe;
+            margin-bottom: 12px;
+            letter-spacing: 0.3px;
+        }
+        .jp-hero-title {
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+        .jp-hero-title-accent {
+            background: linear-gradient(90deg, #a5b4fc 0%, #67e8f9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .jp-hero-desc {
+            font-size: 15px;
+            color: #cbd5e1;
+            max-width: 720px;
+            line-height: 1.6;
+        }
+        .jp-spec-pill {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Container Overlap */
+        .jp-main-container {
+            margin-top: -36px;
+            padding-bottom: 70px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Stats Cards */
+        .jp-stat-card {
+            background: var(--jp-card-bg);
+            border-radius: var(--jp-card-radius);
+            box-shadow: var(--jp-shadow);
+            border: 1px solid var(--jp-border);
+            padding: 20px 22px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+        }
+        .jp-stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--jp-shadow-lg);
+            border-color: #cbd5e1;
+        }
+        .jp-stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+        .jp-stat-card.stat-accent-total::after { background: linear-gradient(90deg, #4f46e5, #818cf8); }
+        .jp-stat-card.stat-accent-new::after { background: linear-gradient(90deg, #06b6d4, #38bdf8); }
+        .jp-stat-card.stat-accent-applied::after { background: linear-gradient(90deg, #10b981, #34d399); }
+        .jp-stat-card.stat-accent-saved::after { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+
+        .jp-stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .jp-stat-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #64748b;
+        }
+        .jp-stat-icon-bubble {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .bubble-total { background: #eef2ff; color: #4f46e5; }
+        .bubble-new { background: #ecfeff; color: #0891b2; }
+        .bubble-applied { background: #ecfdf5; color: #059669; }
+        .bubble-saved { background: #fffbeb; color: #d97706; }
+
+        .jp-stat-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--jp-dark);
+            line-height: 1;
+            letter-spacing: -0.5px;
+        }
+        .jp-stat-subtext {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        /* Time-Window Scraper Command Deck */
+        .jp-control-card {
+            background: var(--jp-card-bg);
+            border-radius: var(--jp-card-radius);
+            box-shadow: var(--jp-shadow);
+            border: 1px solid var(--jp-border);
+            padding: 22px 26px;
+            margin-bottom: 22px;
+        }
+        .custom-range-slider {
+            accent-color: var(--jp-primary);
+            height: 8px;
+            cursor: pointer;
+        }
+        .slider-stop-label {
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 3px 9px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            color: #64748b;
+            user-select: none;
+        }
+        .slider-stop-label:hover {
+            color: var(--jp-primary);
+            background: #eef2ff;
+        }
+        .slider-stop-label.active {
+            color: #ffffff;
+            background: var(--jp-primary);
+            box-shadow: 0 2px 6px rgba(79, 70, 229, 0.35);
+        }
+
+        /* Scraper Monitor Box */
+        .scrape-monitor {
+            background: #ffffff;
+            border: 2px solid var(--jp-primary);
+            border-radius: var(--jp-card-radius);
+            padding: 22px 26px;
+            margin-bottom: 22px;
+            box-shadow: 0 10px 30px -5px rgba(79, 70, 229, 0.2);
+            animation: fadeIn 0.3s ease;
+        }
+        .scrape-monitor.is-complete {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+        .scrape-monitor.is-error {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        /* Location Segregation Card */
+        .location-segregation-card {
+            border: 1px solid var(--jp-border);
+            background: #ffffff;
+            border-radius: var(--jp-card-radius);
+            box-shadow: var(--jp-shadow-sm);
+        }
+        .location-toggle-group .btn {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border: 1px solid var(--jp-border);
+            background: #ffffff;
+            color: #475569;
+            transition: all 0.2s;
+        }
+        .location-toggle-group .btn.active {
+            background: var(--jp-primary);
+            border-color: var(--jp-primary);
+            color: #ffffff;
+            box-shadow: 0 3px 8px rgba(79, 70, 229, 0.25);
+        }
+
+        /* Filter Pills & Buttons */
+        .filter-btn {
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--jp-primary);
+            border-color: var(--jp-primary);
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(79, 70, 229, 0.2);
+        }
+        .filter-btn-researched {
+            border-color: #fca5a5 !important;
+            color: #dc2626 !important;
+            background: #fef2f2 !important;
+        }
+        .filter-btn-researched.active, .filter-btn-researched:hover {
+            background: #dc2626 !important;
+            border-color: #dc2626 !important;
+            color: #ffffff !important;
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3) !important;
+        }
+
+        /* Job Cards */
+        .job-card {
+            background: var(--jp-card-bg);
+            border-radius: var(--jp-card-radius);
+            box-shadow: var(--jp-shadow);
+            border: 1px solid var(--jp-border);
+            padding: 24px;
+            margin-bottom: 18px;
+            position: relative;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .job-card:hover {
+            border-color: #a5b4fc;
+            box-shadow: 0 10px 30px -4px rgba(79, 70, 229, 0.12);
+            transform: translateY(-2px);
+        }
+        .job-card.is-researched-card {
+            border-left: 4px solid #ef4444;
+        }
+
+        /* Job Numbering Column & Badge */
+        .job-card-inner {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        .job-number-col {
+            flex-shrink: 0;
+            padding-top: 2px;
+        }
+        .job-number-badge {
+            min-width: 52px;
+            height: 52px;
+            padding: 0 8px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+            border: 1px solid #e0e7ff;
+            color: #4338ca;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(79, 70, 229, 0.05);
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+        }
+        .job-card:hover .job-number-badge {
+            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+            color: #ffffff;
+            border-color: #4338ca;
+            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.28);
+            transform: translateY(-2px);
+        }
+        .job-number-prefix {
+            font-size: 10px;
+            font-weight: 700;
+            opacity: 0.65;
+            line-height: 1;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .job-card:hover .job-number-prefix {
+            opacity: 0.9;
+        }
+        .job-number-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 17px;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.5px;
+        }
+        .job-card-main {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        /* Re-Searched Card Number Variant */
+        .job-card.is-researched-card .job-number-badge {
+            background: linear-gradient(135deg, #fff1f2 0%, #fee2e2 100%);
+            border-color: #fecdd3;
+            color: #e11d48;
+            box-shadow: 0 2px 6px rgba(225, 29, 72, 0.08);
+        }
+        .job-card.is-researched-card:hover .job-number-badge {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: #ffffff;
+            border-color: #dc2626;
+            box-shadow: 0 6px 18px rgba(239, 68, 68, 0.32);
+        }
+
+        @media (max-width: 576px) {
+            .job-card-inner {
+                gap: 12px;
+            }
+            .job-number-badge {
+                min-width: 42px;
+                height: 42px;
+                padding: 0 4px;
+                border-radius: 10px;
+            }
+            .job-number-prefix {
+                font-size: 9px;
+            }
+            .job-number-val {
+                font-size: 14px;
+            }
+        }
+        .job-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--jp-dark);
+            letter-spacing: -0.3px;
+            margin-bottom: 4px;
+        }
+        .company-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--jp-primary);
+        }
+
+        /* Badges */
+        .badge-platform {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.6px;
+        }
+        .badge-linkedin { background-color: #0a66c2; color: #ffffff; }
+        .badge-indeed { background-color: #003da5; color: #ffffff; }
+        .badge-naukri { background-color: #ff6600; color: #ffffff; }
+        .badge-glassdoor { background-color: #0caa41; color: #ffffff; }
+        .badge-zip_recruiter { background-color: #00a862; color: #ffffff; }
+        .badge-google { background-color: #4285f4; color: #ffffff; }
+        .badge-bayt { background-color: #1b365d; color: #ffffff; }
+        .badge-unknown { background-color: #64748b; color: #ffffff; }
+
+        .status-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-new { background-color: #e0e7ff; color: #4338ca; }
+        .status-applied { background-color: #dcfce7; color: #15803d; }
+        .status-saved { background-color: #fef3c7; color: #b45309; }
+        .status-rejected { background-color: #fee2e2; color: #b91c1c; }
+
+        /* THE RED TAG FOR SEARCHED AGAIN */
+        .badge-researched-red {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            color: #ffffff !important;
+            font-weight: 800;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+            animation: pulse-red-badge 2s infinite ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        @keyframes pulse-red-badge {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 0 5px rgba(239, 68, 68, 0);
+                transform: scale(1.02);
+            }
+        }
+
+        .badge-search-match-red {
+            background: #fef2f2 !important;
+            color: #dc2626 !important;
+            border: 1px solid #f87171 !important;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Infinite Scroll Elements */
+        .infinite-scroll-status {
+            text-align: center;
+            padding: 16px 0 24px 0;
+        }
+        .infinite-loader-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 24px;
+            background: #eef2ff;
+            border: 1px solid #c7d2fe;
+            border-radius: 30px;
+            color: var(--jp-primary-hover);
+            font-weight: 700;
+            font-size: 13px;
+            box-shadow: 0 2px 10px rgba(79, 70, 229, 0.12);
+        }
+        .infinite-end-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 24px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 30px;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Floating Back to Top Button */
+        #btn-back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1040;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--jp-primary);
+            color: #ffffff;
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(12px);
+        }
+        #btn-back-to-top.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+        #btn-back-to-top:hover {
+            background: var(--jp-primary-hover);
+            box-shadow: 0 8px 26px rgba(79, 70, 229, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* Export Bar */
+        .jp-export-card {
+            background: #ffffff;
+            border-radius: var(--jp-card-radius);
+            padding: 18px 22px;
+            border: 1px solid var(--jp-border);
+            margin-bottom: 22px;
+            box-shadow: var(--jp-shadow-sm);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Sticky Brand Navbar -->
+    <nav class="jp-navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/" class="jp-brand-logo">
+                <div class="jp-logo-icon">
+                    <i class="bi bi-compass"></i>
+                </div>
+                <span>JobPilot</span>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-semibold px-2 py-0 ms-1" style="font-size: 10px;">PRO</span>
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <div class="jp-nav-status d-none d-sm-inline-flex">
+                    <span class="status-pulse-dot"></span>
+                    <span>Engine Active (Port 5050)</span>
+                </div>
+                <a href="/jobs" class="btn btn-sm btn-outline-light px-3 fw-semibold">
+                    <i class="bi bi-table me-1"></i> Tabular View
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Header -->
+    <header class="jp-hero">
+        <div class="container position-relative">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div>
+                    <div class="jp-hero-badge">
+                        <i class="bi bi-shield-check text-success"></i>
+                        <span>Autonomous Career Navigation & Job Intelligence</span>
+                    </div>
+                    <h1 class="jp-hero-title">
+                        Navigate High-Impact Roles with <span class="jp-hero-title-accent">JobPilot</span>
+                    </h1>
+                    <p class="jp-hero-desc mb-3">
+                        Real-time Cloud, DevOps & SRE discovery across <strong>LinkedIn, Indeed, Naukri, Glassdoor, ZipRecruiter, and Google Jobs</strong>.
+                        Strictly filtered to <strong>0–4 Years Experience</strong> and <strong>&le; 100 Applicants</strong>.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="jp-spec-pill"><i class="bi bi-briefcase-fill text-info"></i> 0–4y Experience Cap</span>
+                        <span class="jp-spec-pill"><i class="bi bi-people-fill text-warning"></i> &le; 100 Applicants</span>
+                        <span class="jp-spec-pill"><i class="bi bi-sort-numeric-down text-success"></i> Priority: LinkedIn &rarr; Indeed &rarr; Naukri &rarr; Rest</span>
+                        <span class="jp-spec-pill"><i class="bi bi-clock-history text-light"></i> 2h / 6h / 12h / 24h Slider</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container jp-main-container">
+
+        <!-- Stat Tiles Row -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="jp-stat-card stat-accent-total">
+                    <div class="jp-stat-header">
+                        <span class="jp-stat-label">Total Jobs</span>
+                        <div class="jp-stat-icon-bubble bubble-total">
+                            <i class="bi bi-collection-fill"></i>
+                        </div>
+                    </div>
+                    <div class="jp-stat-number" id="stat-total">0</div>
+                    <div class="jp-stat-subtext">Verified 0–4y postings</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="jp-stat-card stat-accent-new">
+                    <div class="jp-stat-header">
+                        <span class="jp-stat-label">New / Fresh</span>
+                        <div class="jp-stat-icon-bubble bubble-new">
+                            <i class="bi bi-stars"></i>
+                        </div>
+                    </div>
+                    <div class="jp-stat-number text-primary" id="stat-new">0</div>
+                    <div class="jp-stat-subtext">Awaiting application</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="jp-stat-card stat-accent-applied">
+                    <div class="jp-stat-header">
+                        <span class="jp-stat-label">Applied</span>
+                        <div class="jp-stat-icon-bubble bubble-applied">
+                            <i class="bi bi-send-check-fill"></i>
+                        </div>
+                    </div>
+                    <div class="jp-stat-number text-success" id="stat-applied">0</div>
+                    <div class="jp-stat-subtext">Tracked submissions</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="jp-stat-card stat-accent-saved">
+                    <div class="jp-stat-header">
+                        <span class="jp-stat-label">Saved</span>
+                        <div class="jp-stat-icon-bubble bubble-saved">
+                            <i class="bi bi-bookmark-star-fill"></i>
+                        </div>
+                    </div>
+                    <div class="jp-stat-number text-warning" id="stat-saved">0</div>
+                    <div class="jp-stat-subtext">Bookmarked for review</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Time Window & Scraping Control Center -->
+        <div class="jp-control-card">
+            <div class="row align-items-center g-3">
+                <div class="col-12 col-lg-5">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <i class="bi bi-sliders fs-5 text-primary"></i>
+                        <h6 class="mb-0 fw-bold text-dark">Recency Filter & Discovery Radar</h6>
+                        <span class="badge bg-primary px-2 py-1 fs-6 ms-1" id="window-badge">Last 24 Hours</span>
+                    </div>
+                    <p class="text-muted small mb-0">Adjust the slider to discover fresh jobs posted in the last <strong>2h, 6h, 12h, or 24h</strong> before applicant buildup.</p>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="px-2">
+                        <input type="range" class="form-range custom-range-slider" min="0" max="3" step="1" value="3" id="timeWindowSlider" oninput="updateTimeWindow(this.value)">
+                        <div class="d-flex justify-content-between px-1 mt-1">
+                            <span class="slider-stop-label" id="stop-0" onclick="setSliderStop(0)">2h</span>
+                            <span class="slider-stop-label" id="stop-1" onclick="setSliderStop(1)">6h</span>
+                            <span class="slider-stop-label" id="stop-2" onclick="setSliderStop(2)">12h</span>
+                            <span class="slider-stop-label active" id="stop-3" onclick="setSliderStop(3)">24h</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3">
+                    <div class="d-flex gap-2 justify-content-lg-end flex-wrap">
+                        <button class="btn btn-danger fw-semibold px-3 py-2 text-nowrap shadow-sm" id="btn-scrape-window" onclick="startScrapeWithWindow()">
+                            <i class="bi bi-fire me-1"></i> Scrape (24h)
+                        </button>
+                        <button class="btn btn-outline-secondary fw-semibold px-3 py-2 text-nowrap" id="btn-scrape-all" onclick="startScrape(false)">
+                            <i class="bi bi-globe me-1"></i> All Time
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center pt-3 mt-3 border-top text-muted small flex-wrap gap-2">
+                <span><i class="bi bi-sort-down me-1 text-primary"></i> Enforced Priority: <strong>LinkedIn &rarr; Indeed &rarr; Naukri &rarr; Rest</strong></span>
+                <span><i class="bi bi-shield-lock-fill text-success me-1"></i> Multi-Platform Anti-Bot & Rate-Limit Safeguards Active</span>
+            </div>
+        </div>
+
+        <!-- Real-Time Scrape Progress Box (hidden when idle) -->
+        <div id="scrape-monitor-box" class="scrape-monitor" style="display: none;">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="spinner-border spinner-border-sm text-primary" id="monitor-spinner" role="status"></div>
+                    <h5 class="mb-0 fw-bold" id="monitor-mode">Scraping in Progress...</h5>
+                </div>
+                <div class="badge bg-dark px-3 py-2 fs-6 font-monospace" id="monitor-timer">⏱️ 0:00</div>
+            </div>
+
+            <div class="text-muted mb-3 small" id="monitor-phase">Initializing multi-platform scraper...</div>
+
+            <div class="progress mb-2" style="height: 10px; border-radius: 10px; background-color: #e2e8f0;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                     id="monitor-progress-bar" style="width: 15%"></div>
+            </div>
+
+            <div class="d-flex justify-content-between text-muted small">
+                <span id="monitor-found-count" class="fw-semibold">Discovered: 0 jobs</span>
+                <span id="monitor-status-text">Connecting to job boards...</span>
+            </div>
+        </div>
+
+        <!-- Export Center -->
+        <div class="jp-export-card">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h6 class="fw-bold mb-1 text-dark"><i class="bi bi-file-earmark-arrow-down me-1 text-primary"></i> Export Discovered Opportunities</h6>
+                    <small class="text-muted">Generate instant structured spreadsheets or formatted PDF & HTML reports:</small>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="/export/download/excel" class="btn btn-sm btn-outline-success fw-semibold px-3 py-2">
+                        <i class="bi bi-file-earmark-excel me-1"></i> Excel (.xlsx)
+                    </a>
+                    <a href="/export/download/pdf" class="btn btn-sm btn-outline-danger fw-semibold px-3 py-2">
+                        <i class="bi bi-file-earmark-pdf me-1"></i> PDF Document
+                    </a>
+                    <a href="/export/download/html" class="btn btn-sm btn-outline-warning text-dark fw-semibold px-3 py-2">
+                        <i class="bi bi-file-earmark-code me-1"></i> HTML Report
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location Segregation Control Bar -->
+        <div class="location-segregation-card p-3 mb-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-geo-alt-fill fs-5 text-primary"></i>
+                    <div>
+                        <div class="d-flex align-items-center gap-2">
+                            <h6 class="fw-bold mb-0 text-dark">Location Segregation</h6>
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1" id="active-loc-badge">Both (All Locations)</span>
+                        </div>
+                        <small class="text-muted">Target remote, on-site/hybrid Bengaluru, or view both:</small>
+                    </div>
+                </div>
+                <div class="btn-group location-toggle-group shadow-sm" role="group" id="location-toggle-group">
+                    <button type="button" class="btn active fw-semibold" id="loc-btn-both" onclick="setLocationFilter('both', this)">
+                        <i class="bi bi-layers me-1"></i> Both <span class="badge bg-primary text-white ms-1" id="badge-count-both">0</span>
+                    </button>
+                    <button type="button" class="btn fw-semibold" id="loc-btn-bengaluru" onclick="setLocationFilter('bengaluru', this)">
+                        <i class="bi bi-building me-1"></i> Bengaluru Only <span class="badge bg-secondary text-white ms-1" id="badge-count-bengaluru">0</span>
+                    </button>
+                    <button type="button" class="btn fw-semibold" id="loc-btn-remote" onclick="setLocationFilter('remote', this)">
+                        <i class="bi bi-wifi me-1"></i> Remote Only <span class="badge bg-success text-white ms-1" id="badge-count-remote">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Search Section -->
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+            <!-- Filter tabs -->
+            <div class="d-flex gap-2 flex-wrap" id="status-filter-pills">
+                <button class="filter-btn active" data-status="all" onclick="setStatusFilter('all', this)">All Jobs</button>
+                <button class="filter-btn" data-status="new" onclick="setStatusFilter('new', this)">New</button>
+                <button class="filter-btn" data-status="applied" onclick="setStatusFilter('applied', this)">Applied</button>
+                <button class="filter-btn" data-status="saved" onclick="setStatusFilter('saved', this)">Saved</button>
+                <button class="filter-btn filter-btn-researched" data-status="researched" onclick="setStatusFilter('researched', this)" title="Show jobs that were discovered or searched again">
+                    <i class="bi bi-arrow-repeat me-1"></i> Re-Searched <span class="badge bg-danger text-white ms-1" id="badge-count-researched" style="font-size: 10px;">0</span>
+                </button>
+            </div>
+
+            <!-- Search box & View Mode Switcher -->
+            <div class="d-flex gap-2 flex-wrap align-items-center" style="max-width: 600px; width: 100%;">
+                <div class="input-group flex-grow-1 shadow-sm" style="min-width: 220px;">
+                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control border-start-0" id="search-input"
+                           placeholder="Filter by title, company, location, skills..." oninput="debounceSearch()">
+                    <button class="btn btn-outline-secondary border-start-0 bg-white text-muted" type="button" onclick="clearSearch()" title="Clear search">
+                        <i class="bi bi-x-circle"></i>
+                    </button>
+                </div>
+                <!-- Pagination / Scroll Mode Toggle -->
+                <div class="btn-group btn-group-sm shadow-sm" id="pagination-mode-toggle" role="group">
+                    <button type="button" class="btn btn-primary btn-sm fw-semibold" id="mode-infinite-btn" onclick="setScrollMode('infinite')" title="Infinite scroll: loads more jobs automatically as you scroll down">
+                        <i class="bi bi-infinity me-1"></i> Infinite
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="mode-classic-btn" onclick="setScrollMode('classic')" title="Classic pages: Previous and Next page buttons">
+                        <i class="bi bi-file-earmark-break me-1"></i> Pages
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Jobs Listing Container -->
+        <div id="jobs-container">
+            <div class="text-center py-5 text-muted">
+                <div class="spinner-border text-primary mb-2" role="status"></div>
+                <div>Loading jobs...</div>
+            </div>
+        </div>
+
+        <!-- Infinite Scroll Footer & Sentinel -->
+        <div id="infinite-scroll-footer" class="infinite-scroll-status mt-3 d-none">
+            <div id="infinite-scroll-loader" class="infinite-loader-box d-none mb-3">
+                <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+                <span>Loading more matching jobs...</span>
+            </div>
+            <div id="infinite-scroll-info" class="text-muted small mb-2"></div>
+            <div id="infinite-scroll-action" class="mb-2">
+                <button id="btn-load-more" class="btn btn-outline-primary btn-sm px-3 fw-semibold shadow-sm" onclick="loadMoreJobs()">
+                    <i class="bi bi-arrow-down-circle me-1"></i> Load More Jobs
+                </button>
+            </div>
+            <div id="infinite-scroll-end" class="infinite-end-box d-none">
+                <i class="bi bi-check-circle-fill text-success"></i>
+                <span id="infinite-scroll-end-text">All jobs loaded</span>
+            </div>
+            <!-- Invisible trigger sentinel for IntersectionObserver -->
+            <div id="infinite-scroll-sentinel" style="height: 10px;"></div>
+        </div>
+
+        <!-- Classic Pagination Controls -->
+        <div class="d-none justify-content-between align-items-center mt-4" id="pagination-controls">
+            <div class="text-muted small" id="pagination-info">Showing page 1</div>
+            <div class="btn-group">
+                <button class="btn btn-sm btn-outline-secondary" id="btn-prev-page" onclick="prevPage()">Previous</button>
+                <button class="btn btn-sm btn-outline-secondary" id="btn-next-page" onclick="nextPage()">Next</button>
+            </div>
+        </div>
+
+        <!-- Floating Back to Top Button -->
+        <button id="btn-back-to-top" onclick="scrollToTop()" title="Scroll back to top">
+            <i class="bi bi-arrow-up fs-5"></i>
+        </button>
+
+    </main>
+
+    <footer class="border-top py-4 bg-white text-center text-muted small mt-5">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <span><strong>JobPilot</strong> &bull; Autonomous Job Finder & Career Intelligence Engine</span>
+                <span>Capped at 0–4 Years Experience &bull; &le; 100 Applicants &bull; Port 5050</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- State ---
+        let currentPage = 1;
+        let totalPages = 1;
+        let totalJobsCount = 0;
+        let loadedJobsCount = 0;
+        let currentStatusFilter = 'all';
+        let currentLocationFilter = 'both';
+        let currentSearchQuery = '';
+        let scrollMode = 'infinite';
+        try {
+            scrollMode = localStorage.getItem('job_pagination_mode') || 'infinite';
+        } catch(e) {}
+        let isLoadingMore = false;
+        let hasMorePages = true;
+        let intersectionObserver = null;
+        let scrapePollInterval = null;
+        let timerInterval = null;
+        let scrapeStartTime = null;
+        let searchTimeout = null;
+
+        function setScrollMode(mode) {
+            scrollMode = mode;
+            try {
+                localStorage.setItem('job_pagination_mode', mode);
+            } catch(e) {}
+            updateScrollModeButtons();
+            loadJobs(true);
+        }
+
+        function updateScrollModeButtons() {
+            const btnInf = document.getElementById('mode-infinite-btn');
+            const btnCls = document.getElementById('mode-classic-btn');
+            if (scrollMode === 'infinite') {
+                if (btnInf) {
+                    btnInf.className = 'btn btn-primary btn-sm fw-semibold';
+                }
+                if (btnCls) {
+                    btnCls.className = 'btn btn-outline-secondary btn-sm';
+                }
+            } else {
+                if (btnInf) {
+                    btnInf.className = 'btn btn-outline-secondary btn-sm';
+                }
+                if (btnCls) {
+                    btnCls.className = 'btn btn-primary btn-sm fw-semibold';
+                }
+            }
+        }
+
+        // --- Fetch & Update Stats ---
+        function updateStats() {
+            fetch('/api/stats')
+                .then(r => r.json())
+                .then(d => {
+                    document.getElementById('stat-total').textContent = d.total_jobs || 0;
+                    document.getElementById('stat-new').textContent = d.new || 0;
+                    document.getElementById('stat-applied').textContent = d.applied || 0;
+                    document.getElementById('stat-saved').textContent = d.saved || 0;
+
+                    const resBadge = document.getElementById('badge-count-researched');
+                    if (resBadge) resBadge.textContent = d.researched || 0;
+
+                    if (d.by_location) {
+                        const bothBadge = document.getElementById('badge-count-both');
+                        const blrBadge = document.getElementById('badge-count-bengaluru');
+                        const remBadge = document.getElementById('badge-count-remote');
+                        if (bothBadge) bothBadge.textContent = d.by_location.both || 0;
+                        if (blrBadge) blrBadge.textContent = d.by_location.bengaluru || 0;
+                        if (remBadge) remBadge.textContent = d.by_location.remote || 0;
+                    }
+                })
+                .catch(e => console.error('Stats error:', e));
+        }
+
+        // --- Location Segregation ---
+        function setLocationFilter(mode, btn) {
+            currentLocationFilter = mode;
+            document.querySelectorAll('#location-toggle-group .btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const badge = document.getElementById('active-loc-badge');
+            if (badge) {
+                if (mode === 'remote') {
+                    badge.textContent = '🌐 Remote Only';
+                    badge.className = 'badge bg-success-subtle text-success border border-success-subtle px-2 py-1';
+                } else if (mode === 'bengaluru') {
+                    badge.textContent = '🏢 Bengaluru Only';
+                    badge.className = 'badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1';
+                } else {
+                    badge.textContent = 'Both (All Locations)';
+                    badge.className = 'badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1';
+                }
+            }
+
+            updateExportLinks();
+            loadJobs(true);
+        }
+
+        function updateExportLinks() {
+            const locParam = currentLocationFilter !== 'both' ? `?location=${currentLocationFilter}` : '';
+            const excelBtn = document.querySelector('a[href*="/export/download/excel"]');
+            const pdfBtn = document.querySelector('a[href*="/export/download/pdf"]');
+            const htmlBtn = document.querySelector('a[href*="/export/download/html"]');
+            if (excelBtn) excelBtn.href = `/export/download/excel${locParam}`;
+            if (pdfBtn) pdfBtn.href = `/export/download/pdf${locParam}`;
+            if (htmlBtn) htmlBtn.href = `/export/download/html${locParam}`;
+        }
+
+        // --- Load Jobs ---
+        function loadJobs(reset = true) {
+            if (reset) {
+                currentPage = 1;
+                hasMorePages = true;
+                loadedJobsCount = 0;
+                const container = document.getElementById('jobs-container');
+                if (container) {
+                    container.innerHTML = `
+                        <div class="text-center py-5 text-muted">
+                            <div class="spinner-border text-primary mb-2" role="status"></div>
+                            <div>Loading jobs...</div>
+                        </div>
+                    `;
+                }
+                const footer = document.getElementById('infinite-scroll-footer');
+                if (footer) footer.classList.add('d-none');
+                const controls = document.getElementById('pagination-controls');
+                if (controls) {
+                    controls.classList.add('d-none');
+                    controls.classList.remove('d-flex');
+                }
+            }
+
+            const url = `/api/jobs?page=${currentPage}&per_page=12&status=${currentStatusFilter}&location=${currentLocationFilter}&q=${encodeURIComponent(currentSearchQuery)}`;
+            fetch(url)
+                .then(r => r.json())
+                .then(data => {
+                    let jobs = data.jobs || [];
+                    totalPages = data.pages || 1;
+                    totalJobsCount = data.total || 0;
+                    loadedJobsCount = jobs.length;
+
+                    renderJobs(jobs, false);
+
+                    if (scrollMode === 'infinite') {
+                        const controls = document.getElementById('pagination-controls');
+                        if (controls) {
+                            controls.classList.add('d-none');
+                            controls.classList.remove('d-flex');
+                        }
+
+                        const footer = document.getElementById('infinite-scroll-footer');
+                        if (footer && jobs.length > 0) {
+                            footer.classList.remove('d-none');
+                            hasMorePages = currentPage < totalPages;
+                            const infoEl = document.getElementById('infinite-scroll-info');
+                            if (infoEl) {
+                                infoEl.textContent = `Showing ${loadedJobsCount} of ${totalJobsCount} matching jobs (Page ${currentPage} of ${totalPages})`;
+                            }
+
+                            const action = document.getElementById('infinite-scroll-action');
+                            const endBox = document.getElementById('infinite-scroll-end');
+                            const endText = document.getElementById('infinite-scroll-end-text');
+
+                            if (hasMorePages) {
+                                if (action) action.classList.remove('d-none');
+                                if (endBox) endBox.classList.add('d-none');
+                                setupIntersectionObserver();
+                            } else {
+                                if (action) action.classList.add('d-none');
+                                if (endBox) endBox.classList.remove('d-none');
+                                if (endText) endText.textContent = `✨ All ${totalJobsCount} jobs loaded (${totalPages} ${totalPages === 1 ? 'page' : 'pages'})`;
+                            }
+                        } else if (footer) {
+                            footer.classList.add('d-none');
+                        }
+                    } else {
+                        const footer = document.getElementById('infinite-scroll-footer');
+                        if (footer) footer.classList.add('d-none');
+                        renderPagination(data.total, data.page, data.pages);
+                    }
+                })
+                .catch(e => {
+                    document.getElementById('jobs-container').innerHTML = `
+                        <div class="alert alert-danger">Error loading jobs: ${e}</div>
+                    `;
+                });
+        }
+
+        // --- Infinite Scroll Next Batch ---
+        function loadMoreJobs() {
+            if (isLoadingMore || !hasMorePages || currentPage >= totalPages) return;
+            isLoadingMore = true;
+
+            const loader = document.getElementById('infinite-scroll-loader');
+            const action = document.getElementById('infinite-scroll-action');
+            if (loader) loader.classList.remove('d-none');
+            if (action) action.classList.add('d-none');
+
+            currentPage++;
+            const url = `/api/jobs?page=${currentPage}&per_page=12&status=${currentStatusFilter}&location=${currentLocationFilter}&q=${encodeURIComponent(currentSearchQuery)}`;
+
+            fetch(url)
+                .then(r => r.json())
+                .then(data => {
+                    const newJobs = data.jobs || [];
+                    totalPages = data.pages || 1;
+                    totalJobsCount = data.total || 0;
+
+                    if (newJobs.length > 0) {
+                        renderJobs(newJobs, true);
+                        loadedJobsCount += newJobs.length;
+                    }
+
+                    hasMorePages = currentPage < totalPages && newJobs.length > 0;
+
+                    if (loader) loader.classList.add('d-none');
+                    const infoEl = document.getElementById('infinite-scroll-info');
+                    if (infoEl) {
+                        infoEl.textContent = `Showing ${loadedJobsCount} of ${totalJobsCount} matching jobs (Page ${currentPage} of ${totalPages})`;
+                    }
+
+                    const endBox = document.getElementById('infinite-scroll-end');
+                    const endText = document.getElementById('infinite-scroll-end-text');
+
+                    if (hasMorePages) {
+                        if (action) action.classList.remove('d-none');
+                        if (endBox) endBox.classList.add('d-none');
+                    } else {
+                        if (action) action.classList.add('d-none');
+                        if (endBox) endBox.classList.remove('d-none');
+                        if (endText) endText.textContent = `✨ All ${totalJobsCount} jobs loaded (${totalPages} pages)`;
+                        if (intersectionObserver) intersectionObserver.disconnect();
+                    }
+                    isLoadingMore = false;
+                })
+                .catch(e => {
+                    console.error('Error loading more jobs:', e);
+                    if (loader) loader.classList.add('d-none');
+                    if (action) action.classList.remove('d-none');
+                    isLoadingMore = false;
+                });
+        }
+
+        function setupIntersectionObserver() {
+            if (intersectionObserver) {
+                intersectionObserver.disconnect();
+            }
+            if (scrollMode !== 'infinite') return;
+
+            const sentinel = document.getElementById('infinite-scroll-sentinel');
+            if (!sentinel) return;
+
+            if ('IntersectionObserver' in window) {
+                intersectionObserver = new IntersectionObserver((entries) => {
+                    const entry = entries[0];
+                    if (entry && entry.isIntersecting && !isLoadingMore && hasMorePages && currentPage < totalPages) {
+                        loadMoreJobs();
+                    }
+                }, {
+                    root: null,
+                    rootMargin: '250px',
+                    threshold: 0.05
+                });
+                intersectionObserver.observe(sentinel);
+            }
+        }
+
+        function renderJobs(jobs, append = false) {
+            const container = document.getElementById('jobs-container');
+            if (!append && !jobs.length) {
+                container.innerHTML = `
+                    <div class="card p-5 text-center text-muted border-0 shadow-sm" style="border-radius: 14px;">
+                        <i class="bi bi-compass fs-1 mb-2 text-primary opacity-50"></i>
+                        <h5>No jobs found matching your criteria</h5>
+                        <p class="mb-3">Launch a scrape above to discover live jobs from LinkedIn, Indeed, Naukri, Glassdoor, and ZipRecruiter.</p>
+                        <div>
+                            <button class="btn btn-primary btn-sm px-3" onclick="startScrapeWithWindow()">
+                                <i class="bi bi-fire me-1"></i> Launch Discovery Scrape
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Determine baseline index for continuous numbering (1 to total)
+            let baseIndex = 0;
+            if (append) {
+                // In infinite scroll mode, continue count from existing cards in the DOM
+                baseIndex = container.querySelectorAll('.job-card').length;
+            } else {
+                // In classic pagination or fresh reset, compute based on currentPage (12 per page)
+                const perPage = 12;
+                baseIndex = Math.max(0, (currentPage - 1) * perPage);
+            }
+
+            let html = '';
+            jobs.forEach((j, idx) => {
+                const jobIndex = baseIndex + idx + 1;
+                const plat = (j.platform || 'unknown').toLowerCase();
+                const status = (j.status || 'new').toLowerCase();
+                const salaryHtml = j.salary ? `<span class="badge bg-light text-dark border me-2"><i class="bi bi-cash me-1"></i>${escapeHtml(j.salary)}</span>` : '';
+                const datePosted = j.date_posted ? `<i class="bi bi-clock me-1"></i>Posted: ${j.date_posted}` : '';
+
+                const locSearch = ((j.location || '') + ' ' + (j.description || '') + ' ' + (j.job_type || '')).toLowerCase();
+                const isRemote = locSearch.includes('remote') || locSearch.includes('wfh') || locSearch.includes('work from home');
+                const isBlr = (j.location || '').toLowerCase().includes('bengaluru') || (j.location || '').toLowerCase().includes('bangalore');
+                let locBadge = '';
+                if (isRemote) {
+                    locBadge = '<span class="badge bg-success-subtle text-success border border-success-subtle me-1"><i class="bi bi-wifi me-1"></i>Remote</span>';
+                } else if (isBlr) {
+                    locBadge = '<span class="badge bg-primary-subtle text-primary border border-primary-subtle me-1"><i class="bi bi-building me-1"></i>Bengaluru</span>';
+                }
+
+                // RED TAG LOGIC:
+                // 1. If job has been re-discovered/searched again (is_researched or search_count > 1)
+                // 2. Or if currently matched via active search query
+                const isResearched = Boolean(j.is_researched || (j.search_count && j.search_count > 1));
+                let redTagHtml = '';
+                if (isResearched) {
+                    const countTxt = j.search_count && j.search_count > 1 ? ` &bull; ${j.search_count}x` : '';
+                    redTagHtml = `<span class="badge-researched-red me-1" title="Discovered again in subsequent searches/scrapes"><i class="bi bi-arrow-repeat me-1"></i> Re-Searched${countTxt}</span>`;
+                } else if (currentSearchQuery && currentSearchQuery.length > 0) {
+                    redTagHtml = `<span class="badge-search-match-red me-1"><i class="bi bi-search me-1"></i> Search Match</span>`;
+                }
+
+                html += `
+                    <div class="job-card ${isResearched ? 'is-researched-card' : ''}" id="job-card-${j.id}">
+                        <div class="job-card-inner">
+                            <!-- Left-Side Opportunity Index Number -->
+                            <div class="job-number-col">
+                                <div class="job-number-badge" title="Opportunity #${jobIndex}">
+                                    <span class="job-number-prefix">#</span>
+                                    <span class="job-number-val">${jobIndex}</span>
+                                </div>
+                            </div>
+
+                            <!-- Main Card Content -->
+                            <div class="job-card-main">
+                                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+                                    <div class="d-flex align-items-center flex-wrap gap-1">
+                                        <span class="badge-platform badge-${plat}">${plat}</span>
+                                        <span class="status-badge status-${status}">${status}</span>
+                                        ${locBadge}
+                                        ${redTagHtml}
+                                        <span class="badge bg-light text-muted border" style="font-size: 11px;">0–4y Exp</span>
+                                    </div>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-danger btn-sm" onclick="searchJobAgain(${j.id}, '${escapeHtml(j.title.replace(/'/g, "\\'"))}')" title="Search for this job role again">
+                                            <i class="bi bi-arrow-repeat"></i> Search Again
+                                        </button>
+                                        ${status !== 'applied' ? `<button class="btn btn-outline-success" onclick="setJobStatus(${j.id}, 'applied')"><i class="bi bi-check2"></i> Mark Applied</button>` : ''}
+                                        ${status !== 'saved' ? `<button class="btn btn-outline-warning text-dark" onclick="setJobStatus(${j.id}, 'saved')"><i class="bi bi-bookmark"></i> Save</button>` : ''}
+                                        ${status !== 'rejected' ? `<button class="btn btn-outline-secondary" onclick="setJobStatus(${j.id}, 'rejected')"><i class="bi bi-x"></i> Dismiss</button>` : ''}
+                                    </div>
+                                </div>
+
+                                <div class="job-title">${escapeHtml(j.title)}</div>
+                                <div class="company-name mb-2"><i class="bi bi-building me-1"></i>${escapeHtml(j.company)}</div>
+
+                                <div class="job-meta d-flex flex-wrap align-items-center gap-3 mb-3 text-muted small">
+                                    <span><i class="bi bi-geo-alt me-1"></i>${escapeHtml(j.location)}</span>
+                                    ${salaryHtml}
+                                    <span>${datePosted}</span>
+                                    ${j.num_applicants ? `<span><i class="bi bi-people me-1"></i>${j.num_applicants} applicants</span>` : ''}
+                                    ${j.is_easy_apply ? '<span class="badge bg-info text-dark"><i class="bi bi-lightning-fill"></i> Easy Apply</span>' : ''}
+                                </div>
+
+                                ${j.description ? `<p class="text-muted small mb-3" style="line-height: 1.6;">${escapeHtml(j.description)}</p>` : ''}
+
+                                <div class="d-flex justify-content-between align-items-center pt-2 border-top flex-wrap gap-2">
+                                    <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>Indexed: ${j.created_at || 'Recently'}</small>
+                                    <a href="${j.url}" target="_blank" class="btn btn-sm btn-primary px-3 fw-semibold shadow-sm">
+                                        Apply on ${plat.toUpperCase()} <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            if (append) {
+                container.insertAdjacentHTML('beforeend', html);
+            } else {
+                container.innerHTML = html;
+            }
+        }
+
+        function renderPagination(total, page, pages) {
+            const controls = document.getElementById('pagination-controls');
+            if (pages <= 1) {
+                controls.classList.add('d-none');
+                controls.classList.remove('d-flex');
+                return;
+            }
+            controls.classList.remove('d-none');
+            controls.classList.add('d-flex');
+            document.getElementById('pagination-info').textContent = `Page ${page} of ${pages} (${total} total jobs)`;
+            document.getElementById('btn-prev-page').disabled = page <= 1;
+            document.getElementById('btn-next-page').disabled = page >= pages;
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                loadJobs(false);
+                window.scrollTo({ top: document.getElementById('jobs-container').offsetTop - 80, behavior: 'smooth' });
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                loadJobs(false);
+                window.scrollTo({ top: document.getElementById('jobs-container').offsetTop - 80, behavior: 'smooth' });
+            }
+        }
+
+        function setStatusFilter(status, el) {
+            currentStatusFilter = status;
+            document.querySelectorAll('#status-filter-pills .filter-btn').forEach(b => b.classList.remove('active'));
+            if (el) el.classList.add('active');
+            loadJobs(true);
+        }
+
+        function debounceSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentSearchQuery = document.getElementById('search-input').value.trim();
+                loadJobs(true);
+            }, 300);
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('search-input');
+            if (input) input.value = '';
+            currentSearchQuery = '';
+            loadJobs(true);
+        }
+
+        // --- Search Job Again Action ---
+        function searchJobAgain(jobId, jobTitle) {
+            // Mark job as re-searched via API
+            fetch(`/api/job/${jobId}/researched`, { method: 'POST' })
+                .then(r => r.json())
+                .catch(() => {});
+
+            // Put title in search input to filter/highlight matching opportunities
+            const input = document.getElementById('search-input');
+            if (input) {
+                input.value = jobTitle;
+                currentSearchQuery = jobTitle;
+            }
+            updateStats();
+            loadJobs(true);
+
+            // Smooth scroll to results
+            const container = document.getElementById('jobs-container');
+            if (container) {
+                window.scrollTo({ top: container.offsetTop - 90, behavior: 'smooth' });
+            }
+        }
+
+        function setJobStatus(jobId, newStatus) {
+            fetch(`/api/job/${jobId}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(r => r.json())
+            .then(() => {
+                updateStats();
+                if (scrollMode === 'infinite' && currentStatusFilter === 'all') {
+                    const card = document.getElementById(`job-card-${jobId}`);
+                    if (card) {
+                        const statusBadge = card.querySelector('.status-badge');
+                        if (statusBadge) {
+                            statusBadge.className = `status-badge status-${newStatus}`;
+                            statusBadge.textContent = newStatus;
+                        }
+                        const btnGroup = card.querySelector('.btn-group');
+                        if (btnGroup) {
+                            btnGroup.innerHTML = `
+                                <button class="btn btn-outline-danger btn-sm" onclick="searchJobAgain(${jobId}, '')" title="Search for this job role again">
+                                    <i class="bi bi-arrow-repeat"></i> Search Again
+                                </button>
+                                ${newStatus !== 'applied' ? `<button class="btn btn-outline-success" onclick="setJobStatus(${jobId}, 'applied')"><i class="bi bi-check2"></i> Mark Applied</button>` : ''}
+                                ${newStatus !== 'saved' ? `<button class="btn btn-outline-warning text-dark" onclick="setJobStatus(${jobId}, 'saved')"><i class="bi bi-bookmark"></i> Save</button>` : ''}
+                                ${newStatus !== 'rejected' ? `<button class="btn btn-outline-secondary" onclick="setJobStatus(${jobId}, 'rejected')"><i class="bi bi-x"></i> Dismiss</button>` : ''}
+                            `;
+                        }
+                    }
+                } else {
+                    loadJobs(true);
+                }
+            })
+            .catch(e => alert(`Error updating job: ${e}`));
+        }
+
+        // --- Time Window & Scraping Engine ---
+
+        const WINDOW_STOPS = [2, 6, 12, 24];
+        let selectedHours = 24;
+
+        function updateTimeWindow(val) {
+            const idx = parseInt(val);
+            selectedHours = WINDOW_STOPS[idx] || 24;
+            const badge = document.getElementById('window-badge');
+            if (badge) badge.textContent = `Last ${selectedHours} Hours`;
+
+            // Update active stop label highlighting
+            for (let i = 0; i < 4; i++) {
+                const el = document.getElementById(`stop-${i}`);
+                if (el) {
+                    if (i === idx) el.classList.add('active');
+                    else el.classList.remove('active');
+                }
+            }
+
+            const btn = document.getElementById('btn-scrape-window');
+            if (btn) btn.innerHTML = `<i class="bi bi-fire me-1"></i> Scrape (${selectedHours}h)`;
+        }
+
+        function setSliderStop(idx) {
+            const slider = document.getElementById('timeWindowSlider');
+            if (slider) {
+                slider.value = idx;
+                updateTimeWindow(idx);
+            }
+        }
+
+        function startScrapeWithWindow() {
+            startScrape(true, selectedHours);
+        }
+
+        function startScrape(todayOnly, hours) {
+            const btnWindow = document.getElementById('btn-scrape-window');
+            const btnAll = document.getElementById('btn-scrape-all');
+            if (btnWindow) btnWindow.disabled = true;
+            if (btnAll) btnAll.disabled = true;
+
+            const targetHours = hours !== undefined ? hours : (todayOnly ? selectedHours : null);
+
+            const monitor = document.getElementById('scrape-monitor-box');
+            monitor.style.display = 'block';
+            monitor.className = 'scrape-monitor';
+
+            document.getElementById('monitor-spinner').style.display = 'inline-block';
+            document.getElementById('monitor-mode').textContent = targetHours ?
+                `🔥 JobPilot Radar: Scanning Last ${targetHours} Hours...` :
+                '🔍 JobPilot Radar: Scanning All Time...';
+            document.getElementById('monitor-phase').textContent = 'Connecting to multi-platform job feeds...';
+            document.getElementById('monitor-progress-bar').className = 'progress-bar progress-bar-striped progress-bar-animated bg-primary';
+            document.getElementById('monitor-progress-bar').style.width = '10%';
+            document.getElementById('monitor-found-count').textContent = 'Discovered: 0 jobs';
+            document.getElementById('monitor-status-text').textContent = 'In progress...';
+
+            scrapeStartTime = Date.now();
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - scrapeStartTime) / 1000);
+                const mins = Math.floor(elapsed / 60);
+                const secs = elapsed % 60;
+                document.getElementById('monitor-timer').textContent = `⏱️ ${mins}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+
+            const payload = {
+                today_only: todayOnly,
+                hours: targetHours
+            };
+
+            // Trigger backend scrape
+            fetch('/api/scrape', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'already_running') {
+                    alert('A scrape is already active!');
+                }
+                pollScrapeStatus();
+            })
+            .catch(e => {
+                alert(`Failed to start scrape: ${e}`);
+                stopScrapeUi(false, e);
+            });
+        }
+
+        function pollScrapeStatus() {
+            clearInterval(scrapePollInterval);
+            scrapePollInterval = setInterval(() => {
+                fetch('/api/scrape-status')
+                    .then(r => r.json())
+                    .then(st => {
+                        document.getElementById('monitor-phase').textContent = st.current_phase || 'Scraping...';
+                        document.getElementById('monitor-found-count').textContent = `Discovered: ${st.jobs_found || 0} jobs`;
+
+                        // Progress heuristic
+                        let pct = 15;
+                        if (st.current_phase.includes('Indeed')) pct = 30;
+                        if (st.current_phase.includes('Naukri')) pct = 45;
+                        if (st.current_phase.includes('Glassdoor')) pct = 60;
+                        if (st.current_phase.includes('Zip_recruiter') || st.current_phase.includes('Ziprecruiter')) pct = 70;
+                        if (st.current_phase.includes('Google') || st.current_phase.includes('Bayt')) pct = 80;
+                        if (st.current_phase.includes('Filtering')) pct = 90;
+                        if (st.current_phase.includes('Saving')) pct = 95;
+                        if (st.finished) pct = 100;
+                        document.getElementById('monitor-progress-bar').style.width = `${pct}%`;
+
+                        if (st.finished) {
+                            clearInterval(scrapePollInterval);
+                            clearInterval(timerInterval);
+                            stopScrapeUi(true, st.error, st.jobs_saved);
+                        }
+                    })
+                    .catch(() => {});
+            }, 1500);
+        }
+
+        function stopScrapeUi(isSuccess, errorMsg, savedCount) {
+            const btnWindow = document.getElementById('btn-scrape-window');
+            const btnAll = document.getElementById('btn-scrape-all');
+            if (btnWindow) btnWindow.disabled = false;
+            if (btnAll) btnAll.disabled = false;
+            document.getElementById('monitor-spinner').style.display = 'none';
+
+            const monitor = document.getElementById('scrape-monitor-box');
+            if (errorMsg) {
+                monitor.classList.add('is-error');
+                document.getElementById('monitor-progress-bar').className = 'progress-bar bg-danger';
+                document.getElementById('monitor-status-text').textContent = `Error: ${errorMsg}`;
+            } else {
+                monitor.classList.add('is-complete');
+                document.getElementById('monitor-progress-bar').className = 'progress-bar bg-success';
+                document.getElementById('monitor-status-text').textContent = `✅ Complete! ${savedCount || 0} new jobs added.`;
+            }
+
+            updateStats();
+            loadJobs();
+
+            setTimeout(() => {
+                monitor.style.display = 'none';
+            }, 12000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text || '';
+            return div.innerHTML;
+        }
+
+        // --- Back to Top Controller ---
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('btn-back-to-top');
+            if (!btn) return;
+            if (window.scrollY > 350) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- Init ---
+        updateScrollModeButtons();
+        updateStats();
+        loadJobs(true);
+
+        // Refresh stats periodically
+        setInterval(updateStats, 20000);
+    </script>
+</body>
+</html>

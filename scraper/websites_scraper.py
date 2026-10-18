@@ -1,0 +1,350 @@
+"""
+Specialized Websites Manager & Scraper
+Curates and organizes 20+ specialized tech, DevOps, cloud engineering,
+and remote-first job boards worldwide and in India.
+"""
+
+import os
+import yaml
+import logging
+import urllib.parse
+from typing import List, Dict, Any, Optional
+
+logger = logging.getLogger(__name__)
+
+SPECIALIZED_JOB_WEBSITES: List[Dict[str, Any]] = [
+    # ── 1. India Tech & Product Platforms ──
+    {
+        "id": "instahyre",
+        "name": "Instahyre",
+        "category": "India Tech & Product",
+        "url": "https://www.instahyre.com",
+        "search_url": "https://www.instahyre.com/jobs-in-bengaluru-for-devops/",
+        "description": "AI-driven tech hiring platform in India with top product companies (Swiggy, Flipkart, Uber, Razorpay).",
+        "target_roles": ["DevOps Engineer", "Cloud Engineer", "SRE", "Platform Engineer"],
+        "region": "India",
+    },
+    {
+        "id": "hirist",
+        "name": "Hirist",
+        "category": "India Tech & Product",
+        "url": "https://www.hirist.tech",
+        "search_url": "https://www.hirist.tech/c/devops-jobs.html",
+        "description": "Dedicated engineering job portal specifically for software, cloud, and DevOps roles in India.",
+        "target_roles": ["DevOps", "Cloud Architect", "Site Reliability Engineer", "AWS Engineer"],
+        "region": "India",
+    },
+    {
+        "id": "cutshort",
+        "name": "Cutshort",
+        "category": "India Tech & Product",
+        "url": "https://cutshort.io",
+        "search_url": "https://cutshort.io/jobs/devops-jobs-in-bangalore",
+        "description": "AI-powered recruitment network popular in India for product engineering and fast recruiter turnaround.",
+        "target_roles": ["DevOps Engineer", "Cloud Engineer", "SRE"],
+        "region": "India",
+    },
+    {
+        "id": "geektrust",
+        "name": "Geektrust",
+        "category": "India Tech & Product",
+        "url": "https://www.geektrust.com",
+        "search_url": "https://www.geektrust.com/jobs",
+        "description": "Skill-based tech challenges connecting engineers directly with vetted product firms without resume filtering.",
+        "target_roles": ["DevOps", "Backend / Cloud", "Infrastructure"],
+        "region": "India",
+    },
+    {
+        "id": "hasjob",
+        "name": "Hasjob",
+        "category": "India Tech & Product",
+        "url": "https://hasjob.co",
+        "search_url": "https://hasjob.co/?q=devops",
+        "description": "Community-driven job board by HasGeek featuring niche tech roles, open-source teams, and tech startups.",
+        "target_roles": ["DevOps", "SysAdmin", "Cloud Infrastructure"],
+        "region": "India",
+    },
+    {
+        "id": "foundit",
+        "name": "Foundit (Monster India)",
+        "category": "India Tech & Product",
+        "url": "https://www.foundit.in",
+        "search_url": "https://www.foundit.in/srp/results?query=Cloud%20DevOps&locations=Bangalore",
+        "description": "Enterprise and mid-market hiring platform covering IT systems, cloud migration, and operations.",
+        "target_roles": ["Cloud Engineer", "DevOps Engineer", "AWS Engineer"],
+        "region": "India",
+    },
+
+    # ── 2. Dedicated DevOps, Cloud & SRE Specialists ──
+    {
+        "id": "devopsjobboard",
+        "name": "DevOpsJobs.io",
+        "category": "DevOps & Cloud Specialist",
+        "url": "https://devopsjobs.io",
+        "search_url": "https://devopsjobs.io/jobs?q=cloud",
+        "description": "Dedicated exclusively to DevOps, Cloud, and SRE roles across AWS, GCP, Azure, and Kubernetes.",
+        "target_roles": ["DevOps Engineer", "Cloud Engineer", "SRE", "Kubernetes Engineer"],
+        "region": "Global & Remote",
+    },
+    {
+        "id": "kubecareers",
+        "name": "KubeCareers",
+        "category": "DevOps & Cloud Specialist",
+        "url": "https://kube.careers",
+        "search_url": "https://kube.careers/?q=kubernetes",
+        "description": "Specializes exclusively in Kubernetes, Cloud-Native, and container infrastructure engineering roles.",
+        "target_roles": ["Kubernetes Administrator", "Cloud Platform Engineer", "DevOps"],
+        "region": "Global & Remote",
+    },
+    {
+        "id": "devopsroles",
+        "name": "DevOpsRoles",
+        "category": "DevOps & Cloud Specialist",
+        "url": "https://devopsroles.com",
+        "search_url": "https://devopsroles.com/",
+        "description": "Curated listings for site reliability engineers, infrastructure engineers, and CI/CD specialists.",
+        "target_roles": ["SRE", "DevOps Engineer", "Platform Engineer"],
+        "region": "Global & Remote",
+    },
+
+    # ── 3. Global Remote-First Engineering ──
+    {
+        "id": "remoteok",
+        "name": "Remote OK",
+        "category": "Global Remote-First",
+        "url": "https://remoteok.com",
+        "search_url": "https://remoteok.com/remote-devops-jobs",
+        "description": "High-volume aggregator for global remote software, DevOps, and cloud infrastructure roles.",
+        "target_roles": ["DevOps", "Cloud", "SRE", "Sysadmin"],
+        "region": "Global Remote",
+    },
+    {
+        "id": "weworkremotely",
+        "name": "We Work Remotely",
+        "category": "Global Remote-First",
+        "url": "https://weworkremotely.com",
+        "search_url": "https://weworkremotely.com/categories/remote-devops-sysadmin-jobs",
+        "description": "One of the largest global remote boards with active DevOps, sysadmin, and backend engineering sections.",
+        "target_roles": ["DevOps / Sysadmin", "Cloud Engineer", "Backend Engineering"],
+        "region": "Global Remote",
+    },
+    {
+        "id": "arc_dev",
+        "name": "Arc.dev",
+        "category": "Global Remote-First",
+        "url": "https://arc.dev",
+        "search_url": "https://arc.dev/remote-jobs/devops",
+        "description": "Vetted global remote developer and DevOps talent network with top international tech companies.",
+        "target_roles": ["Remote DevOps Engineer", "Cloud Architect", "AWS Engineer"],
+        "region": "Global Remote",
+    },
+    {
+        "id": "remotive",
+        "name": "Remotive",
+        "category": "Global Remote-First",
+        "url": "https://remotive.com",
+        "search_url": "https://remotive.com/remote-jobs/devops",
+        "description": "Curated remote tech job board with dedicated DevOps, cloud computing, and sysadmin categories.",
+        "target_roles": ["DevOps", "Infrastructure Engineer", "SRE"],
+        "region": "Global Remote",
+    },
+    {
+        "id": "jobspresso",
+        "name": "Jobspresso",
+        "category": "Global Remote-First",
+        "url": "https://jobspresso.co",
+        "search_url": "https://jobspresso.co/remote-devops-jobs/",
+        "description": "Curated remote tech careers in DevOps, systems engineering, and cloud operations.",
+        "target_roles": ["DevOps", "Systems Engineer", "Cloud Architect"],
+        "region": "Global Remote",
+    },
+    {
+        "id": "flexjobs",
+        "name": "FlexJobs",
+        "category": "Global Remote-First",
+        "url": "https://www.flexjobs.com",
+        "search_url": "https://www.flexjobs.com/search?search=DevOps",
+        "description": "Hand-screened remote, hybrid, and flexible tech jobs with verified employers.",
+        "target_roles": ["Cloud Engineer", "DevOps Engineer", "SRE"],
+        "region": "Global & US/Remote",
+    },
+
+    # ── 4. Tech Ecosystem & Startup Platforms ──
+    {
+        "id": "wellfound",
+        "name": "Wellfound (AngelList Talent)",
+        "category": "Startup & High-Growth",
+        "url": "https://wellfound.com",
+        "search_url": "https://wellfound.com/role/l/devops-engineer/bengaluru",
+        "description": "Leading startup ecosystem board with direct access to engineering founders, CTOs, and equity transparency.",
+        "target_roles": ["DevOps Engineer", "Cloud Architect", "SRE", "Infrastructure Engineer"],
+        "region": "Global & India",
+    },
+    {
+        "id": "otta",
+        "name": "Otta (Welcome to the Jungle)",
+        "category": "Startup & High-Growth",
+        "url": "https://app.otta.com",
+        "search_url": "https://app.otta.com/jobs?roles=devops",
+        "description": "Personalized, candidate-centric board matching engineers to fast-growing tech firms and unicorns.",
+        "target_roles": ["DevOps Engineer", "Cloud Engineer", "Platform Engineer"],
+        "region": "Global & UK/EU/US",
+    },
+    {
+        "id": "hacker_news",
+        "name": "Hacker News (Who is Hiring?)",
+        "category": "Startup & High-Growth",
+        "url": "https://news.ycombinator.com",
+        "search_url": "https://hnhiring.me/?q=devops+OR+cloud",
+        "description": "Monthly Y Combinator community threads with direct posts from engineering hiring managers at top tech companies.",
+        "target_roles": ["DevOps", "SRE", "Cloud Infrastructure", "Kubernetes"],
+        "region": "Global",
+    },
+    {
+        "id": "levels_fyi",
+        "name": "Levels.fyi Jobs",
+        "category": "Startup & High-Growth",
+        "url": "https://www.levels.fyi/jobs",
+        "search_url": "https://www.levels.fyi/jobs?jobFamily=devops&location=bengaluru",
+        "description": "High-compensation tech and engineering jobs with verified salary compensation bands.",
+        "target_roles": ["DevOps Engineer", "Site Reliability Engineer", "Cloud Engineer"],
+        "region": "Global & India",
+    },
+    {
+        "id": "relocate_me",
+        "name": "Relocate.me",
+        "category": "Startup & High-Growth",
+        "url": "https://relocate.me",
+        "search_url": "https://relocate.me/search?q=devops",
+        "description": "Verified international tech jobs offering relocation packages and visa sponsorship.",
+        "target_roles": ["DevOps Engineer", "Cloud Engineer", "SRE"],
+        "region": "Abroad / Relocation",
+    },
+
+    # ── 5. Mainstream & Enterprise Tech Aggregators ──
+    {
+        "id": "dice",
+        "name": "Dice",
+        "category": "Mainstream & Enterprise Tech",
+        "url": "https://www.dice.com",
+        "search_url": "https://www.dice.com/jobs?q=Cloud%20DevOps",
+        "description": "Premier tech-only career platform specializing in enterprise infrastructure, cloud, and cybersecurity.",
+        "target_roles": ["Cloud Engineer", "DevOps Engineer", "Systems Engineer"],
+        "region": "Global & US/Remote",
+    },
+    {
+        "id": "simplyhired",
+        "name": "SimplyHired",
+        "category": "Mainstream & Enterprise Tech",
+        "url": "https://www.simplyhired.com",
+        "search_url": "https://www.simplyhired.co.in/search?q=DevOps+Cloud&l=Bengaluru",
+        "description": "Comprehensive job aggregator indexing thousands of tech positions across multiple domains.",
+        "target_roles": ["DevOps Engineer", "Cloud Support Engineer", "SRE"],
+        "region": "India & Global",
+    },
+    {
+        "id": "adzuna",
+        "name": "Adzuna",
+        "category": "Mainstream & Enterprise Tech",
+        "url": "https://www.adzuna.in",
+        "search_url": "https://www.adzuna.in/search?q=DevOps+Cloud&w=Bengaluru",
+        "description": "Smart job search engine bringing together tech job listings across India and 16 international markets.",
+        "target_roles": ["DevOps Engineer", "Cloud Infrastructure", "Systems Engineer"],
+        "region": "India & Global",
+    },
+    {
+        "id": "techcareers",
+        "name": "TechCareers",
+        "category": "Mainstream & Enterprise Tech",
+        "url": "https://www.techcareers.com",
+        "search_url": "https://www.techcareers.com/jobs?q=DevOps%20Cloud",
+        "description": "Specialized job portal focusing on enterprise IT, networking, cloud systems, and infrastructure.",
+        "target_roles": ["Cloud Engineer", "DevOps Engineer", "Network / Cloud Specialist"],
+        "region": "Global",
+    },
+]
+
+
+class WebsitesManager:
+    """Manager for the 24 specialized tech and DevOps job websites"""
+
+    def __init__(self, config: Optional[dict] = None):
+        self.config = config or {}
+        self.websites = self._load_websites()
+
+    def _load_websites(self) -> List[Dict[str, Any]]:
+        """Load websites from config or fallback to SPECIALIZED_JOB_WEBSITES"""
+        cfg_sites = self.config.get("websites")
+        if cfg_sites and isinstance(cfg_sites, list) and len(cfg_sites) >= 5:
+            return cfg_sites
+        return SPECIALIZED_JOB_WEBSITES
+
+    def count(self) -> int:
+        """Return total count of specialized websites"""
+        return len(self.websites)
+
+    def get_categories(self) -> List[str]:
+        """Return distinct website categories sorted alphabetically"""
+        cats = sorted(list({w.get("category", "General") for w in self.websites}))
+        return cats
+
+    def get_websites(
+        self, category: Optional[str] = None, search: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """Filter websites by category or search term"""
+        results = []
+        c_filter = category.strip().lower() if category else None
+        s_filter = search.strip().lower() if search else None
+
+        for w in self.websites:
+            if c_filter and c_filter not in w.get("category", "").lower():
+                continue
+            if s_filter:
+                match_name = s_filter in w.get("name", "").lower()
+                match_desc = s_filter in w.get("description", "").lower()
+                match_id = s_filter in w.get("id", "").lower()
+                match_reg = s_filter in w.get("region", "").lower()
+                if not (match_name or match_desc or match_id or match_reg):
+                    continue
+            results.append(w)
+        return results
+
+    def get_website_by_id(self, site_id: str) -> Optional[Dict[str, Any]]:
+        """Find a single website by ID"""
+        for w in self.websites:
+            if w.get("id") == site_id:
+                return w
+        return None
+
+    def build_search_url(
+        self, site_id: str, role: str = "DevOps Engineer", location: str = "Bengaluru"
+    ) -> str:
+        """Construct a tailored search URL for a website based on role and location"""
+        site = self.get_website_by_id(site_id)
+        if not site:
+            return ""
+
+        default_search = site.get("search_url")
+        if default_search:
+            return default_search
+
+        base = site.get("url", "")
+        role_enc = urllib.parse.quote_plus(role)
+        return f"{base}/jobs?q={role_enc}"
+
+    def get_stats(self) -> Dict[str, Any]:
+        """Return aggregate summary stats of websites"""
+        by_category: Dict[str, int] = {}
+        by_region: Dict[str, int] = {}
+        for w in self.websites:
+            cat = w.get("category", "Other")
+            reg = w.get("region", "Other")
+            by_category[cat] = by_category.get(cat, 0) + 1
+            by_region[reg] = by_region.get(reg, 0) + 1
+
+        return {
+            "total_websites": len(self.websites),
+            "by_category": by_category,
+            "by_region": by_region,
+            "categories": self.get_categories(),
+        }

@@ -1,0 +1,83 @@
+# Job Finder Configuration
+# Copy this to config.yaml and fill in your details
+
+profile:
+  name: "Deepanshu Yadav"
+  email: "yaadav.deepanshu@gmail.com"
+  phone: "+91 8728081860"
+  linkedin_url: "https://linkedin.com/in/yourprofile"
+  resume_file: "resume.pdf"  # Path to your resume PDF
+
+search:
+  roles:
+    - "Cloud Engineer"
+    - "DevOps Engineer"
+    - "Site Reliability Engineer"
+    - "SRE"
+    - "System Engineer"
+    - "Platform Engineer"
+    - "Infrastructure Engineer"
+
+  location: "Bengaluru"
+  remote: true
+  hybrid: true
+
+  # Job filters
+  max_applicants: 100
+  min_experience_years: 0
+  max_experience_years: 5
+
+  exclude_keywords:
+    - "internship"
+    - "volunteer"
+    - "unpaid"
+    - "part-time"
+
+  salary_min: 0  # 0 = no filter
+  salary_max: 0
+
+platforms:
+  linkedin:
+    enabled: true
+    search_url: "https://www.linkedin.com/jobs/search/"
+
+  indeed:
+    enabled: true
+    country: "IN"
+
+  naukri:
+    enabled: true
+
+  glassdoor:
+    enabled: true
+
+  wellfound:
+    enabled: false  # Not yet implemented
+
+ai:
+  enabled: true
+  provider: "anthropic"  # "anthropic" or "openai"
+
+  # For Anthropic Claude
+  anthropic_api_key: "${CLAUDE_API_KEY}"
+  anthropic_model: "claude-3-5-sonnet-20241022"
+
+  # For OpenAI GPT
+  openai_api_key: "${OPENAI_API_KEY}"
+  openai_model: "gpt-4"
+
+  # Resume tailoring settings
+  resume_tailoring:
+    enabled: true
+    strategy: "keyword_match"  # "keyword_match" or "full_rewrite"
+
+app:
+  host: "127.0.0.1"
+  port: 5000
+  debug: false
+  db_file: "jobs.db"
+
+scheduler:
+  enabled: true
+  scrape_interval_hours: 6  # Run scraper every 6 hours
+  timezone: "Asia/Kolkata"

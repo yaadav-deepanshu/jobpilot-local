@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Discovery Report — 2026-10-09</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #f1f5f9;
+            color: #0f172a;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            padding: 32px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+        }
+        h1 { color: #4338ca; font-size: 26px; }
+        .timestamp { color: #64748b; font-size: 14px; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-card.stat-green { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        .stat-card.stat-amber { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+        .stat-card.stat-purple { background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%); }
+        .stat-card .val { font-size: 32px; font-weight: 700; margin-top: 6px; }
+        .charts-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .chart-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .chart-box h3 { font-size: 16px; margin-bottom: 12px; color: #334155; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+        th {
+            background: #4338ca;
+            color: white;
+            text-align: left;
+            padding: 12px 14px;
+            font-weight: 600;
+        }
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        tr:hover td { background: #f8fafc; }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: white;
+        }
+        .badge-linkedin { background: #0a66c2; }
+        .badge-indeed { background: #003da5; }
+        .badge-naukri { background: #ff6600; }
+        .badge-glassdoor { background: #0caa41; }
+        .badge-unknown { background: #64748b; }
+        .status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-new { background: #e0e7ff; color: #3730a3; }
+        .status-applied { background: #dcfce7; color: #166534; }
+        .status-saved { background: #fef3c7; color: #92400e; }
+        .status-rejected { background: #fee2e2; color: #991b1b; }
+        .btn-link {
+            color: #4338ca;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .btn-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>🎯 Discovered Job Report</h1>
+                <div class="timestamp">Exported on 2026-10-09 14:34:29</div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div>Total Jobs</div>
+                <div class="val">66</div>
+            </div>
+            <div class="stat-card stat-purple">
+                <div>Platforms</div>
+                <div class="val">3</div>
+            </div>
+            <div class="stat-card stat-green">
+                <div>Applied</div>
+                <div class="val">0</div>
+            </div>
+            <div class="stat-card stat-amber">
+                <div>Saved</div>
+                <div class="val">0</div>
+            </div>
+        </div>
+
+        <div class="charts-row">
+            <div class="chart-box">
+                <h3>Jobs by Platform</h3>
+                <canvas id="platChart" height="200"></canvas>
+            </div>
+            <div class="chart-box">
+                <h3>Jobs by Status</h3>
+                <canvas id="statChart" height="200"></canvas>
+            </div>
+        </div>
+
+        <h3>All Job Listings (66)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Platform</th>
+                    <th>Role Title</th>
+                    <th>Company</th>
+                    <th>Location</th>
+                    <th>Posted</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr>
+                <td>1</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>Site Reliability Engineer I</strong></td>
+                <td>CME Group</td>
+                <td>Bengaluru, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-site-reliability-engineer-i-cme-india-technology-and-support-services-pvt-ltd-bengaluru-4-to-7-years-091026911666" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>2</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>Site Reliability Engineer</strong></td>
+                <td>PwC</td>
+                <td>Bengaluru, Hyderabad, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-site-reliability-engineer-pwc-hyderabad-bengaluru-6-to-10-years-081026015954" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>3</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>SRE (Site Reliability Engineer) at Bangalore</strong></td>
+                <td>Smart Ims</td>
+                <td>Bengaluru, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-sre-site-reliability-engineer-at-bangalore-smart-ims-bengaluru-3-to-6-years-150926025109" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>4</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>Site reliability Engineer SRE/Incident Manager-Bangalore location</strong></td>
+                <td>Infosys</td>
+                <td>Bengaluru, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-site-reliability-engineer-sre-incident-manager-bangalore-location-infosys-bengaluru-2-to-5-years-250926036383" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>5</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>Site Reliability Engineer - QLTY</strong></td>
+                <td>Infosys</td>
+                <td>Bengaluru, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-site-reliability-engineer-qlty-infosys-limited-bengaluru-5-to-10-years-051026930599" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>6</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>Site Reliability Engineer (SRE) - Unix/Linux</strong></td>
+                <td>Infosys</td>
+                <td>Bengaluru, Pune, Delhi / NCR, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-site-reliability-engineer-sre-unix-linux-infosys-pune-bengaluru-delhi-ncr-5-to-10-years-180926000040" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>7</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>Site Reliability Engineer</strong></td>
+                <td>Persistent</td>
+                <td>Bengaluru, Mumbai, Pune, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-site-reliability-engineer-persistent-mumbai-pune-bengaluru-5-to-9-years-240926022339" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>8</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>DevOps Engineer</strong></td>
+                <td>Accenture</td>
+                <td>Bengaluru, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-devops-engineer-accenture-solutions-pvt-ltd-bengaluru-3-to-8-years-091026929856" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>9</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>Devops Engineer</strong></td>
+                <td>Razorpay</td>
+                <td>Bengaluru, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-devops-engineer-razorpay-bengaluru-2-to-5-years-091026035625" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>10</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>Devops Engineer</strong></td>
+                <td>Tata Consultancy Services</td>
+                <td>Bengaluru, Hyderabad, Pune, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-devops-engineer-tata-consultancy-services-hyderabad-pune-bengaluru-7-to-12-years-081026018724" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>11</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>DevOps Engineer</strong></td>
+                <td>Comviva Technology</td>
+                <td>Bengaluru, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-devops-engineer-comviva-technologies-limited-bengaluru-0-to-5-years-081026506665" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>12</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>Devops Engineer</strong></td>
+                <td>EY</td>
+                <td>Bengaluru, Mumbai (All Areas), India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-devops-engineer-ey-bengaluru-mumbai-all-areas-4-to-6-years-071026019877" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>13</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>Devops Engineer</strong></td>
+                <td>Platly Infotech</td>
+                <td>Bengaluru, Hyderabad, Chennai, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-devops-engineer-platly-infotech-hyderabad-chennai-bengaluru-4-to-9-years-071026022029" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>14</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>Devops Engineer</strong></td>
+                <td>Synechron</td>
+                <td>Bengaluru, Chennai, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-devops-engineer-synechron-chennai-bengaluru-4-to-7-years-071026000242" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>15</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>Cloud Native Escalation Engineer</strong></td>
+                <td>Pure Storage</td>
+                <td>Bengaluru, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-cloud-native-escalation-engineer-pure-storage-bengaluru-10-to-15-years-091026505107" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>16</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>Cloud & AI Engineer</strong></td>
+                <td>IBM</td>
+                <td>Bengaluru, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-cloud-ai-engineer-ibm-india-pvt-limited-bengaluru-4-to-7-years-091026922890" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>17</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>GCP Cloud Engineer (PAN INDIA)</strong></td>
+                <td>Capgemini</td>
+                <td>Bengaluru, Pune, Delhi / NCR, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-gcp-cloud-engineer-pan-india-capgemini-pune-bengaluru-delhi-ncr-4-to-6-years-081026027159" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>18</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>Cloud Engineer - 3 To 8 years</strong></td>
+                <td>Integel Institute Of Technology Tamil Nadu</td>
+                <td>Bengaluru, Hyderabad, Chennai, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-cloud-engineer-3-to-8-years-integel-institute-of-technology-tamil-nadu-hyderabad-chennai-bengaluru-3-to-8-years-051026015772" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>19</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>AI Cloud Enablement Engineer</strong></td>
+                <td>Tata Consultancy Services</td>
+                <td>Bengaluru, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-ai-cloud-enablement-engineer-tata-consultancy-services-bengaluru-6-to-10-years-051026007296" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>20</td>
+                <td><span class="badge badge-naukri">naukri</span></td>
+                <td><strong>Cloud Engineer</strong></td>
+                <td>Tekskills</td>
+                <td>Bengaluru, Hyderabad, Chennai, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.naukri.com/job-listings-cloud-engineer-tekskills-hyderabad-chennai-bengaluru-7-to-10-years-051026004208" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>21</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Senior Site Reliability Engineer</strong></td>
+                <td>S. A. Solution</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=554082e5df8a8056" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>22</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Site Reliability Engineer</strong></td>
+                <td>TECSYS Inc.</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=4f93bbee62323c11" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>23</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Site Reliability Engineer (SRE)</strong></td>
+                <td>BALUSEN TECHNOLOGIES</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=28b43e074b0f80f3" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>24</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Staff Site Reliability Engineer</strong></td>
+                <td>Palo Alto Networks</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=321ff75da8bb258d" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>25</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Site Reliability Manager</strong></td>
+                <td>Google</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=c54ab6d5b7e2559a" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>26</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Site Reliability Engineer</strong></td>
+                <td>Google</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=62b624d09e55f7e6" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>27</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Site Reliability Engineer</strong></td>
+                <td>SymphonyAI</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=24718bb73bbed6f4" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>28</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Site Reliability Engineer III - India</strong></td>
+                <td>CME Group</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=545fd8bca9d9ca8e" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>29</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>DevOps Engineer</strong></td>
+                <td>Inode Technologies Private Ltd</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=784ca698d0c85476" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>30</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>DevOps Engineer</strong></td>
+                <td>Hewlett Packard Enterprise | HPE</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=dfac3fbee9f06731" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>31</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Devops Engineer</strong></td>
+                <td>Qilin Software Lab Private Limited</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=bcceefa925a0435f" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>32</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>DevOps Engineer - IND</strong></td>
+                <td>Fortanix</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=81d3bd5564187900" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>33</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Automation/DevOps Engineer</strong></td>
+                <td>Elfonze Technologies</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=4da83438544bb385" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>34</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>DevOps Engineer</strong></td>
+                <td>Toradex AG</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=4b368612dd4a8d1b" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>35</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>DevOps Engineer</strong></td>
+                <td>Increasingly</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=4f29adbf196c6e61" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>36</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Cloud Engineer – AWS</strong></td>
+                <td>Mantra Consultancy Services</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=e1aedbb4a99c2db1" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>37</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Cloud Engineer</strong></td>
+                <td>Magna International</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=d622bb6a1f2b78af" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>38</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Cloud Engineer, AVP</strong></td>
+                <td>Deutsche Bank</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=6db5938aada8cace" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>39</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Cloud AWS Engineer</strong></td>
+                <td>Wipro</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=09131e3899ce1cc5" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>40</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Cloud Engineer</strong></td>
+                <td>Antique Network Solutions Pvt.Ltd</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=405aa6accb969288" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>41</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Junior Cloud & DevOps Engineer</strong></td>
+                <td>mhtechin</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=5f68d2f9f9dc92fe" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>42</td>
+                <td><span class="badge badge-indeed">indeed</span></td>
+                <td><strong>Dev Ops Engineer - Cloud SRE Engineer</strong></td>
+                <td>Tredence</td>
+                <td>KA, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://in.indeed.com/viewjob?jk=dea13d3761b36d71" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>43</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Site Reliability Engineer - India</strong></td>
+                <td>JumpCloud</td>
+                <td>Bengaluru East, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4473121141" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>44</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Senior Site Reliability Engineer - India</strong></td>
+                <td>JumpCloud</td>
+                <td>Bengaluru East, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4473122072" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>45</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Staff / Lead Site Reliability Engineer</strong></td>
+                <td>BlinkRx</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4472338109" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>46</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Senior Staff Site Reliability Engineer</strong></td>
+                <td>NVIDIA</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4462330400" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>47</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Site Reliability Engineer 2</strong></td>
+                <td>slice</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4471440752" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>48</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Site Reliability Engineer 3</strong></td>
+                <td>eBay</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4430604888" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>49</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Senior Site Reliability Engineer</strong></td>
+                <td>BlinkRx</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4466552699" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>50</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Site Reliability Engineer II</strong></td>
+                <td>Backblaze</td>
+                <td>Bengaluru East, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4451614027" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>51</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Senior AWS DevOps & Platform Engineer (6-9 Years)</strong></td>
+                <td>Fractal</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4431860025" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>52</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Devops Engineer</strong></td>
+                <td>Infosys</td>
+                <td>Bengaluru East, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4474272697" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>53</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Lead I - DevOps Engineering</strong></td>
+                <td>UST</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4472911278" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>54</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>GCP Devops Senior Developer</strong></td>
+                <td>Infosys</td>
+                <td>Bengaluru East, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4471378837" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>55</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Devops- Terraform</strong></td>
+                <td>Wipro</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4469398354" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>56</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>DevOps engineer</strong></td>
+                <td>Finkraft</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4433459487" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>57</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Senior DevOps Engineer - Remote Work | REF#284057</strong></td>
+                <td>BairesDev</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4249413216" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>58</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Senior DevOps Engineer - Remote Work | REF#284071</strong></td>
+                <td>BairesDev</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4249234013" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>59</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Software Engineer - Cloud Infrastructure</strong></td>
+                <td>Point72</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4476317730" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>60</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Sr Platform Engineer (AWS Cloud Engineer)</strong></td>
+                <td>Synechron</td>
+                <td>Greater Bengaluru Area</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4474681364" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>61</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Cloud Engineer</strong></td>
+                <td>Leadrat Real Estate CRM - Dubai | India</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4473756241" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>62</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Platform Engineering Professional</strong></td>
+                <td>Takeda</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4470543325" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>63</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Cloud Engineer</strong></td>
+                <td>Point72</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4458789282" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>64</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Cloud Engineer</strong></td>
+                <td>AstroFarm by 42Gears</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4429434782" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>65</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Advanced / Senior Cloud Engineer for BearingPoint Products</strong></td>
+                <td>BearingPoint</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4396466745" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            <tr>
+                <td>66</td>
+                <td><span class="badge badge-linkedin">linkedin</span></td>
+                <td><strong>Cloud Engineer - Infrastructure</strong></td>
+                <td>Thoucentric</td>
+                <td>Bengaluru, Karnataka, India</td>
+                <td>2026-10-09</td>
+                <td><span class="status status-new">new</span></td>
+                <td><a href="https://www.linkedin.com/jobs/view/4272088128" target="_blank" class="btn-link">Apply →</a></td>
+            </tr>
+            
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const platData = [24, 22, 20];
+        const platLabels = ['linkedin', 'indeed', 'naukri'];
+        new Chart(document.getElementById('platChart'), {
+            type: 'doughnut',
+            data: {
+                labels: platLabels.length ? platLabels : ['None'],
+                datasets: [{
+                    data: platData.length ? platData : [1],
+                    backgroundColor: ['#0a66c2', '#003da5', '#ff6600', '#0caa41', '#64748b']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        const statData = [66];
+        const statLabels = ['new'];
+        new Chart(document.getElementById('statChart'), {
+            type: 'pie',
+            data: {
+                labels: statLabels.length ? statLabels : ['None'],
+                datasets: [{
+                    data: statData.length ? statData : [1],
+                    backgroundColor: ['#4f46e5', '#10b981', '#f59e0b', '#ef4444']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    </script>
+</body>
+</html>

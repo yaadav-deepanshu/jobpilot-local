@@ -1,0 +1,815 @@
+"""
+Smart Job Filter Engine
+Filters jobs by roles (with synonym matching), location, applicant count, keywords, and recency
+"""
+
+import logging
+import re
+from typing import List, Dict, Any, Optional
+from datetime import datetime, timezone, timedelta
+
+logger = logging.getLogger(__name__)
+
+class FilterEngine:
+    """Intelligent job filter matching target profile"""
+
+    # Primary Cloud Provider Keywords (User specified + Resume + Industry)
+    CLOUD_KEYWORDS = [
+        'cloud', 'azure', 'aws', 'gcp', 'google cloud', 'amazon web services'
+    ]
+
+    # Regex to match primary cloud keywords as whole words or phrases in titles and descriptions
+    CLOUD_REGEX = re.compile(
+        r'\b(cloud|azure|aws|gcp|google\s+cloud|amazon\s+web\s+services)\b',
+        re.IGNORECASE
+    )
+
+    # Smart regex patterns for technical skills ensuring zero false positives on short acronyms
+    # and allowing punctuation, hyphen, space, and alias variations
+    SMART_KEYWORD_REGEX_MAP = {
+        # 1. Primary Cloud Providers
+        'cloud': r'\bcloud(?:ops|sec|native)?\b',
+        'aws': r'\b(?:aws|amazon\s+web\s+services)\b',
+        'amazon web services': r'\b(?:amazon\s+web\s+services|aws)\b',
+        'azure': r'\b(?:microsoft\s+azure|azure)\b',
+        'microsoft azure': r'\b(?:microsoft\s+azure|azure)\b',
+        'gcp': r'\b(?:google\s+cloud(?:\s+platform)?|gcp)\b',
+        'google cloud': r'\b(?:google\s+cloud(?:\s+platform)?|gcp)\b',
+        'google cloud platform': r'\b(?:google\s+cloud(?:\s+platform)?|gcp)\b',
+        'multi-cloud': r'\bmulti[\s_\-]*cloud\b',
+        'hybrid cloud': r'\bhybrid[\s_\-]*cloud\b',
+
+        # 2. AWS Services (Resume & Cert Stack)
+        'ec2': r'\bec2\b',
+        's3': r'\bs3\b',
+        'lambda': r'\b(?:aws\s+)?lambda\b',
+        'iam': r'\biam\b',
+        'aws sso': r'\baws[\s_\-]*sso\b',
+        'vpc': r'\bvpc\b',
+        'route 53': r'\broute[\s_\-]*53\b',
+        'route53': r'\broute[\s_\-]*53\b',
+        'cloudwatch': r'\bcloud[\s_\-]*watch\b',
+        'cloudtrail': r'\bcloud[\s_\-]*trail\b',
+        'sqs': r'\bsqs\b',
+        'sns': r'\bsns\b',
+        'elasticache': r'\belasti[\s_\-]*cache\b',
+        'opensearch': r'\bopen[\s_\-]*search\b',
+        'ecs': r'\becs\b',
+        'ecr': r'\becr\b',
+        'eks': r'\b(?:eks|elastic\s+kubernetes\s+service)\b',
+        'codepipeline': r'\bcode[\s_\-]*pipeline\b',
+        'codebuild': r'\bcode[\s_\-]*build\b',
+        'codedeploy': r'\bcode[\s_\-]*deploy\b',
+        'waf': r'\bwaf\b',
+        'kms': r'\bkms\b',
+        'secrets manager': r'\bsecrets?[\s_\-]*manager\b',
+        'cloudformation': r'\bcloud[\s_\-]*formation\b',
+        'alb': r'\balb\b',
+        'nlb': r'\bnlb\b',
+        'elb': r'\belb\b',
+
+        # 3. Azure Services
+        'azure devops': r'\bazure[\s_\-]*devops\b',
+        'aks': r'\b(?:aks|azure\s+kubernetes(?:\s+service)?)\b',
+        'azure kubernetes service': r'\b(?:aks|azure\s+kubernetes(?:\s+service)?)\b',
+        'azure active directory': r'\b(?:azure\s+(?:active\s+directory|ad)|entra\s+id)\b',
+        'entra id': r'\b(?:azure\s+(?:active\s+directory|ad)|entra\s+id)\b',
+        'azure blob storage': r'\bazure[\s_\-]*(?:blob(?:\s+storage)?)\b',
+        'azure monitor': r'\bazure[\s_\-]*monitor\b',
+        'arm templates': r'\barm[\s_\-]*templates?\b',
+        'bicep': r'\bbicep\b',
+        'azure functions': r'\bazure[\s_\-]*functions?\b',
+        'azure virtual network': r'\b(?:azure\s+virtual\s+network|vnet)\b',
+        'azure key vault': r'\bazure[\s_\-]*key[\s_\-]*vault\b',
+        'application gateway': r'\bapplication[\s_\-]*gateway\b',
+        'azure resource manager': r'\bazure[\s_\-]*resource[\s_\-]*manager\b',
+        'azure container instances': r'\b(?:azure\s+container\s+instances?|aci)\b',
+
+        # 4. GCP Services
+        'gke': r'\b(?:gke|google\s+kubernetes(?:\s+engine)?)\b',
+        'google kubernetes engine': r'\b(?:gke|google\s+kubernetes(?:\s+engine)?)\b',
+        'cloud run': r'\bcloud[\s_\-]*run\b',
+        'cloud functions': r'\bcloud[\s_\-]*functions?\b',
+        'cloud storage': r'\bcloud[\s_\-]*storage\b',
+        'cloud build': r'\bcloud[\s_\-]*build\b',
+        'cloud compute': r'\bcloud[\s_\-]*compute\b',
+        'google vpc': r'\b(?:google\s+vpc|gcp\s+vpc)\b',
+        'cloud pub/sub': r'\bcloud[\s_\-]*(?:pub[\s/_\-]*sub|pubsub)\b',
+        'cloud monitoring': r'\bcloud[\s_\-]*monitoring\b',
+        'cloud logging': r'\bcloud[\s_\-]*logging\b',
+        'google cloud armor': r'\b(?:google\s+)?cloud[\s_\-]*armor\b',
+
+        # 5. IaC & Config Management
+        'terraform': r'\bterraform\b',
+        'terragrunt': r'\bterragrunt\b',
+        'ansible': r'\bansible(?:\s+playbooks?)?\b',
+        'ansible playbook': r'\bansible(?:\s+playbooks?)?\b',
+        'puppet': r'\bpuppet\b',
+        'chef': r'\bchef\b',
+        'pulumi': r'\bpulumi\b',
+        'iac': r'\b(?:infrastructure\s+as\s+code|iac)\b',
+        'infrastructure as code': r'\b(?:infrastructure\s+as\s+code|iac)\b',
+        'packer': r'\bpacker\b',
+        'vagrant': r'\bvagrant\b',
+        'configuration management': r'\bconfiguration[\s_\-]*management\b',
+
+        # 6. Containers, Orchestration & Service Mesh
+        'docker': r'\bdocker\b',
+        'docker compose': r'\bdocker[\s_\-]*compose\b',
+        'dockerfile': r'\bdockerfile\b',
+        'kubernetes': r'\b(?:kubernetes|k8s)\b',
+        'k8s': r'\b(?:kubernetes|k8s)\b',
+        'helm': r'\bhelm(?:\s+charts?)?\b',
+        'helm charts': r'\bhelm(?:\s+charts?)?\b',
+        'openshift': r'\bopen[\s_\-]*shift\b',
+        'containerd': r'\bcontainerd\b',
+        'podman': r'\bpodman\b',
+        'istio': r'\bistio\b',
+        'linkerd': r'\blinkerd\b',
+        'ingress': r'\bingress\b',
+        'cni': r'\bcni\b',
+        'containerization': r'\bcontainer(?:ization|ised|ized)?\b',
+
+        # 7. CI/CD & GitOps
+        'ci/cd': r'\bci[\s/_\-]*cd\b',
+        'cicd': r'\bci[\s/_\-]*cd\b',
+        'continuous integration': r'\bcontinuous\s+integration\b',
+        'continuous deployment': r'\bcontinuous\s+deployment\b',
+        'continuous delivery': r'\bcontinuous\s+delivery\b',
+        'gitops': r'\bgitops\b',
+        'jenkins': r'\bjenkins\b',
+        'github actions': r'\bgithub[\s_\-]*actions\b',
+        'gitlab': r'\bgitlab\b',
+        'gitlab ci': r'\bgitlab[\s_\-]*(?:ci)?\b',
+        'argocd': r'\bargo[\s_\-]*cd\b',
+        'flux': r'\bflux(?:cd)?\b',
+        'fluxcd': r'\bflux(?:cd)?\b',
+        'bitbucket pipelines': r'\bbitbucket[\s_\-]*pipelines?\b',
+        'circleci': r'\bcircle[\s_\-]*ci\b',
+        'build automation': r'\bbuild[\s_\-]*automation\b',
+
+        # 8. Scripting & Linux
+        'linux': r'\blinux\b',
+        'ubuntu': r'\bubuntu\b',
+        'redhat': r'\bred[\s_\-]*hat\b',
+        'centos': r'\bcentos\b',
+        'bash': r'\bbash\b',
+        'shell': r'\bshell(?:\s+scripting)?\b',
+        'shell scripting': r'\bshell(?:\s+scripting)?\b',
+        'python': r'\bpython(?:3)?\b',
+        'golang': r'\b(?:golang|go)\b',
+        'go': r'\b(?:golang|go)\b',
+        'git': r'\bgit\b',
+        'sql': r'\bsql\b',
+        'powershell': r'\bpower[\s_\-]*shell\b',
+        'yaml': r'\byaml\b',
+        'json': r'\bjson\b',
+
+        # 9. Observability & Monitoring
+        'prometheus': r'\bprometheus\b',
+        'grafana': r'\bgrafana\b',
+        'datadog': r'\bdatadog\b',
+        'elk': r'\belk(?:\s+stack)?\b',
+        'elk stack': r'\belk(?:\s+stack)?\b',
+        'elasticsearch': r'\belastic[\s_\-]*search\b',
+        'logstash': r'\blogstash\b',
+        'kibana': r'\bkibana\b',
+        'splunk': r'\bsplunk\b',
+        'new relic': r'\bnew[\s_\-]*relic\b',
+        'dynatrace': r'\bdynatrace\b',
+        'opentelemetry': r'\bopen[\s_\-]*telemetry\b',
+        'distributed tracing': r'\bdistributed[\s_\-]*tracing\b',
+        'pagerduty': r'\bpager[\s_\-]*duty\b',
+        'incident management': r'\bincident[\s_\-]*management\b',
+
+        # 10. Cloud Security & Networking
+        'devsecops': r'\bdevsecops\b',
+        'zero trust': r'\bzero[\s_\-]*trust\b',
+        'cloud security': r'\bcloud[\s_\-]*security\b',
+        'network security': r'\bnetwork[\s_\-]*security\b',
+        'security groups': r'\bsecurity[\s_\-]*groups?\b',
+        'network acls': r'\bnetwork[\s_\-]*acls?\b',
+        'nacl': r'\bnacl\b',
+        'subnets': r'\bsubnets?\b',
+        'load balancing': r'\bload[\s_\-]*(?:balancing|balancer|balancers)\b',
+        'load balancer': r'\bload[\s_\-]*(?:balancing|balancer|balancers)\b',
+        'vpn': r'\bvpn\b',
+        'dns': r'\bdns\b',
+        'tls': r'\btls\b',
+        'ssl': r'\bssl\b',
+        'sso': r'\b(?:single\s+sign[\s_\-]*on|sso)\b',
+        'single sign-on': r'\b(?:single\s+sign[\s_\-]*on|sso)\b',
+
+        # 11. SRE & Platform Architecture
+        'sre': r'\b(?:site\s+reliability\s+engineer(?:ing)?|sre)\b',
+        'site reliability': r'\bsite\s+reliability(?:\s+engineering)?\b',
+        'site reliability engineering': r'\bsite\s+reliability(?:\s+engineering)?\b',
+        'sli': r'\bsli(?:s)?\b',
+        'slo': r'\bslo(?:s)?\b',
+        'sla': r'\bsla(?:s)?\b',
+        'error budgets': r'\berror[\s_\-]*budgets?\b',
+        'platform engineering': r'\bplatform[\s_\-]*engineering\b',
+        'internal developer platform': r'\b(?:internal\s+developer\s+platform|idp)\b',
+        'idp': r'\b(?:internal\s+developer\s+platform|idp)\b',
+        'microservices': r'\bmicro[\s_\-]*services?\b',
+        'distributed systems': r'\bdistributed[\s_\-]*systems?\b',
+        'high availability': r'\bhigh[\s_\-]*availability\b',
+        'disaster recovery': r'\bdisaster[\s_\-]*recovery\b',
+        'chaos engineering': r'\bchaos[\s_\-]*engineering\b',
+        'cloudops': r'\bcloudops\b',
+        'sysops': r'\bsysops\b',
+    }
+
+    # Common technical synonyms and role abbreviations
+    ROLE_SYNONYMS = {
+        'sre': ['site reliability engineer', 'site reliability', 'reliability engineer', 'sre', 'production engineer', 'systems reliability engineer'],
+        'site reliability engineer': ['sre', 'site reliability', 'reliability engineer', 'production engineer', 'systems reliability engineer'],
+        'devops': ['devops engineer', 'devops', 'cloud devops', 'devsecops', 'gitops', 'build and release', 'release engineer', 'automation engineer'],
+        'devops engineer': ['devops', 'cloud devops', 'devsecops', 'site reliability engineer', 'platform engineer', 'devops specialist', 'gitops engineer', 'build and release engineer', 'automation engineer'],
+        'cloud engineer': ['cloud', 'aws engineer', 'azure engineer', 'gcp engineer', 'google cloud engineer', 'cloud infrastructure', 'cloud specialist', 'cloud support engineer', 'cloud operations', 'cloud platform', 'cloud solutions', 'cloud developer', 'cloud consultant', 'associate cloud engineer', 'cloudops'],
+        'aws cloud engineer': ['aws engineer', 'aws cloud', 'aws devops', 'aws sysops', 'aws specialist', 'aws solutions', 'aws cloud specialist', 'aws associate'],
+        'azure cloud engineer': ['azure engineer', 'azure cloud', 'azure devops', 'azure administrator', 'azure specialist', 'azure cloud specialist'],
+        'gcp cloud engineer': ['gcp engineer', 'google cloud engineer', 'gcp devops', 'gcp specialist', 'google cloud platform engineer', 'google cloud specialist'],
+        'google cloud engineer': ['google cloud platform engineer', 'gcp engineer', 'google cloud specialist', 'gcp cloud engineer'],
+        'platform engineer': ['platform', 'infrastructure engineer', 'systems engineer', 'devops', 'platform software engineer', 'internal developer platform', 'platform developer'],
+        'infrastructure engineer': ['infrastructure', 'cloud infrastructure', 'iac', 'systems engineer', 'infrastructure specialist', 'infra engineer'],
+        'system engineer': ['systems engineer', 'system administrator', 'sysadmin', 'system engineer 1', 'systems engineer 1', 'systems automation'],
+        'cloud support engineer': ['cloud support', 'technical support engineer cloud', 'support engineer cloud', 'cloud technical support', 'cloud support associate'],
+        'devsecops engineer': ['devsecops', 'cloud security engineer', 'security automation engineer', 'cloud security specialist'],
+        'cloud operations engineer': ['cloud operations', 'cloudops', 'cloud operations specialist', 'cloud support'],
+        'cloud': ['cloud engineer', 'cloud specialist', 'cloud support', 'cloud operations', 'cloud developer', 'cloud administrator'],
+        'aws': ['aws engineer', 'aws cloud engineer', 'aws devops', 'aws sysops', 'aws specialist'],
+        'azure': ['azure engineer', 'azure cloud engineer', 'azure devops', 'azure administrator', 'azure specialist'],
+        'gcp': ['gcp engineer', 'google cloud engineer', 'gcp devops', 'gcp specialist'],
+        'google cloud': ['google cloud engineer', 'google cloud platform engineer', 'gcp engineer'],
+    }
+
+    # Comprehensive technical skills extracted from candidate resume and industry standards (150+ keywords)
+    CORE_SKILLS = [
+        # 1. Primary Cloud Providers & Multi-Cloud
+        'cloud', 'aws', 'amazon web services', 'azure', 'microsoft azure',
+        'gcp', 'google cloud', 'google cloud platform', 'multi-cloud', 'hybrid cloud',
+
+        # 2. AWS Cloud Services (Resume & AWS Certified Developer Stack)
+        'ec2', 's3', 'lambda', 'iam', 'aws sso', 'vpc', 'route 53', 'route53',
+        'cloudwatch', 'cloudtrail', 'sqs', 'sns', 'elasticache', 'opensearch',
+        'ecs', 'ecr', 'eks', 'codepipeline', 'codebuild', 'codedeploy',
+        'waf', 'kms', 'secrets manager', 'cloudformation', 'alb', 'nlb', 'elb',
+
+        # 3. Azure Cloud Services & Ecosystem
+        'azure devops', 'aks', 'azure kubernetes service', 'azure active directory',
+        'entra id', 'azure blob storage', 'azure monitor', 'arm templates', 'bicep',
+        'azure functions', 'azure virtual network', 'azure key vault',
+        'application gateway', 'azure resource manager', 'azure container instances',
+
+        # 4. GCP Cloud Services & Ecosystem
+        'gke', 'google kubernetes engine', 'cloud run', 'cloud functions',
+        'cloud storage', 'cloud build', 'cloud compute', 'google vpc',
+        'cloud pub/sub', 'cloud monitoring', 'cloud logging', 'google cloud armor',
+
+        # 5. Infrastructure as Code (IaC) & Configuration Management
+        'terraform', 'terragrunt', 'ansible', 'ansible playbook', 'puppet', 'chef',
+        'pulumi', 'iac', 'infrastructure as code', 'packer', 'vagrant', 'configuration management',
+
+        # 6. Containers, Orchestration & Service Mesh
+        'docker', 'docker compose', 'dockerfile', 'kubernetes', 'k8s', 'helm',
+        'helm charts', 'openshift', 'containerd', 'podman', 'istio', 'linkerd',
+        'ingress', 'cni', 'containerization',
+
+        # 7. CI/CD, Build Automation & GitOps
+        'ci/cd', 'cicd', 'continuous integration', 'continuous deployment',
+        'continuous delivery', 'gitops', 'jenkins', 'github actions', 'gitlab',
+        'gitlab ci', 'argocd', 'flux', 'fluxcd', 'bitbucket pipelines',
+        'circleci', 'build automation',
+
+        # 8. Scripting, Programming & Operating Systems
+        'linux', 'ubuntu', 'redhat', 'centos', 'bash', 'shell', 'shell scripting',
+        'python', 'golang', 'go', 'git', 'sql', 'powershell', 'yaml', 'json',
+
+        # 9. Observability, Monitoring, Logging & Telemetry
+        'prometheus', 'grafana', 'datadog', 'elk', 'elk stack', 'elasticsearch',
+        'logstash', 'kibana', 'splunk', 'new relic', 'dynatrace', 'opentelemetry',
+        'distributed tracing', 'pagerduty', 'incident management',
+
+        # 10. Cloud Security, Networking & Access Management
+        'devsecops', 'zero trust', 'cloud security', 'network security',
+        'security groups', 'network acls', 'nacl', 'subnets', 'load balancing',
+        'load balancer', 'vpn', 'dns', 'tls', 'ssl', 'sso', 'single sign-on',
+
+        # 11. Site Reliability, Architecture & Platform Engineering
+        'sre', 'site reliability', 'site reliability engineering', 'sli', 'slo', 'sla',
+        'error budgets', 'platform engineering', 'internal developer platform', 'idp',
+        'microservices', 'distributed systems', 'high availability', 'disaster recovery',
+        'chaos engineering', 'cloudops', 'sysops'
+    ]
+
+    # Explicitly non-technical keywords to prevent non-IT roles with 'cloud' from matching
+    NON_TECH_ROLE_KEYWORDS = {
+        'kitchen', 'cook', 'chef', 'sales', 'marketing', 'recruiter', 'recruiting',
+        'talent acquisition', 'account executive', 'business development', 'bdr',
+        'sdr', 'driver', 'realtor', 'real estate', 'nurse', 'doctor', 'teacher',
+        'content writer', 'copywriter'
+    }
+
+    def __init__(self, config: dict):
+        self.config = config
+        self.search_config = config.get('search', {})
+        self.target_roles = [r.lower() for r in self.search_config.get('roles', [])]
+        self.target_location = self.search_config.get('location', '').lower()
+        self.max_applicants = self.search_config.get('max_applicants', 100)
+        self.exclude_keywords = [k.lower() for k in self.search_config.get('exclude_keywords', [])]
+
+        # Dynamic skills pool combining core technical skills and configured keywords
+        configured_kw = [str(k).lower().strip() for k in self.search_config.get('keywords', []) if str(k).strip()]
+        self.skills_pool = list(set([s.lower() for s in self.CORE_SKILLS] + configured_kw))
+
+        # Dynamic compiled regex map for each skill in skills_pool
+        self.skills_regex_map: Dict[str, re.Pattern] = {
+            kw: self._compile_keyword_regex(kw) for kw in self.skills_pool
+        }
+
+    @classmethod
+    def _compile_keyword_regex(cls, kw: str) -> re.Pattern:
+        """
+        Compiles a word-boundary regex for a technical skill.
+        Uses specialized regex from SMART_KEYWORD_REGEX_MAP if available,
+        otherwise safely builds a word-boundary pattern with delimiter tolerance.
+        """
+        kw_clean = str(kw).lower().strip()
+        if kw_clean in cls.SMART_KEYWORD_REGEX_MAP:
+            pattern = cls.SMART_KEYWORD_REGEX_MAP[kw_clean]
+        else:
+            parts = re.split(r'[\s/_\-]+', kw_clean)
+            if len(parts) > 1:
+                escaped = [re.escape(p) for p in parts if p]
+                pattern = r'\b' + r'[\s/_\-]+'.join(escaped) + r'\b'
+            else:
+                pattern = r'\b' + re.escape(kw_clean) + r'\b'
+        return re.compile(pattern, re.IGNORECASE)
+
+    def get_matching_skills(self, text: str) -> set:
+        """
+        Returns the set of distinct technical skills from skills_pool
+        that match within the given text using word-boundary regex.
+        Guarantees zero false positives for short acronyms like 'go', 'git', 'slo', 'iam'.
+        """
+        if not text:
+            return set()
+        matched = set()
+        for skill_name, reg in self.skills_regex_map.items():
+            if reg.search(text):
+                matched.add(skill_name)
+        return matched
+
+    def count_matching_skills(self, text: str) -> int:
+        """Returns the count of distinct technical skills matched via word-boundary regex."""
+        return len(self.get_matching_skills(text))
+
+    def filter_jobs(self, jobs: List[Dict[str, Any]], today_only: bool = False, max_hours: Optional[int] = None, location_mode: str = 'both') -> List[Dict[str, Any]]:
+        """Run jobs through all filters and return matching ones in platform priority order"""
+        initial_count = len(jobs)
+        logger.info(f"🔎 Filtering {initial_count} jobs (today_only={today_only}, max_hours={max_hours}, location_mode={location_mode})...")
+
+        filtered = jobs
+
+        # 1. Recency filter
+        if max_hours is not None:
+            filtered = self._filter_by_recency(filtered, max_hours=max_hours)
+        elif today_only:
+            filtered = self._filter_by_recency(filtered, max_hours=24)
+        else:
+            filtered = self._filter_by_recency(filtered, max_hours=24 * 30)
+
+        # 2. Exclude negative keywords (internship, unpaid, etc.)
+        filtered = self._filter_by_excluded_keywords(filtered)
+
+        # 3. Experience filter (strictly exclude jobs requiring > 4 years, e.g. 5+, 8+ years)
+        filtered = self._filter_by_experience(filtered)
+
+        # 4. Role and skill matching (flexible)
+        filtered = self._filter_by_role_and_skills(filtered)
+
+        # 5. Location match
+        filtered = self._filter_by_location(filtered, location_mode=location_mode)
+
+        # 6. Applicant threshold (max 100 applicants)
+        filtered = self._filter_by_applicants(filtered)
+
+        # 7. Final deduplication
+        filtered = self._deduplicate(filtered)
+
+        # 8. Sort by platform priority: LinkedIn -> Indeed -> Naukri -> Rest
+        filtered = self._sort_by_platform_priority(filtered)
+
+        logger.info(f"✓ Filter result: {initial_count} → {len(filtered)} jobs matched")
+        return filtered
+
+    def _filter_by_recency(self, jobs: List[Dict], max_hours: int = 24) -> List[Dict]:
+        """Keep jobs posted within max_hours"""
+        now = datetime.now(timezone.utc)
+        cutoff = now - timedelta(hours=max_hours)
+        passed = []
+
+        for j in jobs:
+            posted = j.get('date_posted')
+            if not posted:
+                passed.append(j)
+                continue
+
+            try:
+                if isinstance(posted, str):
+                    posted = datetime.fromisoformat(posted.replace('Z', '+00:00'))
+                if hasattr(posted, 'tzinfo') and posted.tzinfo is None:
+                    posted = posted.replace(tzinfo=timezone.utc)
+                if posted >= cutoff:
+                    passed.append(j)
+            except Exception:
+                # If date can't be parsed, keep it conservatively
+                passed.append(j)
+
+        return passed
+
+    def _filter_by_excluded_keywords(self, jobs: List[Dict]) -> List[Dict]:
+        """Exclude jobs containing forbidden keywords like internship, unpaid"""
+        if not self.exclude_keywords:
+            return jobs
+
+        passed = []
+        for j in jobs:
+            title = j.get('title', '').lower()
+            desc = j.get('description', '').lower()[:300]
+            job_type = j.get('job_type', '').lower()
+            text = f"{title} {job_type} {desc}"
+
+            if not any(k in text for k in self.exclude_keywords):
+                passed.append(j)
+
+        return passed
+
+    def _matches_role_title(self, title: str, all_terms: set) -> bool:
+        """
+        Intelligently matches role titles against candidate profile.
+        Supports:
+        - Wildcard/prefix patterns: aws*, cloud*, azure*, gcp*, devops*, sre*, platform*, infra*, sys*
+        - Any writing style: ALL UPPERCASE, all lowercase, Capitalize, Title Case, mixed/inverted case
+        - Concatenated / CamelCase titles: AWSEngineer, CloudOps, AzureDevOps, DevSecOps, SREngineer, CloudNative
+        - Delimiters and symbols: /, -, _, +, &, |, *, [ ], ( )
+        - Non-contiguous titles: 'Engineer - DevOps & Cloud', 'Platform Software Engineer'
+        - Guards strictly against non-technical roles (kitchen, sales, marketing, recruiting)
+        """
+        if not title:
+            return False
+
+        title_raw = title.strip()
+        title_lower = title_raw.lower()
+
+        # Reject explicitly non-technical titles even if they mention 'cloud' or 'aws'
+        if any(nt in title_lower for nt in self.NON_TECH_ROLE_KEYWORDS):
+            return False
+
+        # Split CamelCase / concatenated words (e.g. "AWSEngineer" -> "AWS Engineer", "CloudOps" -> "Cloud Ops")
+        split_title = re.sub(r'([a-z])([A-Z])', r'\1 \2', title_raw)
+        split_title = re.sub(r'([A-Z]+)([A-Z][a-z])', r'\1 \2', split_title)
+        split_lower = split_title.lower()
+
+        # 1. Exact or contiguous phrase match against target roles and synonyms
+        if any(term in title_lower for term in all_terms) or any(term in split_lower for term in all_terms):
+            return True
+
+        # 2. Tokenized domain & component matching for titles with non-contiguous words or punctuation
+        clean_tokens = set(re.findall(r'[a-z0-9]+', title_lower)) | set(re.findall(r'[a-z0-9]+', split_lower))
+
+        # Core target domain tokens and prefixes (aws*, cloud*, azure*, gcp*, devops*, sre*, etc.)
+        has_aws = any(t.startswith('aws') for t in clean_tokens) or 'aws' in clean_tokens
+        has_cloud = any(t.startswith('cloud') for t in clean_tokens) or bool(self.CLOUD_REGEX.search(title_lower)) or bool(self.CLOUD_REGEX.search(split_lower))
+        has_azure = any(t.startswith('azure') for t in clean_tokens) or 'azure' in clean_tokens
+        has_gcp = any(t.startswith('gcp') for t in clean_tokens) or 'gcp' in clean_tokens or ('google' in clean_tokens and 'cloud' in clean_tokens)
+        has_devops = any(t.startswith('devops') for t in clean_tokens) or any(t.startswith('devsecops') for t in clean_tokens) or 'devops' in clean_tokens or 'devsecops' in clean_tokens or 'gitops' in clean_tokens
+        has_sre = any(t.startswith('sre') for t in clean_tokens) or 'sre' in clean_tokens or ('site' in clean_tokens and 'reliability' in clean_tokens)
+        has_platform = any(t.startswith('platform') for t in clean_tokens) or 'platform' in clean_tokens
+        has_infra = any(t.startswith('infra') for t in clean_tokens) or 'infrastructure' in clean_tokens or 'infra' in clean_tokens
+        has_sys = any(t.startswith('sys') for t in clean_tokens) or 'systems' in clean_tokens or 'system' in clean_tokens or 'sysadmin' in clean_tokens
+
+        # Direct domain matches: any DevOps or SRE role is within target profile
+        if has_devops or has_sre:
+            return True
+
+        # Technical/engineering role qualifiers
+        role_qualifiers = {
+            'engineer', 'engineering', 'specialist', 'support', 'developer',
+            'associate', 'analyst', 'operations', 'administrator', 'admin',
+            'consultant', 'practitioner', 'technician', 'sysops', 'ops',
+            'software', 'automation', 'tech', 'technical', 'architect'
+        }
+
+        # AWS keyword / prefix + qualifier (e.g. "AWSEngineer", "AWS Developer", "AWS Specialist", "AWS Support", "AWSOps", "AWS Infrastructure")
+        if has_aws and (clean_tokens & role_qualifiers or has_cloud or has_infra or has_platform or has_sys):
+            return True
+
+        # Cloud keyword / prefix + qualifier (e.g. "Cloud Support Engineer", "AWS Specialist", "Azure Administrator", "GCP Developer", "CloudOps")
+        if has_cloud and (clean_tokens & role_qualifiers or has_infra or has_platform or has_sys):
+            return True
+
+        # Azure keyword / prefix + qualifier (e.g. "Azure DevOps", "Azure Specialist", "Azure Administrator", "Azure Developer")
+        if has_azure and (clean_tokens & role_qualifiers or has_infra or has_platform or has_sys):
+            return True
+
+        # GCP keyword / prefix + qualifier (e.g. "GCP Developer", "Google Cloud Associate")
+        if has_gcp and (clean_tokens & role_qualifiers or has_infra or has_platform or has_sys):
+            return True
+
+        # Platform + qualifier (e.g. "Platform Software Engineer", "Platform Systems", "Platform Developer")
+        if has_platform and (clean_tokens & {'engineer', 'engineering', 'developer', 'specialist', 'software', 'systems', 'operations', 'automation', 'ops'}):
+            return True
+
+        # Infrastructure + qualifier (e.g. "Infrastructure Engineer", "Infrastructure Specialist")
+        if has_infra and (clean_tokens & role_qualifiers):
+            return True
+
+        # Systems + qualifier (e.g. "Systems Engineer", "System Engineer", "System Engineer 1")
+        if has_sys and (clean_tokens & {'engineer', 'engineering', 'administrator', 'admin', 'specialist', '1', 'i', 'ii'}):
+            return True
+
+        return False
+
+    def _filter_by_role_and_skills(self, jobs: List[Dict]) -> List[Dict]:
+        """
+        Match if:
+        1. Job title matches any target role, synonym, domain token combination, or prefix/wildcard (AWS, Azure, GCP, Cloud, DevOps, SRE, etc.), OR
+        2. Job title contains any cloud/AWS keyword and has tech context or 1+ technical skills, OR
+        3. Job description contains cloud keywords AND 2+ candidate technical skills from resume (matched via word-boundary regex), OR
+        4. Job description contains 3+ relevant DevOps/Cloud skills
+        """
+        if not self.target_roles:
+            return jobs
+
+        # Build expanded terms
+        all_terms = set(self.target_roles)
+        for r in self.target_roles:
+            for syn in self.ROLE_SYNONYMS.get(r, []):
+                all_terms.add(syn.lower())
+
+        passed = []
+        for j in jobs:
+            title = j.get('title', '')
+            desc = j.get('description', '').lower()
+            title_lower = title.lower()
+
+            # Guard against explicitly non-technical titles
+            if any(nt in title_lower for nt in self.NON_TECH_ROLE_KEYWORDS):
+                continue
+
+            # 1. Flexible role title match (exact phrase, synonym, component, wildcard, or cloud regex)
+            if self._matches_role_title(title, all_terms):
+                passed.append(j)
+                continue
+
+            # 2. Cloud or AWS keyword in title + non-blacklisted technical context
+            # e.g., "Cloud Solutions Consultant", "AWS Technical Specialist", "Azure Systems Associate"
+            title_tokens = set(re.findall(r'[a-z0-9]+', title_lower))
+            has_cloud_title = bool(self.CLOUD_REGEX.search(title_lower)) or any(t.startswith('aws') for t in title_tokens)
+            if has_cloud_title:
+                has_tech_word = any(w in title_lower for w in [
+                    'engineer', 'developer', 'specialist', 'support', 'operations', 'admin',
+                    'analyst', 'associate', 'consultant', 'practitioner', 'technician', 'tech', 'ops'
+                ])
+                skill_count = self.count_matching_skills(desc)
+                if has_tech_word or skill_count >= 1:
+                    passed.append(j)
+                    continue
+
+            # 3. Technical role title + Cloud keyword in description + resume technical skills
+            # e.g. Title: "Software Engineer", "Systems Engineer", "Technology Analyst"
+            # Description has AWS/Azure/GCP/Cloud + Terraform, Docker, Kubernetes, etc.
+            is_technical_title = any(w in title_lower for w in [
+                'engineer', 'developer', 'specialist', 'technician', 'analyst',
+                'associate', 'administrator', 'consultant', 'support', 'operations'
+            ])
+            if is_technical_title:
+                has_cloud_desc = bool(self.CLOUD_REGEX.search(desc))
+                skill_count = self.count_matching_skills(desc)
+                if has_cloud_desc and skill_count >= 2:
+                    passed.append(j)
+                    continue
+                elif skill_count >= 3:
+                    passed.append(j)
+                    continue
+
+        return passed
+
+    def _filter_by_location(self, jobs: List[Dict], location_mode: str = 'both') -> List[Dict]:
+        """Match preferred location, supporting segregation modes: 'remote', 'bengaluru', 'both'"""
+        mode = (location_mode or 'both').lower().strip()
+
+        if mode == 'remote':
+            passed = []
+            for j in jobs:
+                loc = (j.get('location') or '').lower()
+                title = (j.get('title') or '').lower()
+                desc = (j.get('description') or '').lower()
+                job_type = (j.get('job_type') or '').lower()
+                text = f"{loc} {title} {desc} {job_type}"
+                if any(w in text for w in ['remote', 'work from home', 'wfh']):
+                    passed.append(j)
+            return passed
+
+        if mode == 'bengaluru':
+            passed = []
+            for j in jobs:
+                loc = (j.get('location') or '').lower()
+                if 'bengaluru' in loc or 'bangalore' in loc:
+                    passed.append(j)
+            return passed
+
+        if not self.target_location:
+            return jobs
+
+        allow_remote = self.search_config.get('remote', True)
+        allow_hybrid = self.search_config.get('hybrid', True)
+        passed = []
+
+        for j in jobs:
+            loc = j.get('location', '').lower()
+
+            # Location match (e.g. Bengaluru, Bangalore, India)
+            if self.target_location in loc:
+                passed.append(j)
+            elif 'bangalore' in loc and 'bengaluru' in self.target_location:
+                passed.append(j)
+            elif 'bengaluru' in loc and 'bangalore' in self.target_location:
+                passed.append(j)
+            elif 'india' in loc or 'all' in loc:
+                passed.append(j)
+            elif allow_remote and 'remote' in loc:
+                passed.append(j)
+            elif allow_hybrid and 'hybrid' in loc:
+                passed.append(j)
+            elif not loc or loc == 'not specified':
+                passed.append(j)
+
+        return passed
+
+    def _filter_by_experience(self, jobs: List[Dict]) -> List[Dict]:
+        """
+        Exclude jobs requiring more experience than user's target profile (target: 0-4 years).
+        Matches patterns like '8+ years', 'minimum 8 years', '5-8 years', etc.
+        Also excludes executive/director/principal/architect/lead/manager/senior titles.
+        Safely ignores company history longevity (e.g. 'operating for 10+ years') and
+        qualifies mid-level ranges where candidate's 3 years experience fits (e.g. 2-5y, 3-5y).
+        """
+        max_exp = self.search_config.get('max_experience_years', 4)
+        senior_titles = ['principal', 'director', 'vp', 'vice president', 'staff', 'head of', 'architect', 'manager', 'lead']
+        if max_exp <= 4:
+            senior_titles.extend(['senior', 'sr.', 'sr ', 'sr/', 'lead ', 'mgr'])
+
+        passed = []
+        for j in jobs:
+            title = j.get('title', '').lower()
+            desc = j.get('description', '').lower()
+
+            # Reject executive, senior, lead, architect, or manager titles
+            if any(st in title for st in senior_titles):
+                continue
+
+            # Strip company history / operational longevity phrases to avoid false-positive senior rejection
+            # e.g. "operating for 10+ years", "founded 10+ years ago", "serving clients for 8+ years", "10+ years of company track record"
+            clean_desc = desc
+            clean_desc = re.sub(r'(?:founded|established|operating|operating\s+for|in\s+business\s+for|serving\s+(?:clients|customers|enterprises)\s+for|track\s+record\s+of|history\s+of|over\s+the\s+past)\s+\d+\+?\s*(?:years?|yrs?)', ' ', clean_desc)
+            clean_desc = re.sub(r'(?:over|more\s+than|with|for)\s+\d+\+?\s*(?:years?|yrs?)\s+(?:of\s+)?(?:[a-z]+\s+)?(?:industry|market|business|domain|company|proven|corporate|track\s+record|leadership|innovation|excellence|presence|existence|heritage|legacy)', ' ', clean_desc)
+            clean_desc = re.sub(r'(?:company|organization|firm|agency|we\s+have|has|boasts?|brings?)\s+(?:over\s+)?\d+\+?\s*(?:years?|yrs?)\s+(?:of\s+)?(?:[a-z]+\s+)?(?:experience|history|expertise|excellence|presence)', ' ', clean_desc)
+            clean_desc = re.sub(r'\d+\+?\s*(?:years?|yrs?)\s+(?:of\s+)?(?:experience|expertise|presence)\s+in\s+the\s+(?:market|industry|domain|business|field|space|sector)', ' ', clean_desc)
+
+            too_senior = False
+
+            # Check 1: Range patterns, e.g. "5-8 years of experience", "6 to 9 yrs"
+            for m in re.finditer(r'(\d+)\s*(?:-|to)\s*(\d+)\s*(?:years?|yrs?)(?:\s+of)?\s+(?:experience|exp)?', clean_desc):
+                try:
+                    min_y = int(m.group(1))
+                    max_y = int(m.group(2))
+                    # If minimum exceeds candidate max_exp (e.g. 5-8y, 6-9y, 7-10y) -> reject
+                    if min_y > max_exp:
+                        too_senior = True
+                        break
+                    # If upper bound is executive/staff level (e.g. 4-10y, 4-8y) -> reject
+                    if min_y >= 4 and max_y >= 8:
+                        too_senior = True
+                        break
+                except (ValueError, TypeError):
+                    pass
+
+            if too_senior:
+                continue
+
+            # Check 2: Minimum requirements exceeding max_exp, e.g. "minimum 5 years", "at least 6 years", "min 8 yrs"
+            min_matches = re.findall(r'(?:minimum|at\s+least|min\.?|requires?|requiring|must\s+have)\s+(\d+)\s*(?:\+|plus)?\s*(?:years?|yrs?)', clean_desc)
+            for m in min_matches:
+                try:
+                    if int(m) > max_exp:
+                        too_senior = True
+                        break
+                except (ValueError, TypeError):
+                    pass
+
+            if too_senior:
+                continue
+
+            # Check 3: Explicit single requirements exceeding max_exp, e.g. "8+ years of experience", "5+ years of exp"
+            # Negative lookbehinds ensure we don't accidentally match the upper bound of a valid range like "2 to 5 years" or "3-5 years"
+            single_matches = re.findall(r'(?<!\d\s)(?<!\d-)(?<!to\s)\b([5-9]|\d{2,})\s*(?:\+|plus)?\s*(?:years?|yrs?)(?:\s+of)?\s+(?:experience|exp)\b', clean_desc)
+            if single_matches:
+                too_senior = True
+                continue
+
+            # Check 4: General plus matches with experience, e.g. "8+ years" where number > max_exp
+            plus_matches = re.findall(r'(?<!\d\s)(?<!\d-)(?<!to\s)\b([5-9]|\d{2,})\s*\+\s*(?:years?|yrs?)', clean_desc)
+            for m in plus_matches:
+                try:
+                    if int(m) > max_exp:
+                        too_senior = True
+                        break
+                except (ValueError, TypeError):
+                    pass
+
+            if not too_senior:
+                passed.append(j)
+
+        return passed
+
+    def _filter_by_applicants(self, jobs: List[Dict]) -> List[Dict]:
+        """Filter out jobs with too many applicants (> max_applicants or over 100)"""
+        max_limit = self.max_applicants or 100
+
+        passed = []
+        for j in jobs:
+            count = j.get('num_applicants')
+            if count is not None and count > max_limit:
+                continue
+
+            # Check textual applicant indicators in description
+            desc = j.get('description', '').lower()
+            applicant_phrases = [
+                'over 100 people applied', 'over 100 applicants', 'over 100 people clicked apply',
+                'over 100 clicked apply', 'over 100 candidates', 'over 100 people have applied',
+                '100+ applicants', '100+ people applied', '100+ people clicked apply', '100+ clicked apply',
+                '150+ applicants', '200+ applicants', 'more than 100 applicants',
+                'more than 100 people applied', 'more than 100 clicked apply'
+            ]
+            if any(term in desc for term in applicant_phrases):
+                continue
+
+            # Regex search for applicant counts e.g. "120 applicants", "250 people applied", "more than 150 applicants"
+            app_matches = re.findall(r'(?:over|more\s+than)?\s*(\d+)\s*(?:\+|plus)?\s*(?:people\s+clicked\s+apply|applicants|people\s+applied|applied|candidates)', desc)
+            too_many_apps = False
+            for am in app_matches:
+                try:
+                    if int(am) > max_limit:
+                        too_many_apps = True
+                        break
+                except (ValueError, TypeError):
+                    pass
+
+            if too_many_apps:
+                continue
+
+            passed.append(j)
+
+        return passed
+
+    def _deduplicate(self, jobs: List[Dict]) -> List[Dict]:
+        """Remove duplicates by URL or Company+Title"""
+        seen_urls = set()
+        seen_titles = set()
+        unique = []
+
+        for j in jobs:
+            url = j.get('url', '').strip()
+            key = f"{j.get('company', '').lower()}|{j.get('title', '').lower()}"
+
+            if url and url not in seen_urls and key not in seen_titles:
+                seen_urls.add(url)
+                seen_titles.add(key)
+                unique.append(j)
+
+        return unique
+
+    @staticmethod
+    def _sort_by_platform_priority(jobs: List[Dict]) -> List[Dict]:
+        """Sort jobs: LinkedIn (1) -> Indeed (2) -> Naukri (3) -> Rest (4), then date_posted desc"""
+        priority_map = {'linkedin': 1, 'indeed': 2, 'naukri': 3}
+        def get_sort_key(j):
+            p = priority_map.get((j.get('platform') or '').lower(), 4)
+            dt = j.get('date_posted')
+            ts = 0.0
+            if dt:
+                if hasattr(dt, 'timestamp'):
+                    try:
+                        ts = dt.timestamp()
+                    except Exception:
+                        ts = 0.0
+                elif isinstance(dt, str):
+                    try:
+                        ts = datetime.fromisoformat(dt.replace('Z', '+00:00')).timestamp()
+                    except Exception:
+                        ts = 0.0
+            return (p, -ts)
+        return sorted(jobs, key=get_sort_key)

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobPilot — 100 Big Company Portals & 24 Tech Job Boards</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <script>
+        (function() {
+            try {
+                var theme = localStorage.getItem('jobpilot_theme');
+                if (theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } catch(e) {}
+        })();
+    </script>
+
+    <style>
+        :root {
+            --jp-primary: #4f46e5;
+            --jp-primary-hover: #4338ca;
+            --jp-primary-light: #eef2ff;
+            --jp-secondary: #06b6d4;
+            --jp-accent: #f43f5e;
+            --jp-success: #10b981;
+            --jp-warning: #f59e0b;
+            --jp-danger: #ef4444;
+            --jp-dark: #0f172a;
+            --jp-dark-surface: #1e293b;
+            --jp-bg: #f8fafc;
+            --jp-border: #e2e8f0;
+            --jp-card-bg: #ffffff;
+            --jp-card-radius: 14px;
+            --jp-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
+            --jp-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+            --jp-shadow-lg: 0 12px 30px -4px rgba(15, 23, 42, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --jp-dark: #f8fafc;
+            --jp-dark-surface: #0f172a;
+            --jp-bg: #090d16;
+            --jp-border: #1e293b;
+            --jp-card-bg: #111827;
+            --jp-primary-light: #1e1b4b;
+            --jp-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --jp-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+            --jp-shadow-lg: 0 12px 30px -4px rgba(0, 0, 0, 0.6);
+            color-scheme: dark;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--jp-bg);
+            color: #334155;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        [data-theme="dark"] body {
+            background-color: var(--jp-bg);
+            color: #e2e8f0;
+        }
+
+        /* Top Brand Navbar */
+        .jp-navbar {
+            background: #0f172a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 14px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .jp-brand-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .jp-logo-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 18px;
+        }
+
+        /* Hero Header */
+        .jp-hero {
+            background: linear-gradient(180deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            color: #ffffff;
+            padding: 38px 0 54px 0;
+            position: relative;
+        }
+        .jp-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #c7d2fe;
+            margin-bottom: 12px;
+        }
+        .jp-hero-title {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+        .jp-hero-title-accent {
+            background: linear-gradient(90deg, #a5b4fc 0%, #67e8f9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Main Container Overlap */
+        .jp-main-container {
+            margin-top: -30px;
+            padding-bottom: 70px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Stat Summary Cards */
+        .jp-stat-card {
+            background: var(--jp-card-bg);
+            border-radius: var(--jp-card-radius);
+            box-shadow: var(--jp-shadow);
+            border: 1px solid var(--jp-border);
+            padding: 18px 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .jp-stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--jp-shadow-lg);
+        }
+
+        /* Navigation Tabs */
+        .jp-nav-pills {
+            background: var(--jp-card-bg);
+            border-radius: 12px;
+            padding: 6px;
+            border: 1px solid var(--jp-border);
+            display: inline-flex;
+            gap: 6px;
+            margin-bottom: 24px;
+        }
+        .jp-pill-btn {
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 8px 18px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        [data-theme="dark"] .jp-pill-btn {
+            color: #94a3b8;
+        }
+        .jp-pill-btn.active {
+            background: var(--jp-primary);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Search & Filter Bar */
+        .jp-filter-bar {
+            background: var(--jp-card-bg);
+            border-radius: var(--jp-card-radius);
+            border: 1px solid var(--jp-border);
+            padding: 16px 20px;
+            box-shadow: var(--jp-shadow-sm);
+            margin-bottom: 22px;
+        }
+        .jp-search-input {
+            border-radius: 8px;
+            border: 1px solid var(--jp-border);
+            padding: 10px 14px;
+            font-size: 14px;
+            background: var(--jp-card-bg);
+            color: inherit;
+        }
+        .jp-search-input:focus {
+            outline: none;
+            border-color: var(--jp-primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        /* Cards Grid */
+        .portal-card {
+            background: var(--jp-card-bg);
+            border-radius: var(--jp-card-radius);
+            border: 1px solid var(--jp-border);
+            box-shadow: var(--jp-shadow-sm);
+            padding: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+        .portal-card:hover {
+            border-color: #a5b4fc;
+            box-shadow: var(--jp-shadow);
+            transform: translateY(-2px);
+        }
+        .portal-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: var(--jp-primary-light);
+            color: var(--jp-primary);
+        }
+        [data-theme="dark"] .portal-badge {
+            background: #1e1b4b;
+            color: #a5b4fc;
+        }
+        .portal-ats-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 7px;
+            border-radius: 5px;
+            background: #f1f5f9;
+            color: #475569;
+        }
+        [data-theme="dark"] .portal-ats-badge {
+            background: #1e293b;
+            color: #94a3b8;
+        }
+
+        /* Action Buttons */
+        .btn-portal-search {
+            background: var(--jp-primary);
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 7px 14px;
+            border-radius: 8px;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.18s ease;
+        }
+        .btn-portal-search:hover {
+            background: var(--jp-primary-hover);
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3);
+        }
+        .btn-portal-direct {
+            background: transparent;
+            color: #64748b;
+            border: 1px solid var(--jp-border);
+            font-weight: 600;
+            font-size: 13px;
+            padding: 7px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.18s ease;
+        }
+        .btn-portal-direct:hover {
+            color: var(--jp-primary);
+            border-color: var(--jp-primary);
+            background: var(--jp-primary-light);
+        }
+        [data-theme="dark"] .btn-portal-direct {
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Navbar -->
+    <nav class="jp-navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/" class="jp-brand-logo">
+                <div class="jp-logo-icon">
+                    <i class="bi bi-compass"></i>
+                </div>
+                <span>JobPilot</span>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-semibold px-2 py-0 ms-1" style="font-size: 10px;">PORTALS</span>
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-sm btn-outline-light d-inline-flex align-items-center gap-2 px-3 fw-semibold shadow-sm" id="btn-theme-toggle" onclick="toggleDarkMode()" title="Toggle Dark/Light Mode">
+                    <i class="bi bi-moon-stars-fill" id="theme-toggle-icon"></i>
+                    <span id="theme-toggle-text">Dark Mode</span>
+                </button>
+                <a href="/" class="btn btn-sm btn-outline-light px-3 fw-semibold">
+                    <i class="bi bi-house-door me-1"></i> Dashboard
+                </a>
+                <a href="/jobs" class="btn btn-sm btn-outline-light px-3 fw-semibold">
+                    <i class="bi bi-table me-1"></i> Tabular View
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Header -->
+    <header class="jp-hero">
+        <div class="container position-relative">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div>
+                    <div class="jp-hero-badge">
+                        <i class="bi bi-buildings-fill text-info"></i>
+                        <span>Direct Hiring Channels & Enterprise Career Sites</span>
+                    </div>
+                    <h1 class="jp-hero-title">
+                        Enterprise <span class="jp-hero-title-accent">Company Portals & Job Boards</span>
+                    </h1>
+                    <p class="mb-0 text-light opacity-75" style="max-width: 720px; font-size: 15px;">
+                        Direct 1-click access to <strong>100 Big Company Career Portals</strong> (Amazon, Google, Microsoft, Swiggy, Flipkart, GCCs, SaaS)
+                        and <strong>24 Specialized Tech & Remote Job Boards</strong> (Instahyre, Hirist, RemoteOK, KubeCareers, Hacker News).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container jp-main-container">
+
+        <!-- Stat Summary Row -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="jp-stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-secondary fw-semibold small text-uppercase">Big Companies</span>
+                        <i class="bi bi-buildings text-primary fs-5"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0 mt-2 text-primary" id="stat-companies-count">100</h3>
+                    <small class="text-muted">Enterprise Career Sites</small>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="jp-stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-secondary fw-semibold small text-uppercase">Job Websites</span>
+                        <i class="bi bi-globe text-info fs-5"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0 mt-2 text-info" id="stat-websites-count">24</h3>
+                    <small class="text-muted">Tech & Remote Boards</small>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="jp-stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-secondary fw-semibold small text-uppercase">Target Focus</span>
+                        <i class="bi bi-cpu text-success fs-5"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0 mt-2 text-success">Cloud & SRE</h3>
+                    <small class="text-muted">DevOps / AWS / Azure</small>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="jp-stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-secondary fw-semibold small text-uppercase">Target Profile</span>
+                        <i class="bi bi-person-check text-warning fs-5"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0 mt-2 text-warning">0–4 Years</h3>
+                    <small class="text-muted">Deepanshu Yadav (3y)</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Switcher Tabs -->
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+            <div class="jp-nav-pills" id="portal-tab-group">
+                <button class="jp-pill-btn active" id="tab-btn-companies" onclick="switchTab('companies')">
+                    <i class="bi bi-buildings me-1"></i> 100 Big Companies (100)
+                </button>
+                <button class="jp-pill-btn" id="tab-btn-websites" onclick="switchTab('websites')">
+                    <i class="bi bi-globe me-1"></i> Specialized Job Websites (24)
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="jp-filter-bar">
+            <div class="row g-2 align-items-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0 text-muted">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" id="portal-search-input" class="form-control jp-search-input border-start-0"
+                               placeholder="Search by company name, location, or keyword (e.g. AWS, Swiggy, Workday, Bengaluru)..."
+                               oninput="filterPortals()">
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex gap-2 justify-content-md-end flex-wrap">
+                    <select id="category-filter-select" class="form-select jp-search-input" style="max-width: 280px;" onchange="filterPortals()">
+                        <option value="">All Categories</option>
+                    </select>
+                    <button class="btn btn-outline-secondary btn-sm px-3" onclick="resetFilters()">
+                        <i class="bi bi-arrow-counterclockwise"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 1: Companies Grid -->
+        <div id="section-companies">
+            <div class="row g-3" id="companies-grid">
+                <!-- Dynamically populated or rendered -->
+                {% for c in portals %}
+                <div class="col-md-6 col-lg-4 company-card-item"
+                     data-name="{{ c.name | lower }}"
+                     data-category="{{ c.category }}"
+                     data-ats="{{ c.ats_type | lower }}"
+                     data-locations="{{ c.locations | join(' ') | lower }}"
+                     data-desc="{{ c.description | lower }}">
+                    <div class="portal-card">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                <h5 class="fw-bold mb-0 text-truncate" title="{{ c.name }}">{{ c.name }}</h5>
+                                <span class="portal-badge text-truncate" style="max-width: 140px;">{{ c.category }}</span>
+                            </div>
+                            <p class="small text-muted mb-3" style="min-height: 38px;">{{ c.description }}</p>
+                            <div class="d-flex flex-wrap gap-1 mb-3">
+                                <span class="portal-ats-badge"><i class="bi bi-gear-fill me-1"></i>{{ c.ats_type }}</span>
+                                {% for loc in c.locations[:3] %}
+                                <span class="badge bg-light text-secondary border fw-normal" style="font-size: 11px;">{{ loc }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 mt-2 pt-2 border-top">
+                            <a href="{{ c.search_url }}" target="_blank" rel="noopener noreferrer" class="btn-portal-search flex-grow-1 text-center justify-content-center">
+                                <i class="bi bi-search"></i> DevOps Jobs
+                            </a>
+                            <a href="{{ c.portal_url }}" target="_blank" rel="noopener noreferrer" class="btn-portal-direct" title="Visit Official Careers Portal">
+                                <i class="bi bi-box-arrow-up-right"></i> Portal
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Tab 2: Websites Grid -->
+        <div id="section-websites" style="display: none;">
+            <div class="row g-3" id="websites-grid">
+                {% for w in websites %}
+                <div class="col-md-6 col-lg-4 website-card-item"
+                     data-name="{{ w.name | lower }}"
+                     data-category="{{ w.category }}"
+                     data-region="{{ w.region | lower }}"
+                     data-desc="{{ w.description | lower }}">
+                    <div class="portal-card">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                <h5 class="fw-bold mb-0 text-truncate" title="{{ w.name }}">{{ w.name }}</h5>
+                                <span class="portal-badge text-truncate" style="max-width: 150px;">{{ w.category }}</span>
+                            </div>
+                            <p class="small text-muted mb-3" style="min-height: 48px;">{{ w.description }}</p>
+                            <div class="d-flex flex-wrap gap-1 mb-3">
+                                <span class="badge bg-info-subtle text-info border border-info-subtle fw-normal" style="font-size: 11px;">
+                                    <i class="bi bi-geo-alt me-1"></i>{{ w.region }}
+                                </span>
+                                {% for role in w.target_roles[:3] %}
+                                <span class="badge bg-light text-secondary border fw-normal" style="font-size: 11px;">{{ role }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 mt-2 pt-2 border-top">
+                            <a href="{{ w.search_url }}" target="_blank" rel="noopener noreferrer" class="btn-portal-search flex-grow-1 text-center justify-content-center">
+                                <i class="bi bi-search"></i> Search Jobs
+                            </a>
+                            <a href="{{ w.url }}" target="_blank" rel="noopener noreferrer" class="btn-portal-direct" title="Visit Job Board">
+                                <i class="bi bi-box-arrow-up-right"></i> Website
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div id="no-results-alert" class="alert alert-warning text-center mt-4" style="display: none;">
+            <i class="bi bi-exclamation-circle me-2"></i>
+            No matching portals found. Try adjusting your search keyword or selecting "All Categories".
+        </div>
+
+    </div>
+
+    <script>
+        var currentActiveTab = 'companies';
+
+        function switchTab(tab) {
+            currentActiveTab = tab;
+            var btnCompanies = document.getElementById('tab-btn-companies');
+            var btnWebsites = document.getElementById('tab-btn-websites');
+            var secCompanies = document.getElementById('section-companies');
+            var secWebsites = document.getElementById('section-websites');
+
+            if (tab === 'companies') {
+                btnCompanies.classList.add('active');
+                btnWebsites.classList.remove('active');
+                secCompanies.style.display = 'block';
+                secWebsites.style.display = 'none';
+            } else {
+                btnWebsites.classList.add('active');
+                btnCompanies.classList.remove('active');
+                secWebsites.style.display = 'block';
+                secCompanies.style.display = 'none';
+            }
+            populateCategories();
+            filterPortals();
+        }
+
+        function populateCategories() {
+            var select = document.getElementById('category-filter-select');
+            select.innerHTML = '<option value="">All Categories</option>';
+
+            var items = currentActiveTab === 'companies'
+                ? document.querySelectorAll('.company-card-item')
+                : document.querySelectorAll('.website-card-item');
+
+            var categories = {};
+            items.forEach(function(item) {
+                var cat = item.getAttribute('data-category');
+                if (cat) {
+                    categories[cat] = true;
+                }
+            });
+
+            Object.keys(categories).sort().forEach(function(cat) {
+                var opt = document.createElement('option');
+                opt.value = cat;
+                opt.textContent = cat;
+                select.appendChild(opt);
+            });
+        }
+
+        function filterPortals() {
+            var search = (document.getElementById('portal-search-input').value || '').toLowerCase().trim();
+            var category = (document.getElementById('category-filter-select').value || '').trim();
+
+            var selector = currentActiveTab === 'companies' ? '.company-card-item' : '.website-card-item';
+            var items = document.querySelectorAll(selector);
+            var visibleCount = 0;
+
+            items.forEach(function(item) {
+                var name = item.getAttribute('data-name') || '';
+                var cat = item.getAttribute('data-category') || '';
+                var desc = item.getAttribute('data-desc') || '';
+                var ats = item.getAttribute('data-ats') || '';
+                var loc = item.getAttribute('data-locations') || '';
+
+                var matchesCat = !category || cat === category;
+                var matchesSearch = !search ||
+                    name.indexOf(search) !== -1 ||
+                    desc.indexOf(search) !== -1 ||
+                    ats.indexOf(search) !== -1 ||
+                    loc.indexOf(search) !== -1;
+
+                if (matchesCat && matchesSearch) {
+                    item.style.display = '';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            var noRes = document.getElementById('no-results-alert');
+            if (noRes) {
+                noRes.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        }
+
+        function resetFilters() {
+            document.getElementById('portal-search-input').value = '';
+            document.getElementById('category-filter-select').value = '';
+            filterPortals();
+        }
+
+        function toggleDarkMode() {
+            var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            var nextTheme = isDark ? 'light' : 'dark';
+            if (nextTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+            try {
+                localStorage.setItem('jobpilot_theme', nextTheme);
+            } catch(e) {}
+            updateThemeButtonText();
+        }
+
+        function updateThemeButtonText() {
+            var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            var btnText = document.getElementById('theme-toggle-text');
+            var icon = document.getElementById('theme-toggle-icon');
+            if (btnText && icon) {
+                if (isDark) {
+                    btnText.textContent = 'Light Mode';
+                    icon.className = 'bi bi-sun-fill text-warning';
+                } else {
+                    btnText.textContent = 'Dark Mode';
+                    icon.className = 'bi bi-moon-stars-fill';
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            populateCategories();
+            updateThemeButtonText();
+        });
+    </script>
+</body>
+</html>
