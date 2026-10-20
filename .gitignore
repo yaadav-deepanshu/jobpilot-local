@@ -7,4 +7,5 @@ __pycache__/
 .pytest_cache/
 
 # Test generated exports
-exports/job_finder_*20261020*
+exports/job_finder_*
+job_finder.log
