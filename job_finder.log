@@ -9679,3 +9679,999 @@ AttributeError: 'NoneType' object has no attribute 'lower'
 2026-10-16 14:51:20,620 - filter.engine - INFO - 🔎 Filtering 416 jobs (today_only=True, max_hours=6, location_mode=both)...
 2026-10-16 14:51:21,446 - filter.engine - INFO - ✓ Filter result: 416 → 104 jobs matched
 2026-10-16 14:51:21,505 - web.routes - INFO - ✓ Background scrape finished. Added 103 new jobs to DB.
+2026-10-20 13:14:26,205 - __main__ - INFO - 🎯 Starting Job Finder...
+2026-10-20 13:14:26,453 - web.routes - INFO - ✓ Purged 0 unqualified/legacy jobs from database.
+2026-10-20 13:14:26,455 - __main__ - INFO - ✓ Database initialized
+2026-10-20 13:14:26,535 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-10-20 13:14:26,535 - apscheduler.scheduler - INFO - Added job "Scrape jobs from all platforms" to job store "default"
+2026-10-20 13:14:26,535 - apscheduler.scheduler - INFO - Scheduler started
+2026-10-20 13:14:26,535 - scheduler - INFO - ✓ Scheduler started (scrapes every 6 hours)
+2026-10-20 13:14:26,538 - __main__ - INFO - ✓ Scheduler configured
+2026-10-20 13:14:26,619 - __main__ - INFO - ✓ Also listening on companion port: http://127.0.0.1:5000
+2026-10-20 13:14:26,619 - __main__ - INFO - ============================================================
+2026-10-20 13:14:26,619 - __main__ - INFO - Job Finder is running!
+2026-10-20 13:14:26,619 - __main__ - INFO - ============================================================
+2026-10-20 13:14:26,619 - __main__ - INFO - 📱 Primary Dashboard:     http://127.0.0.1:5050
+2026-10-20 13:14:26,619 - __main__ - INFO - 📱 Companion Port:        http://127.0.0.1:5000
+2026-10-20 13:14:26,619 - __main__ - INFO - 🌐 Portals & Sites:       http://127.0.0.1:5050/portals
+2026-10-20 13:14:26,619 - __main__ - INFO - ============================================================
+2026-10-20 13:14:26,632 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5050
+2026-10-20 13:14:26,634 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-10-20 13:14:44,691 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:14:44] "GET / HTTP/1.1" 200 -
+2026-10-20 13:14:45,077 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:14:45] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-10-20 13:14:45,286 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:14:45] "GET /api/jobs?page=1&per_page=12&status=all&location=both HTTP/1.1" 200 -
+2026-10-20 13:14:46,123 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:14:46] "GET /api/stats HTTP/1.1" 200 -
+2026-10-20 13:14:53,734 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:14:53] "GET /api/jobs?page=1&per_page=12&status=all&location=both&hours=2 HTTP/1.1" 200 -
+2026-10-20 13:14:54,468 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:14:54] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:14:56,672 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:14:56] "POST /api/scrape HTTP/1.1" 200 -
+2026-10-20 13:14:56,672 - scraper.multi_platform - INFO - 🚀 Starting scrape across 7 platforms (21 roles, remote=True): ['linkedin', 'indeed', 'naukri', 'glassdoor', 'zip_recruiter', 'google', 'bayt']
+2026-10-20 13:14:56,672 - scraper.multi_platform - INFO - [1/252] Scraping Linkedin for 'Cloud Engineer' in Bengaluru...
+2026-10-20 13:14:58,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:14:58] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:14:59,682 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:14:59] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:01,222 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:01] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:02,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:02] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:04,179 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:04] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:05,683 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:05] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:05,809 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:05] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:15:07,185 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:07] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:08,683 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:08] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:10,186 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:10] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:11,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:11] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:13,178 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:13] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:14,676 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:14] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:16,183 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:16] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:17,682 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:17] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:19,182 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:19] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:19,546 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Cloud Engineer' (Bengaluru)
+2026-10-20 13:15:20,047 - scraper.multi_platform - INFO - [2/252] Scraping Linkedin for 'DevOps Engineer' in Bengaluru...
+2026-10-20 13:15:20,676 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:20] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:22,519 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:22] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:24,518 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:24] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:25,536 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:25] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:26,494 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:26] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:15:27,521 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:27] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:28,518 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:28] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:30,521 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:30] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:31,530 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:31] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:33,524 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:33] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:34,517 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:34] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:36,529 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:36] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:37,529 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:37] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:39,370 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'DevOps Engineer' (Bengaluru)
+2026-10-20 13:15:39,531 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:39] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:39,871 - scraper.multi_platform - INFO - [3/252] Scraping Linkedin for 'Site Reliability Engineer' in Bengaluru...
+2026-10-20 13:15:40,519 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:40] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:42,519 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:42] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:43,519 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:43] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:45,531 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:45] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:46,442 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:46] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:15:46,530 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:46] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:48,529 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:48] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:49,527 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:51,530 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:51] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:52,527 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:52] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:54,520 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:54] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:55,524 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:55] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:57,517 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:57] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:58,529 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:15:58] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:15:58,865 - scraper.multi_platform - INFO -   ✓ linkedin: Found 10 jobs for 'Site Reliability Engineer' (Bengaluru)
+2026-10-20 13:15:59,366 - scraper.multi_platform - INFO - [4/252] Scraping Linkedin for 'SRE' in Bengaluru...
+2026-10-20 13:16:00,528 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:00] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:16:01,520 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:01] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:16:03,529 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:03] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:16:04,519 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:04] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:16:06,277 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:06] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:16:06,530 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:06] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:16:07,518 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:07] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:16:09,533 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:09] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:16:10,531 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:10] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:16:12,531 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:12] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:16:13,519 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:13] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:16:15,524 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:15] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:16:16,530 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:16] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:16:18,529 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:18] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:16:19,530 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:19] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:16:23,465 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'SRE' (Bengaluru)
+2026-10-20 13:16:23,965 - scraper.multi_platform - INFO - [5/252] Scraping Linkedin for 'AWS Cloud Engineer' in Bengaluru...
+2026-10-20 13:16:26,242 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:26] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:16:46,353 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:46] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:16:47,162 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'AWS Cloud Engineer' (Bengaluru)
+2026-10-20 13:16:47,663 - scraper.multi_platform - INFO - [6/252] Scraping Linkedin for 'Azure Cloud Engineer' in Bengaluru...
+2026-10-20 13:16:48,234 - scraper.multi_platform - INFO -   - linkedin: No jobs returned for 'Azure Cloud Engineer' (Bengaluru)
+2026-10-20 13:16:48,735 - scraper.multi_platform - INFO - [7/252] Scraping Linkedin for 'GCP Cloud Engineer' in Bengaluru...
+2026-10-20 13:16:49,207 - scraper.multi_platform - INFO -   - linkedin: No jobs returned for 'GCP Cloud Engineer' (Bengaluru)
+2026-10-20 13:16:49,529 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:16:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:16:49,708 - scraper.multi_platform - INFO - [8/252] Scraping Linkedin for 'Google Cloud Engineer' in Bengaluru...
+2026-10-20 13:17:10,765 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Google Cloud Engineer' (Bengaluru)
+2026-10-20 13:17:11,265 - scraper.multi_platform - INFO - [9/252] Scraping Linkedin for 'System Engineer' in Bengaluru...
+2026-10-20 13:17:18,624 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:18] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:19,182 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:19] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:19,455 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:19] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:17:20,687 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:20] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:22,179 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:22] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:23,677 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:23] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:25,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:25] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:25,786 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:25] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:17:26,687 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:26] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:28,187 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:28] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:29,690 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:29] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:31,181 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:31] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:32,687 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:32] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:32,955 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'System Engineer' (Bengaluru)
+2026-10-20 13:17:33,456 - scraper.multi_platform - INFO - [10/252] Scraping Linkedin for 'Platform Engineer' in Bengaluru...
+2026-10-20 13:17:34,185 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:34] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:35,687 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:35] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:37,180 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:37] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:38,708 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:38] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:40,187 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:40] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:41,681 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:41] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:43,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:43] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:44,685 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:44] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:45,838 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:45] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:17:46,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:46] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:47,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:47] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:49,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:50,683 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:50] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:52,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:52] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:53,657 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Platform Engineer' (Bengaluru)
+2026-10-20 13:17:53,679 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:53] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:54,158 - scraper.multi_platform - INFO - [11/252] Scraping Linkedin for 'Infrastructure Engineer' in Bengaluru...
+2026-10-20 13:17:55,187 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:55] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:56,687 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:56] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:58,186 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:58] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:17:59,682 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:17:59] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:01,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:01] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:02,682 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:02] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:04,182 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:04] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:05,737 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:05] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:05,847 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:05] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:18:07,189 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:07] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:08,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:08] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:10,186 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:10] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:11,679 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:11] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:13,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:13] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:14,685 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:14] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:16,080 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Infrastructure Engineer' (Bengaluru)
+2026-10-20 13:18:16,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:16] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:16,581 - scraper.multi_platform - INFO - [12/252] Scraping Linkedin for 'Cloud Support Engineer' in Bengaluru...
+2026-10-20 13:18:17,690 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:17] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:19,187 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:19] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:20,680 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:20] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:22,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:22] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:23,686 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:23] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:25,181 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:25] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:25,904 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:25] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:18:26,689 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:26] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:28,178 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:28] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:29,685 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:29] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:31,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:31] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:32,683 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:32] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:34,187 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:34] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:35,683 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:35] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:37,190 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:37] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:38,342 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Cloud Support Engineer' (Bengaluru)
+2026-10-20 13:18:38,679 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:38] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:38,843 - scraper.multi_platform - INFO - [13/252] Scraping Linkedin for 'DevSecOps Engineer' in Bengaluru...
+2026-10-20 13:18:39,321 - scraper.multi_platform - INFO -   - linkedin: No jobs returned for 'DevSecOps Engineer' (Bengaluru)
+2026-10-20 13:18:39,822 - scraper.multi_platform - INFO - [14/252] Scraping Linkedin for 'Cloud Operations Engineer' in Bengaluru...
+2026-10-20 13:18:40,190 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:40] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:40,662 - scraper.multi_platform - INFO -   - linkedin: No jobs returned for 'Cloud Operations Engineer' (Bengaluru)
+2026-10-20 13:18:41,163 - scraper.multi_platform - INFO - [15/252] Scraping Linkedin for 'Cloud Operations Architect' in Bengaluru...
+2026-10-20 13:18:41,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:41] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:43,187 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:43] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:44,696 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:44] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:45,908 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:45] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:18:46,183 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:46] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:47,689 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:47] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:49,204 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:50,732 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:50] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:52,189 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:52] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:53,689 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:53] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:55,182 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:55] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:56,684 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:56] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:57,791 - scraper.multi_platform - INFO -   ✓ linkedin: Found 10 jobs for 'Cloud Operations Architect' (Bengaluru)
+2026-10-20 13:18:58,186 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:58] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:18:58,292 - scraper.multi_platform - INFO - [16/252] Scraping Linkedin for 'Cloud Architect' in Bengaluru...
+2026-10-20 13:18:59,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:18:59] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:01,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:01] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:02,685 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:02] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:04,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:04] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:05,769 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:05] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:05,891 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:05] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:19:07,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:07] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:08,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:08] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:10,189 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:10] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:11,689 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:11] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:13,186 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:13] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:15,529 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:15] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:16,527 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:16] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:18,519 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:18] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:19,518 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:19] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:20,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:20] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:21,320 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Cloud Architect' (Bengaluru)
+2026-10-20 13:19:21,820 - scraper.multi_platform - INFO - [17/252] Scraping Linkedin for 'DevOps Architect' in Bengaluru...
+2026-10-20 13:19:22,182 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:22] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:24,534 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:24] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:25,535 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:25] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:26,344 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:26] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:19:27,519 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:27] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:28,529 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:28] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:30,562 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:30] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:31,522 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:31] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:33,531 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:33] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:34,517 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:34] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:36,522 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:36] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:37,520 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:37] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:39,520 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:39] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:40,534 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:40] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:42,674 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:42] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:43,521 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:43] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:45,323 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'DevOps Architect' (Bengaluru)
+2026-10-20 13:19:45,523 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:45] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:45,824 - scraper.multi_platform - INFO - [18/252] Scraping Linkedin for 'Cloud Solutions Architect' in Bengaluru...
+2026-10-20 13:19:46,241 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:46] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:19:46,404 - scraper.multi_platform - INFO -   - linkedin: No jobs returned for 'Cloud Solutions Architect' (Bengaluru)
+2026-10-20 13:19:46,528 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:46] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:46,905 - scraper.multi_platform - INFO - [19/252] Scraping Linkedin for 'Infrastructure Operations Architect' in Bengaluru...
+2026-10-20 13:19:48,531 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:48] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:49,524 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:51,518 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:51] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:52,531 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:52] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:54,531 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:54] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:55,525 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:55] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:57,526 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:57] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:19:58,534 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:19:58] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:00,525 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:00] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:01,534 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:01] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:03,522 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:03] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:04,526 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:04] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:06,225 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:06] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:20:06,534 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:06] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:07,522 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:07] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:08,422 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Infrastructure Operations Architect' (Bengaluru)
+2026-10-20 13:20:08,923 - scraper.multi_platform - INFO - [20/252] Scraping Linkedin for 'Forward Deployed Systems Engineer' in Bengaluru...
+2026-10-20 13:20:09,525 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:09] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:10,528 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:10] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:12,522 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:12] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:13,519 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:13] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:15,530 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:15] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:16,535 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:16] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:18,524 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:18] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:19,527 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:19] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:21,521 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:21] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:31,308 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Forward Deployed Systems Engineer' (Bengaluru)
+2026-10-20 13:20:31,809 - scraper.multi_platform - INFO - [21/252] Scraping Linkedin for 'Forward Deployed Engineer' in Bengaluru...
+2026-10-20 13:20:49,528 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:20:50,862 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:20:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:20:51,266 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Forward Deployed Engineer' (Bengaluru)
+2026-10-20 13:20:51,767 - scraper.multi_platform - INFO - [22/252] Scraping Linkedin for 'Cloud Engineer' in India (Remote)...
+2026-10-20 13:20:52,282 - scraper.multi_platform - INFO -   - linkedin: No jobs returned for 'Cloud Engineer' (India (Remote))
+2026-10-20 13:20:52,782 - scraper.multi_platform - INFO - [23/252] Scraping Linkedin for 'DevOps Engineer' in India (Remote)...
+2026-10-20 13:20:53,258 - scraper.multi_platform - INFO -   - linkedin: No jobs returned for 'DevOps Engineer' (India (Remote))
+2026-10-20 13:20:53,759 - scraper.multi_platform - INFO - [24/252] Scraping Linkedin for 'Site Reliability Engineer' in India (Remote)...
+2026-10-20 13:20:54,238 - scraper.multi_platform - INFO -   - linkedin: No jobs returned for 'Site Reliability Engineer' (India (Remote))
+2026-10-20 13:20:54,739 - scraper.multi_platform - INFO - [25/252] Scraping Linkedin for 'SRE' in India (Remote)...
+2026-10-20 13:20:55,207 - scraper.multi_platform - INFO -   - linkedin: No jobs returned for 'SRE' (India (Remote))
+2026-10-20 13:20:55,708 - scraper.multi_platform - INFO - [26/252] Scraping Linkedin for 'AWS Cloud Engineer' in India (Remote)...
+2026-10-20 13:20:56,183 - scraper.multi_platform - INFO -   - linkedin: No jobs returned for 'AWS Cloud Engineer' (India (Remote))
+2026-10-20 13:20:56,683 - scraper.multi_platform - INFO - [27/252] Scraping Linkedin for 'Azure Cloud Engineer' in India (Remote)...
+2026-10-20 13:21:17,438 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Azure Cloud Engineer' (India (Remote))
+2026-10-20 13:21:17,939 - scraper.multi_platform - INFO - [28/252] Scraping Linkedin for 'GCP Cloud Engineer' in India (Remote)...
+2026-10-20 13:21:36,358 - scraper.multi_platform - INFO -   ✓ linkedin: Found 10 jobs for 'GCP Cloud Engineer' (India (Remote))
+2026-10-20 13:21:36,858 - scraper.multi_platform - INFO - [29/252] Scraping Linkedin for 'Google Cloud Engineer' in India (Remote)...
+2026-10-20 13:21:49,527 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:21:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:21:50,359 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:21:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:21:51,191 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:21:51] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:21:52,178 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:21:52] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:21:53,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:21:53] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:21:55,187 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:21:55] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:21:56,689 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:21:56] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:21:58,189 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:21:58] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:21:59,682 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:21:59] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:00,538 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Google Cloud Engineer' (India (Remote))
+2026-10-20 13:22:01,039 - scraper.multi_platform - INFO - [30/252] Scraping Linkedin for 'System Engineer' in India (Remote)...
+2026-10-20 13:22:01,185 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:01] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:02,691 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:02] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:04,181 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:04] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:05,689 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:05] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:05,836 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:05] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:22:07,189 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:07] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:08,685 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:08] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:10,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:10] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:11,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:11] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:13,183 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:13] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:14,689 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:14] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:16,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:16] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:17,687 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:17] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:19,191 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:19] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:20,689 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:20] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:22,182 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:22] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:22,897 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'System Engineer' (India (Remote))
+2026-10-20 13:22:23,398 - scraper.multi_platform - INFO - [31/252] Scraping Linkedin for 'Platform Engineer' in India (Remote)...
+2026-10-20 13:22:23,682 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:23] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:25,190 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:25] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:25,844 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:25] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:22:26,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:26] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:27,100 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:27] "GET /portals HTTP/1.1" 200 -
+2026-10-20 13:22:28,520 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:28] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:30,528 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:30] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:31,525 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:31] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:33,532 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:33] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:34,524 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:34] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:36,524 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:36] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:37,532 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:37] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:39,527 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:39] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:40,519 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:40] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:42,521 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:42] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:43,528 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:43] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:45,387 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Platform Engineer' (India (Remote))
+2026-10-20 13:22:45,527 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:45] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:45,888 - scraper.multi_platform - INFO - [32/252] Scraping Linkedin for 'Infrastructure Engineer' in India (Remote)...
+2026-10-20 13:22:46,270 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:46] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:22:46,518 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:46] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:48,521 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:48] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:49,524 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:51,522 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:51] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:52,518 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:52] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:54,522 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:54] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:55,533 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:55] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:57,527 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:57] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:22:58,527 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:22:58] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:00,525 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:00] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:01,524 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:01] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:03,525 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:03] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:04,518 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:04] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:06,289 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:06] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:23:06,532 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:06] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:07,610 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:07] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:07,666 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Infrastructure Engineer' (India (Remote))
+2026-10-20 13:23:08,167 - scraper.multi_platform - INFO - [33/252] Scraping Linkedin for 'Cloud Support Engineer' in India (Remote)...
+2026-10-20 13:23:09,522 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:09] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:10,521 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:10] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:12,529 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:12] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:13,531 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:13] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:15,520 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:15] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:16,527 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:16] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:18,521 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:18] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:19,531 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:19] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:21,525 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:21] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:22,532 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:22] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:24,530 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:24] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:25,536 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:25] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:26,301 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:26] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:23:27,524 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:27] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:28,327 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Cloud Support Engineer' (India (Remote))
+2026-10-20 13:23:28,827 - scraper.multi_platform - INFO - [34/252] Scraping Linkedin for 'DevSecOps Engineer' in India (Remote)...
+2026-10-20 13:23:43,457 - scraper.multi_platform - INFO -   ✓ linkedin: Found 10 jobs for 'DevSecOps Engineer' (India (Remote))
+2026-10-20 13:23:43,958 - scraper.multi_platform - INFO - [35/252] Scraping Linkedin for 'Cloud Operations Engineer' in India (Remote)...
+2026-10-20 13:23:49,529 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:23:50,435 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:23:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:24:04,663 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Cloud Operations Engineer' (India (Remote))
+2026-10-20 13:24:05,164 - scraper.multi_platform - INFO - [36/252] Scraping Linkedin for 'Cloud Operations Architect' in India (Remote)...
+2026-10-20 13:24:28,420 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Cloud Operations Architect' (India (Remote))
+2026-10-20 13:24:28,922 - scraper.multi_platform - INFO - [37/252] Scraping Linkedin for 'Cloud Architect' in India (Remote)...
+2026-10-20 13:24:49,452 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'Cloud Architect' (India (Remote))
+2026-10-20 13:24:49,521 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:24:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:24:49,953 - scraper.multi_platform - INFO - [38/252] Scraping Linkedin for 'DevOps Architect' in India (Remote)...
+2026-10-20 13:24:50,384 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:24:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:25:11,472 - scraper.multi_platform - INFO -   ✓ linkedin: Found 15 jobs for 'DevOps Architect' (India (Remote))
+2026-10-20 13:25:11,973 - scraper.multi_platform - INFO - [39/252] Scraping Linkedin for 'Cloud Solutions Architect' in India (Remote)...
+2026-10-20 13:25:12,471 - scraper.multi_platform - INFO -   - linkedin: No jobs returned for 'Cloud Solutions Architect' (India (Remote))
+2026-10-20 13:25:12,972 - scraper.multi_platform - INFO - [40/252] Scraping Linkedin for 'Infrastructure Operations Architect' in India (Remote)...
+2026-10-20 13:25:29,259 - scraper.multi_platform - INFO -   ✓ linkedin: Found 10 jobs for 'Infrastructure Operations Architect' (India (Remote))
+2026-10-20 13:25:29,760 - scraper.multi_platform - INFO - [41/252] Scraping Linkedin for 'Forward Deployed Systems Engineer' in India (Remote)...
+2026-10-20 13:25:45,142 - scraper.multi_platform - INFO -   ✓ linkedin: Found 10 jobs for 'Forward Deployed Systems Engineer' (India (Remote))
+2026-10-20 13:25:45,643 - scraper.multi_platform - INFO - [42/252] Scraping Linkedin for 'Forward Deployed Engineer' in India (Remote)...
+2026-10-20 13:25:46,495 - scraper.multi_platform - INFO -   - linkedin: No jobs returned for 'Forward Deployed Engineer' (India (Remote))
+2026-10-20 13:25:46,996 - scraper.multi_platform - INFO - [43/252] Scraping Indeed for 'Cloud Engineer' in Bengaluru...
+2026-10-20 13:25:47,575 - scraper.multi_platform - INFO -   ✓ indeed: Found 4 jobs for 'Cloud Engineer' (Bengaluru)
+2026-10-20 13:25:48,076 - scraper.multi_platform - INFO - [44/252] Scraping Indeed for 'DevOps Engineer' in Bengaluru...
+2026-10-20 13:25:48,483 - scraper.multi_platform - INFO -   - indeed: No jobs returned for 'DevOps Engineer' (Bengaluru)
+2026-10-20 13:25:48,984 - scraper.multi_platform - INFO - [45/252] Scraping Indeed for 'Site Reliability Engineer' in Bengaluru...
+2026-10-20 13:25:49,424 - scraper.multi_platform - INFO -   - indeed: No jobs returned for 'Site Reliability Engineer' (Bengaluru)
+2026-10-20 13:25:49,528 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:25:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:25:49,925 - scraper.multi_platform - INFO - [46/252] Scraping Indeed for 'SRE' in Bengaluru...
+2026-10-20 13:25:50,328 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:25:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:25:50,477 - scraper.multi_platform - INFO -   - indeed: No jobs returned for 'SRE' (Bengaluru)
+2026-10-20 13:25:50,978 - scraper.multi_platform - INFO - [47/252] Scraping Indeed for 'AWS Cloud Engineer' in Bengaluru...
+2026-10-20 13:25:51,567 - scraper.multi_platform - INFO -   ✓ indeed: Found 2 jobs for 'AWS Cloud Engineer' (Bengaluru)
+2026-10-20 13:25:52,068 - scraper.multi_platform - INFO - [48/252] Scraping Indeed for 'Azure Cloud Engineer' in Bengaluru...
+2026-10-20 13:25:52,533 - scraper.multi_platform - INFO -   - indeed: No jobs returned for 'Azure Cloud Engineer' (Bengaluru)
+2026-10-20 13:25:53,035 - scraper.multi_platform - INFO - [49/252] Scraping Indeed for 'GCP Cloud Engineer' in Bengaluru...
+2026-10-20 13:25:53,622 - scraper.multi_platform - INFO -   ✓ indeed: Found 2 jobs for 'GCP Cloud Engineer' (Bengaluru)
+2026-10-20 13:25:54,123 - scraper.multi_platform - INFO - [50/252] Scraping Indeed for 'Google Cloud Engineer' in Bengaluru...
+2026-10-20 13:25:54,683 - scraper.multi_platform - INFO -   ✓ indeed: Found 1 jobs for 'Google Cloud Engineer' (Bengaluru)
+2026-10-20 13:25:55,184 - scraper.multi_platform - INFO - [51/252] Scraping Indeed for 'System Engineer' in Bengaluru...
+2026-10-20 13:25:55,745 - scraper.multi_platform - INFO -   ✓ indeed: Found 6 jobs for 'System Engineer' (Bengaluru)
+2026-10-20 13:25:56,247 - scraper.multi_platform - INFO - [52/252] Scraping Indeed for 'Platform Engineer' in Bengaluru...
+2026-10-20 13:25:56,779 - scraper.multi_platform - INFO -   ✓ indeed: Found 7 jobs for 'Platform Engineer' (Bengaluru)
+2026-10-20 13:25:57,279 - scraper.multi_platform - INFO - [53/252] Scraping Indeed for 'Infrastructure Engineer' in Bengaluru...
+2026-10-20 13:25:57,935 - scraper.multi_platform - INFO -   ✓ indeed: Found 3 jobs for 'Infrastructure Engineer' (Bengaluru)
+2026-10-20 13:25:58,435 - scraper.multi_platform - INFO - [54/252] Scraping Indeed for 'Cloud Support Engineer' in Bengaluru...
+2026-10-20 13:25:58,964 - scraper.multi_platform - INFO -   ✓ indeed: Found 2 jobs for 'Cloud Support Engineer' (Bengaluru)
+2026-10-20 13:25:59,465 - scraper.multi_platform - INFO - [55/252] Scraping Indeed for 'DevSecOps Engineer' in Bengaluru...
+2026-10-20 13:25:59,962 - scraper.multi_platform - INFO -   ✓ indeed: Found 1 jobs for 'DevSecOps Engineer' (Bengaluru)
+2026-10-20 13:26:00,463 - scraper.multi_platform - INFO - [56/252] Scraping Indeed for 'Cloud Operations Engineer' in Bengaluru...
+2026-10-20 13:26:00,949 - scraper.multi_platform - INFO -   ✓ indeed: Found 1 jobs for 'Cloud Operations Engineer' (Bengaluru)
+2026-10-20 13:26:01,450 - scraper.multi_platform - INFO - [57/252] Scraping Indeed for 'Cloud Operations Architect' in Bengaluru...
+2026-10-20 13:26:01,911 - scraper.multi_platform - INFO -   ✓ indeed: Found 1 jobs for 'Cloud Operations Architect' (Bengaluru)
+2026-10-20 13:26:02,412 - scraper.multi_platform - INFO - [58/252] Scraping Indeed for 'Cloud Architect' in Bengaluru...
+2026-10-20 13:26:02,905 - scraper.multi_platform - INFO -   ✓ indeed: Found 1 jobs for 'Cloud Architect' (Bengaluru)
+2026-10-20 13:26:03,406 - scraper.multi_platform - INFO - [59/252] Scraping Indeed for 'DevOps Architect' in Bengaluru...
+2026-10-20 13:26:03,995 - scraper.multi_platform - INFO -   ✓ indeed: Found 1 jobs for 'DevOps Architect' (Bengaluru)
+2026-10-20 13:26:04,496 - scraper.multi_platform - INFO - [60/252] Scraping Indeed for 'Cloud Solutions Architect' in Bengaluru...
+2026-10-20 13:26:04,913 - scraper.multi_platform - INFO -   - indeed: No jobs returned for 'Cloud Solutions Architect' (Bengaluru)
+2026-10-20 13:26:05,414 - scraper.multi_platform - INFO - [61/252] Scraping Indeed for 'Infrastructure Operations Architect' in Bengaluru...
+2026-10-20 13:26:05,887 - scraper.multi_platform - INFO -   ✓ indeed: Found 1 jobs for 'Infrastructure Operations Architect' (Bengaluru)
+2026-10-20 13:26:06,387 - scraper.multi_platform - INFO - [62/252] Scraping Indeed for 'Forward Deployed Systems Engineer' in Bengaluru...
+2026-10-20 13:26:06,837 - scraper.multi_platform - INFO -   - indeed: No jobs returned for 'Forward Deployed Systems Engineer' (Bengaluru)
+2026-10-20 13:26:07,338 - scraper.multi_platform - INFO - [63/252] Scraping Indeed for 'Forward Deployed Engineer' in Bengaluru...
+2026-10-20 13:26:07,793 - scraper.multi_platform - INFO -   - indeed: No jobs returned for 'Forward Deployed Engineer' (Bengaluru)
+2026-10-20 13:26:08,294 - scraper.multi_platform - INFO - [64/252] Scraping Indeed for 'Cloud Engineer' in India (Remote)...
+2026-10-20 13:26:08,810 - scraper.multi_platform - INFO -   ✓ indeed: Found 5 jobs for 'Cloud Engineer' (India (Remote))
+2026-10-20 13:26:09,311 - scraper.multi_platform - INFO - [65/252] Scraping Indeed for 'DevOps Engineer' in India (Remote)...
+2026-10-20 13:26:09,788 - scraper.multi_platform - INFO -   ✓ indeed: Found 2 jobs for 'DevOps Engineer' (India (Remote))
+2026-10-20 13:26:10,290 - scraper.multi_platform - INFO - [66/252] Scraping Indeed for 'Site Reliability Engineer' in India (Remote)...
+2026-10-20 13:26:10,833 - scraper.multi_platform - INFO -   - indeed: No jobs returned for 'Site Reliability Engineer' (India (Remote))
+2026-10-20 13:26:11,334 - scraper.multi_platform - INFO - [67/252] Scraping Indeed for 'SRE' in India (Remote)...
+2026-10-20 13:26:11,822 - scraper.multi_platform - INFO -   ✓ indeed: Found 1 jobs for 'SRE' (India (Remote))
+2026-10-20 13:26:12,322 - scraper.multi_platform - INFO - [68/252] Scraping Indeed for 'AWS Cloud Engineer' in India (Remote)...
+2026-10-20 13:26:13,073 - scraper.multi_platform - INFO -   - indeed: No jobs returned for 'AWS Cloud Engineer' (India (Remote))
+2026-10-20 13:26:13,575 - scraper.multi_platform - INFO - [69/252] Scraping Indeed for 'Azure Cloud Engineer' in India (Remote)...
+2026-10-20 13:26:14,046 - scraper.multi_platform - INFO -   ✓ indeed: Found 1 jobs for 'Azure Cloud Engineer' (India (Remote))
+2026-10-20 13:26:14,547 - scraper.multi_platform - INFO - [70/252] Scraping Indeed for 'GCP Cloud Engineer' in India (Remote)...
+2026-10-20 13:26:14,996 - scraper.multi_platform - INFO -   - indeed: No jobs returned for 'GCP Cloud Engineer' (India (Remote))
+2026-10-20 13:26:15,496 - scraper.multi_platform - INFO - [71/252] Scraping Indeed for 'Google Cloud Engineer' in India (Remote)...
+2026-10-20 13:26:15,960 - scraper.multi_platform - INFO -   - indeed: No jobs returned for 'Google Cloud Engineer' (India (Remote))
+2026-10-20 13:26:16,461 - scraper.multi_platform - INFO - [72/252] Scraping Indeed for 'System Engineer' in India (Remote)...
+2026-10-20 13:26:17,146 - scraper.multi_platform - INFO -   ✓ indeed: Found 2 jobs for 'System Engineer' (India (Remote))
+2026-10-20 13:26:17,647 - scraper.multi_platform - INFO - [73/252] Scraping Indeed for 'Platform Engineer' in India (Remote)...
+2026-10-20 13:26:18,203 - scraper.multi_platform - INFO -   ✓ indeed: Found 2 jobs for 'Platform Engineer' (India (Remote))
+2026-10-20 13:26:18,704 - scraper.multi_platform - INFO - [74/252] Scraping Indeed for 'Infrastructure Engineer' in India (Remote)...
+2026-10-20 13:26:19,182 - scraper.multi_platform - INFO -   ✓ indeed: Found 2 jobs for 'Infrastructure Engineer' (India (Remote))
+2026-10-20 13:26:19,684 - scraper.multi_platform - INFO - [75/252] Scraping Indeed for 'Cloud Support Engineer' in India (Remote)...
+2026-10-20 13:26:20,121 - scraper.multi_platform - INFO -   ✓ indeed: Found 2 jobs for 'Cloud Support Engineer' (India (Remote))
+2026-10-20 13:26:20,623 - scraper.multi_platform - INFO - [76/252] Scraping Indeed for 'DevSecOps Engineer' in India (Remote)...
+2026-10-20 13:26:21,084 - scraper.multi_platform - INFO -   ✓ indeed: Found 1 jobs for 'DevSecOps Engineer' (India (Remote))
+2026-10-20 13:26:21,584 - scraper.multi_platform - INFO - [77/252] Scraping Indeed for 'Cloud Operations Engineer' in India (Remote)...
+2026-10-20 13:26:22,055 - scraper.multi_platform - INFO -   ✓ indeed: Found 2 jobs for 'Cloud Operations Engineer' (India (Remote))
+2026-10-20 13:26:22,557 - scraper.multi_platform - INFO - [78/252] Scraping Indeed for 'Cloud Operations Architect' in India (Remote)...
+2026-10-20 13:26:23,163 - scraper.multi_platform - INFO -   ✓ indeed: Found 2 jobs for 'Cloud Operations Architect' (India (Remote))
+2026-10-20 13:26:23,664 - scraper.multi_platform - INFO - [79/252] Scraping Indeed for 'Cloud Architect' in India (Remote)...
+2026-10-20 13:26:24,171 - scraper.multi_platform - INFO -   ✓ indeed: Found 5 jobs for 'Cloud Architect' (India (Remote))
+2026-10-20 13:26:24,672 - scraper.multi_platform - INFO - [80/252] Scraping Indeed for 'DevOps Architect' in India (Remote)...
+2026-10-20 13:26:25,185 - scraper.multi_platform - INFO -   ✓ indeed: Found 2 jobs for 'DevOps Architect' (India (Remote))
+2026-10-20 13:26:25,686 - scraper.multi_platform - INFO - [81/252] Scraping Indeed for 'Cloud Solutions Architect' in India (Remote)...
+2026-10-20 13:26:26,178 - scraper.multi_platform - INFO -   ✓ indeed: Found 4 jobs for 'Cloud Solutions Architect' (India (Remote))
+2026-10-20 13:26:26,678 - scraper.multi_platform - INFO - [82/252] Scraping Indeed for 'Infrastructure Operations Architect' in India (Remote)...
+2026-10-20 13:26:27,080 - scraper.multi_platform - INFO -   - indeed: No jobs returned for 'Infrastructure Operations Architect' (India (Remote))
+2026-10-20 13:26:27,581 - scraper.multi_platform - INFO - [83/252] Scraping Indeed for 'Forward Deployed Systems Engineer' in India (Remote)...
+2026-10-20 13:26:28,028 - scraper.multi_platform - INFO -   - indeed: No jobs returned for 'Forward Deployed Systems Engineer' (India (Remote))
+2026-10-20 13:26:28,529 - scraper.multi_platform - INFO - [84/252] Scraping Indeed for 'Forward Deployed Engineer' in India (Remote)...
+2026-10-20 13:26:28,937 - scraper.multi_platform - INFO -   - indeed: No jobs returned for 'Forward Deployed Engineer' (India (Remote))
+2026-10-20 13:26:29,438 - scraper.multi_platform - INFO - [85/252] Scraping Naukri for 'Cloud Engineer' in Bengaluru...
+2026-10-20 13:26:35,533 - scraper.multi_platform - INFO -   ✓ naukri: Found 9 jobs for 'Cloud Engineer' (Bengaluru)
+2026-10-20 13:26:36,034 - scraper.multi_platform - INFO - [86/252] Scraping Naukri for 'DevOps Engineer' in Bengaluru...
+2026-10-20 13:26:41,188 - scraper.multi_platform - INFO -   ✓ naukri: Found 3 jobs for 'DevOps Engineer' (Bengaluru)
+2026-10-20 13:26:41,689 - scraper.multi_platform - INFO - [87/252] Scraping Naukri for 'Site Reliability Engineer' in Bengaluru...
+2026-10-20 13:26:49,521 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:26:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:26:50,305 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:26:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:26:50,696 - scraper.multi_platform - INFO -   ✓ naukri: Found 2 jobs for 'Site Reliability Engineer' (Bengaluru)
+2026-10-20 13:26:51,197 - scraper.multi_platform - INFO - [88/252] Scraping Naukri for 'SRE' in Bengaluru...
+2026-10-20 13:26:59,216 - scraper.multi_platform - INFO -   ✓ naukri: Found 5 jobs for 'SRE' (Bengaluru)
+2026-10-20 13:26:59,717 - scraper.multi_platform - INFO - [89/252] Scraping Naukri for 'AWS Cloud Engineer' in Bengaluru...
+2026-10-20 13:27:08,740 - scraper.multi_platform - INFO -   ✓ naukri: Found 7 jobs for 'AWS Cloud Engineer' (Bengaluru)
+2026-10-20 13:27:09,240 - scraper.multi_platform - INFO - [90/252] Scraping Naukri for 'Azure Cloud Engineer' in Bengaluru...
+2026-10-20 13:27:12,929 - scraper.multi_platform - INFO -   ✓ naukri: Found 15 jobs for 'Azure Cloud Engineer' (Bengaluru)
+2026-10-20 13:27:13,430 - scraper.multi_platform - INFO - [91/252] Scraping Naukri for 'GCP Cloud Engineer' in Bengaluru...
+2026-10-20 13:27:14,191 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'GCP Cloud Engineer' (Bengaluru)
+2026-10-20 13:27:14,693 - scraper.multi_platform - INFO - [92/252] Scraping Naukri for 'Google Cloud Engineer' in Bengaluru...
+2026-10-20 13:27:20,682 - scraper.multi_platform - INFO -   ✓ naukri: Found 4 jobs for 'Google Cloud Engineer' (Bengaluru)
+2026-10-20 13:27:21,184 - scraper.multi_platform - INFO - [93/252] Scraping Naukri for 'System Engineer' in Bengaluru...
+2026-10-20 13:27:22,198 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'System Engineer' (Bengaluru)
+2026-10-20 13:27:22,698 - scraper.multi_platform - INFO - [94/252] Scraping Naukri for 'Platform Engineer' in Bengaluru...
+2026-10-20 13:27:32,410 - scraper.multi_platform - INFO -   ✓ naukri: Found 14 jobs for 'Platform Engineer' (Bengaluru)
+2026-10-20 13:27:32,911 - scraper.multi_platform - INFO - [95/252] Scraping Naukri for 'Infrastructure Engineer' in Bengaluru...
+2026-10-20 13:27:41,014 - scraper.multi_platform - INFO -   ✓ naukri: Found 5 jobs for 'Infrastructure Engineer' (Bengaluru)
+2026-10-20 13:27:41,514 - scraper.multi_platform - INFO - [96/252] Scraping Naukri for 'Cloud Support Engineer' in Bengaluru...
+2026-10-20 13:27:48,841 - scraper.multi_platform - INFO -   ✓ naukri: Found 1 jobs for 'Cloud Support Engineer' (Bengaluru)
+2026-10-20 13:27:49,342 - scraper.multi_platform - INFO - [97/252] Scraping Naukri for 'DevSecOps Engineer' in Bengaluru...
+2026-10-20 13:27:49,526 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:27:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:27:50,301 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:27:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:27:56,916 - scraper.multi_platform - INFO -   ✓ naukri: Found 2 jobs for 'DevSecOps Engineer' (Bengaluru)
+2026-10-20 13:27:57,416 - scraper.multi_platform - INFO - [98/252] Scraping Naukri for 'Cloud Operations Engineer' in Bengaluru...
+2026-10-20 13:28:05,677 - scraper.multi_platform - INFO -   ✓ naukri: Found 3 jobs for 'Cloud Operations Engineer' (Bengaluru)
+2026-10-20 13:28:06,178 - scraper.multi_platform - INFO - [99/252] Scraping Naukri for 'Cloud Operations Architect' in Bengaluru...
+2026-10-20 13:28:11,410 - scraper.multi_platform - INFO -   ✓ naukri: Found 2 jobs for 'Cloud Operations Architect' (Bengaluru)
+2026-10-20 13:28:11,911 - scraper.multi_platform - INFO - [100/252] Scraping Naukri for 'Cloud Architect' in Bengaluru...
+2026-10-20 13:28:20,616 - scraper.multi_platform - INFO -   ✓ naukri: Found 6 jobs for 'Cloud Architect' (Bengaluru)
+2026-10-20 13:28:21,117 - scraper.multi_platform - INFO - [101/252] Scraping Naukri for 'DevOps Architect' in Bengaluru...
+2026-10-20 13:28:29,566 - scraper.multi_platform - INFO -   ✓ naukri: Found 2 jobs for 'DevOps Architect' (Bengaluru)
+2026-10-20 13:28:30,067 - scraper.multi_platform - INFO - [102/252] Scraping Naukri for 'Cloud Solutions Architect' in Bengaluru...
+2026-10-20 13:28:39,602 - scraper.multi_platform - INFO -   ✓ naukri: Found 15 jobs for 'Cloud Solutions Architect' (Bengaluru)
+2026-10-20 13:28:40,103 - scraper.multi_platform - INFO - [103/252] Scraping Naukri for 'Infrastructure Operations Architect' in Bengaluru...
+2026-10-20 13:28:48,126 - scraper.multi_platform - INFO -   ✓ naukri: Found 2 jobs for 'Infrastructure Operations Architect' (Bengaluru)
+2026-10-20 13:28:48,628 - scraper.multi_platform - INFO - [104/252] Scraping Naukri for 'Forward Deployed Systems Engineer' in Bengaluru...
+2026-10-20 13:28:49,521 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:28:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:28:50,322 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:28:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:28:51,638 - scraper.multi_platform - INFO -   ✓ naukri: Found 15 jobs for 'Forward Deployed Systems Engineer' (Bengaluru)
+2026-10-20 13:28:52,138 - scraper.multi_platform - INFO - [105/252] Scraping Naukri for 'Forward Deployed Engineer' in Bengaluru...
+2026-10-20 13:28:53,025 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'Forward Deployed Engineer' (Bengaluru)
+2026-10-20 13:28:53,527 - scraper.multi_platform - INFO - [106/252] Scraping Naukri for 'Cloud Engineer' in India (Remote)...
+2026-10-20 13:28:54,462 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'Cloud Engineer' (India (Remote))
+2026-10-20 13:28:54,964 - scraper.multi_platform - INFO - [107/252] Scraping Naukri for 'DevOps Engineer' in India (Remote)...
+2026-10-20 13:28:55,876 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'DevOps Engineer' (India (Remote))
+2026-10-20 13:28:56,376 - scraper.multi_platform - INFO - [108/252] Scraping Naukri for 'Site Reliability Engineer' in India (Remote)...
+2026-10-20 13:28:57,318 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'Site Reliability Engineer' (India (Remote))
+2026-10-20 13:28:57,819 - scraper.multi_platform - INFO - [109/252] Scraping Naukri for 'SRE' in India (Remote)...
+2026-10-20 13:28:58,726 - scraper.multi_platform - INFO -   ✓ naukri: Found 2 jobs for 'SRE' (India (Remote))
+2026-10-20 13:28:59,227 - scraper.multi_platform - INFO - [110/252] Scraping Naukri for 'AWS Cloud Engineer' in India (Remote)...
+2026-10-20 13:28:59,944 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'AWS Cloud Engineer' (India (Remote))
+2026-10-20 13:29:00,445 - scraper.multi_platform - INFO - [111/252] Scraping Naukri for 'Azure Cloud Engineer' in India (Remote)...
+2026-10-20 13:29:01,031 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'Azure Cloud Engineer' (India (Remote))
+2026-10-20 13:29:01,532 - scraper.multi_platform - INFO - [112/252] Scraping Naukri for 'GCP Cloud Engineer' in India (Remote)...
+2026-10-20 13:29:02,244 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'GCP Cloud Engineer' (India (Remote))
+2026-10-20 13:29:02,745 - scraper.multi_platform - INFO - [113/252] Scraping Naukri for 'Google Cloud Engineer' in India (Remote)...
+2026-10-20 13:29:03,462 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'Google Cloud Engineer' (India (Remote))
+2026-10-20 13:29:03,963 - scraper.multi_platform - INFO - [114/252] Scraping Naukri for 'System Engineer' in India (Remote)...
+2026-10-20 13:29:04,872 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'System Engineer' (India (Remote))
+2026-10-20 13:29:05,373 - scraper.multi_platform - INFO - [115/252] Scraping Naukri for 'Platform Engineer' in India (Remote)...
+2026-10-20 13:29:06,567 - scraper.multi_platform - INFO -   ✓ naukri: Found 1 jobs for 'Platform Engineer' (India (Remote))
+2026-10-20 13:29:07,068 - scraper.multi_platform - INFO - [116/252] Scraping Naukri for 'Infrastructure Engineer' in India (Remote)...
+2026-10-20 13:29:07,961 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'Infrastructure Engineer' (India (Remote))
+2026-10-20 13:29:08,468 - scraper.multi_platform - INFO - [117/252] Scraping Naukri for 'Cloud Support Engineer' in India (Remote)...
+2026-10-20 13:29:09,396 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'Cloud Support Engineer' (India (Remote))
+2026-10-20 13:29:09,897 - scraper.multi_platform - INFO - [118/252] Scraping Naukri for 'DevSecOps Engineer' in India (Remote)...
+2026-10-20 13:29:10,599 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'DevSecOps Engineer' (India (Remote))
+2026-10-20 13:29:11,100 - scraper.multi_platform - INFO - [119/252] Scraping Naukri for 'Cloud Operations Engineer' in India (Remote)...
+2026-10-20 13:29:11,844 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'Cloud Operations Engineer' (India (Remote))
+2026-10-20 13:29:12,346 - scraper.multi_platform - INFO - [120/252] Scraping Naukri for 'Cloud Operations Architect' in India (Remote)...
+2026-10-20 13:29:13,296 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'Cloud Operations Architect' (India (Remote))
+2026-10-20 13:29:13,796 - scraper.multi_platform - INFO - [121/252] Scraping Naukri for 'Cloud Architect' in India (Remote)...
+2026-10-20 13:29:14,326 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'Cloud Architect' (India (Remote))
+2026-10-20 13:29:14,828 - scraper.multi_platform - INFO - [122/252] Scraping Naukri for 'DevOps Architect' in India (Remote)...
+2026-10-20 13:29:15,793 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'DevOps Architect' (India (Remote))
+2026-10-20 13:29:16,294 - scraper.multi_platform - INFO - [123/252] Scraping Naukri for 'Cloud Solutions Architect' in India (Remote)...
+2026-10-20 13:29:17,253 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'Cloud Solutions Architect' (India (Remote))
+2026-10-20 13:29:17,754 - scraper.multi_platform - INFO - [124/252] Scraping Naukri for 'Infrastructure Operations Architect' in India (Remote)...
+2026-10-20 13:29:18,806 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'Infrastructure Operations Architect' (India (Remote))
+2026-10-20 13:29:19,307 - scraper.multi_platform - INFO - [125/252] Scraping Naukri for 'Forward Deployed Systems Engineer' in India (Remote)...
+2026-10-20 13:29:27,798 - scraper.multi_platform - INFO -   ✓ naukri: Found 3 jobs for 'Forward Deployed Systems Engineer' (India (Remote))
+2026-10-20 13:29:28,298 - scraper.multi_platform - INFO - [126/252] Scraping Naukri for 'Forward Deployed Engineer' in India (Remote)...
+2026-10-20 13:29:29,514 - scraper.multi_platform - INFO -   - naukri: No jobs returned for 'Forward Deployed Engineer' (India (Remote))
+2026-10-20 13:29:30,015 - scraper.multi_platform - INFO - [127/252] Scraping Glassdoor for 'Cloud Engineer' in Bengaluru...
+2026-10-20 13:29:33,870 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 15 jobs for 'Cloud Engineer' (Bengaluru)
+2026-10-20 13:29:34,371 - scraper.multi_platform - INFO - [128/252] Scraping Glassdoor for 'DevOps Engineer' in Bengaluru...
+2026-10-20 13:29:36,188 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 6 jobs for 'DevOps Engineer' (Bengaluru)
+2026-10-20 13:29:36,692 - scraper.multi_platform - INFO - [129/252] Scraping Glassdoor for 'Site Reliability Engineer' in Bengaluru...
+2026-10-20 13:29:39,667 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 10 jobs for 'Site Reliability Engineer' (Bengaluru)
+2026-10-20 13:29:40,169 - scraper.multi_platform - INFO - [130/252] Scraping Glassdoor for 'SRE' in Bengaluru...
+2026-10-20 13:29:42,527 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 12 jobs for 'SRE' (Bengaluru)
+2026-10-20 13:29:43,028 - scraper.multi_platform - INFO - [131/252] Scraping Glassdoor for 'AWS Cloud Engineer' in Bengaluru...
+2026-10-20 13:29:46,004 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 15 jobs for 'AWS Cloud Engineer' (Bengaluru)
+2026-10-20 13:29:46,505 - scraper.multi_platform - INFO - [132/252] Scraping Glassdoor for 'Azure Cloud Engineer' in Bengaluru...
+2026-10-20 13:29:48,324 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 6 jobs for 'Azure Cloud Engineer' (Bengaluru)
+2026-10-20 13:29:48,825 - scraper.multi_platform - INFO - [133/252] Scraping Glassdoor for 'GCP Cloud Engineer' in Bengaluru...
+2026-10-20 13:29:49,522 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:29:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:29:50,376 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:29:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:29:51,628 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 15 jobs for 'GCP Cloud Engineer' (Bengaluru)
+2026-10-20 13:29:52,128 - scraper.multi_platform - INFO - [134/252] Scraping Glassdoor for 'Google Cloud Engineer' in Bengaluru...
+2026-10-20 13:29:55,040 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 15 jobs for 'Google Cloud Engineer' (Bengaluru)
+2026-10-20 13:29:55,542 - scraper.multi_platform - INFO - [135/252] Scraping Glassdoor for 'System Engineer' in Bengaluru...
+2026-10-20 13:29:59,855 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 15 jobs for 'System Engineer' (Bengaluru)
+2026-10-20 13:30:00,358 - scraper.multi_platform - INFO - [136/252] Scraping Glassdoor for 'Platform Engineer' in Bengaluru...
+2026-10-20 13:30:04,605 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 15 jobs for 'Platform Engineer' (Bengaluru)
+2026-10-20 13:30:05,108 - scraper.multi_platform - INFO - [137/252] Scraping Glassdoor for 'Infrastructure Engineer' in Bengaluru...
+2026-10-20 13:30:06,811 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:06] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:07,196 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:07] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:07,680 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:07] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:30:08,448 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 15 jobs for 'Infrastructure Engineer' (Bengaluru)
+2026-10-20 13:30:08,681 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:08] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:08,949 - scraper.multi_platform - INFO - [138/252] Scraping Glassdoor for 'Cloud Support Engineer' in Bengaluru...
+2026-10-20 13:30:10,192 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:10] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:11,693 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:11] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:12,009 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 15 jobs for 'Cloud Support Engineer' (Bengaluru)
+2026-10-20 13:30:12,511 - scraper.multi_platform - INFO - [139/252] Scraping Glassdoor for 'DevSecOps Engineer' in Bengaluru...
+2026-10-20 13:30:13,192 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:13] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:14,684 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:14] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:14,781 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 7 jobs for 'DevSecOps Engineer' (Bengaluru)
+2026-10-20 13:30:15,282 - scraper.multi_platform - INFO - [140/252] Scraping Glassdoor for 'Cloud Operations Engineer' in Bengaluru...
+2026-10-20 13:30:16,190 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:16] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:17,682 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:17] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:18,452 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 15 jobs for 'Cloud Operations Engineer' (Bengaluru)
+2026-10-20 13:30:18,953 - scraper.multi_platform - INFO - [141/252] Scraping Glassdoor for 'Cloud Operations Architect' in Bengaluru...
+2026-10-20 13:30:19,192 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:19] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:20,683 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:20] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:22,189 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:22] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:22,718 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 15 jobs for 'Cloud Operations Architect' (Bengaluru)
+2026-10-20 13:30:23,219 - scraper.multi_platform - INFO - [142/252] Scraping Glassdoor for 'Cloud Architect' in Bengaluru...
+2026-10-20 13:30:23,692 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:23] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:25,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:25] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:25,788 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:25] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:30:26,491 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 15 jobs for 'Cloud Architect' (Bengaluru)
+2026-10-20 13:30:26,690 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:26] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:26,992 - scraper.multi_platform - INFO - [143/252] Scraping Glassdoor for 'DevOps Architect' in Bengaluru...
+2026-10-20 13:30:28,194 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:28] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:29,694 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:29] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:30,624 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 15 jobs for 'DevOps Architect' (Bengaluru)
+2026-10-20 13:30:31,125 - scraper.multi_platform - INFO - [144/252] Scraping Glassdoor for 'Cloud Solutions Architect' in Bengaluru...
+2026-10-20 13:30:31,186 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:31] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:32,680 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:32] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:34,190 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:34] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:34,436 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 15 jobs for 'Cloud Solutions Architect' (Bengaluru)
+2026-10-20 13:30:34,937 - scraper.multi_platform - INFO - [145/252] Scraping Glassdoor for 'Infrastructure Operations Architect' in Bengaluru...
+2026-10-20 13:30:35,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:35] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:37,193 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:37] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:38,691 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:38] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:38,779 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 15 jobs for 'Infrastructure Operations Architect' (Bengaluru)
+2026-10-20 13:30:39,279 - scraper.multi_platform - INFO - [146/252] Scraping Glassdoor for 'Forward Deployed Systems Engineer' in Bengaluru...
+2026-10-20 13:30:40,181 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:40] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:40,370 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'Forward Deployed Systems Engineer' (Bengaluru)
+2026-10-20 13:30:40,871 - scraper.multi_platform - INFO - [147/252] Scraping Glassdoor for 'Forward Deployed Engineer' in Bengaluru...
+2026-10-20 13:30:41,682 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:41] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:42,520 - scraper.multi_platform - INFO -   ✓ glassdoor: Found 1 jobs for 'Forward Deployed Engineer' (Bengaluru)
+2026-10-20 13:30:43,021 - scraper.multi_platform - INFO - [148/252] Scraping Glassdoor for 'Cloud Engineer' in India (Remote)...
+2026-10-20 13:30:43,192 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:43] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:44,009 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'Cloud Engineer' (India (Remote))
+2026-10-20 13:30:44,509 - scraper.multi_platform - INFO - [149/252] Scraping Glassdoor for 'DevOps Engineer' in India (Remote)...
+2026-10-20 13:30:44,680 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:44] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:45,551 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'DevOps Engineer' (India (Remote))
+2026-10-20 13:30:45,786 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:45] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:30:46,052 - scraper.multi_platform - INFO - [150/252] Scraping Glassdoor for 'Site Reliability Engineer' in India (Remote)...
+2026-10-20 13:30:46,181 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:46] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:47,152 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'Site Reliability Engineer' (India (Remote))
+2026-10-20 13:30:47,653 - scraper.multi_platform - INFO - [151/252] Scraping Glassdoor for 'SRE' in India (Remote)...
+2026-10-20 13:30:47,692 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:47] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:48,707 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'SRE' (India (Remote))
+2026-10-20 13:30:49,182 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:49,208 - scraper.multi_platform - INFO - [152/252] Scraping Glassdoor for 'AWS Cloud Engineer' in India (Remote)...
+2026-10-20 13:30:50,246 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'AWS Cloud Engineer' (India (Remote))
+2026-10-20 13:30:50,680 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:50] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:50,746 - scraper.multi_platform - INFO - [153/252] Scraping Glassdoor for 'Azure Cloud Engineer' in India (Remote)...
+2026-10-20 13:30:51,690 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'Azure Cloud Engineer' (India (Remote))
+2026-10-20 13:30:52,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:52] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:52,191 - scraper.multi_platform - INFO - [154/252] Scraping Glassdoor for 'GCP Cloud Engineer' in India (Remote)...
+2026-10-20 13:30:53,392 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'GCP Cloud Engineer' (India (Remote))
+2026-10-20 13:30:53,690 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:53] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:53,894 - scraper.multi_platform - INFO - [155/252] Scraping Glassdoor for 'Google Cloud Engineer' in India (Remote)...
+2026-10-20 13:30:54,798 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'Google Cloud Engineer' (India (Remote))
+2026-10-20 13:30:55,183 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:55] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:55,300 - scraper.multi_platform - INFO - [156/252] Scraping Glassdoor for 'System Engineer' in India (Remote)...
+2026-10-20 13:30:56,431 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'System Engineer' (India (Remote))
+2026-10-20 13:30:56,685 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:56] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:56,932 - scraper.multi_platform - INFO - [157/252] Scraping Glassdoor for 'Platform Engineer' in India (Remote)...
+2026-10-20 13:30:57,959 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'Platform Engineer' (India (Remote))
+2026-10-20 13:30:58,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:58] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:58,460 - scraper.multi_platform - INFO - [158/252] Scraping Glassdoor for 'Infrastructure Engineer' in India (Remote)...
+2026-10-20 13:30:59,429 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'Infrastructure Engineer' (India (Remote))
+2026-10-20 13:30:59,682 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:30:59] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:30:59,929 - scraper.multi_platform - INFO - [159/252] Scraping Glassdoor for 'Cloud Support Engineer' in India (Remote)...
+2026-10-20 13:31:01,072 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'Cloud Support Engineer' (India (Remote))
+2026-10-20 13:31:01,192 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:01] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:01,573 - scraper.multi_platform - INFO - [160/252] Scraping Glassdoor for 'DevSecOps Engineer' in India (Remote)...
+2026-10-20 13:31:02,671 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'DevSecOps Engineer' (India (Remote))
+2026-10-20 13:31:02,684 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:02] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:03,173 - scraper.multi_platform - INFO - [161/252] Scraping Glassdoor for 'Cloud Operations Engineer' in India (Remote)...
+2026-10-20 13:31:04,180 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:04] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:04,286 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'Cloud Operations Engineer' (India (Remote))
+2026-10-20 13:31:04,786 - scraper.multi_platform - INFO - [162/252] Scraping Glassdoor for 'Cloud Operations Architect' in India (Remote)...
+2026-10-20 13:31:05,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:05] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:05,777 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:05] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:31:05,792 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'Cloud Operations Architect' (India (Remote))
+2026-10-20 13:31:06,293 - scraper.multi_platform - INFO - [163/252] Scraping Glassdoor for 'Cloud Architect' in India (Remote)...
+2026-10-20 13:31:07,193 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:07] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:07,290 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'Cloud Architect' (India (Remote))
+2026-10-20 13:31:07,792 - scraper.multi_platform - INFO - [164/252] Scraping Glassdoor for 'DevOps Architect' in India (Remote)...
+2026-10-20 13:31:08,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:08] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:08,761 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'DevOps Architect' (India (Remote))
+2026-10-20 13:31:09,262 - scraper.multi_platform - INFO - [165/252] Scraping Glassdoor for 'Cloud Solutions Architect' in India (Remote)...
+2026-10-20 13:31:10,178 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:10] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:10,353 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'Cloud Solutions Architect' (India (Remote))
+2026-10-20 13:31:10,854 - scraper.multi_platform - INFO - [166/252] Scraping Glassdoor for 'Infrastructure Operations Architect' in India (Remote)...
+2026-10-20 13:31:11,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:11] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:11,952 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'Infrastructure Operations Architect' (India (Remote))
+2026-10-20 13:31:12,453 - scraper.multi_platform - INFO - [167/252] Scraping Glassdoor for 'Forward Deployed Systems Engineer' in India (Remote)...
+2026-10-20 13:31:13,188 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:13] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:13,466 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'Forward Deployed Systems Engineer' (India (Remote))
+2026-10-20 13:31:13,967 - scraper.multi_platform - INFO - [168/252] Scraping Glassdoor for 'Forward Deployed Engineer' in India (Remote)...
+2026-10-20 13:31:14,683 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:14] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:15,015 - scraper.multi_platform - INFO -   - glassdoor: No jobs returned for 'Forward Deployed Engineer' (India (Remote))
+2026-10-20 13:31:15,516 - scraper.multi_platform - INFO - [169/252] Scraping Zip_recruiter for 'Cloud Engineer' in Bengaluru...
+2026-10-20 13:31:16,183 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:16] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:16,452 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'Cloud Engineer' (Bengaluru)
+2026-10-20 13:31:16,953 - scraper.multi_platform - INFO - [170/252] Scraping Zip_recruiter for 'DevOps Engineer' in Bengaluru...
+2026-10-20 13:31:17,693 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:17] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:17,753 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'DevOps Engineer' (Bengaluru)
+2026-10-20 13:31:18,253 - scraper.multi_platform - INFO - [171/252] Scraping Zip_recruiter for 'Site Reliability Engineer' in Bengaluru...
+2026-10-20 13:31:19,192 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:19] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:19,266 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'Site Reliability Engineer' (Bengaluru)
+2026-10-20 13:31:19,767 - scraper.multi_platform - INFO - [172/252] Scraping Zip_recruiter for 'SRE' in Bengaluru...
+2026-10-20 13:31:20,617 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'SRE' (Bengaluru)
+2026-10-20 13:31:20,681 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:20] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:21,119 - scraper.multi_platform - INFO - [173/252] Scraping Zip_recruiter for 'AWS Cloud Engineer' in Bengaluru...
+2026-10-20 13:31:21,979 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'AWS Cloud Engineer' (Bengaluru)
+2026-10-20 13:31:22,189 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:22] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:22,480 - scraper.multi_platform - INFO - [174/252] Scraping Zip_recruiter for 'Azure Cloud Engineer' in Bengaluru...
+2026-10-20 13:31:23,356 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'Azure Cloud Engineer' (Bengaluru)
+2026-10-20 13:31:23,680 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:23] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:23,857 - scraper.multi_platform - INFO - [175/252] Scraping Zip_recruiter for 'GCP Cloud Engineer' in Bengaluru...
+2026-10-20 13:31:24,825 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'GCP Cloud Engineer' (Bengaluru)
+2026-10-20 13:31:25,181 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:25] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:25,326 - scraper.multi_platform - INFO - [176/252] Scraping Zip_recruiter for 'Google Cloud Engineer' in Bengaluru...
+2026-10-20 13:31:25,791 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:25] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:31:26,131 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'Google Cloud Engineer' (Bengaluru)
+2026-10-20 13:31:26,631 - scraper.multi_platform - INFO - [177/252] Scraping Zip_recruiter for 'System Engineer' in Bengaluru...
+2026-10-20 13:31:26,681 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:26] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:27,498 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'System Engineer' (Bengaluru)
+2026-10-20 13:31:27,999 - scraper.multi_platform - INFO - [178/252] Scraping Zip_recruiter for 'Platform Engineer' in Bengaluru...
+2026-10-20 13:31:28,184 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:28] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:28,890 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'Platform Engineer' (Bengaluru)
+2026-10-20 13:31:29,391 - scraper.multi_platform - INFO - [179/252] Scraping Zip_recruiter for 'Infrastructure Engineer' in Bengaluru...
+2026-10-20 13:31:29,690 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:29] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:30,203 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'Infrastructure Engineer' (Bengaluru)
+2026-10-20 13:31:30,704 - scraper.multi_platform - INFO - [180/252] Scraping Zip_recruiter for 'Cloud Support Engineer' in Bengaluru...
+2026-10-20 13:31:31,190 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:31] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:31,636 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'Cloud Support Engineer' (Bengaluru)
+2026-10-20 13:31:32,137 - scraper.multi_platform - INFO - [181/252] Scraping Zip_recruiter for 'DevSecOps Engineer' in Bengaluru...
+2026-10-20 13:31:32,683 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:32] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:32,940 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'DevSecOps Engineer' (Bengaluru)
+2026-10-20 13:31:33,441 - scraper.multi_platform - INFO - [182/252] Scraping Zip_recruiter for 'Cloud Operations Engineer' in Bengaluru...
+2026-10-20 13:31:34,192 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:34] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:34,399 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'Cloud Operations Engineer' (Bengaluru)
+2026-10-20 13:31:34,900 - scraper.multi_platform - INFO - [183/252] Scraping Zip_recruiter for 'Cloud Operations Architect' in Bengaluru...
+2026-10-20 13:31:35,680 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:35] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:35,818 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'Cloud Operations Architect' (Bengaluru)
+2026-10-20 13:31:36,319 - scraper.multi_platform - INFO - [184/252] Scraping Zip_recruiter for 'Cloud Architect' in Bengaluru...
+2026-10-20 13:31:37,182 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:37] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:37,392 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'Cloud Architect' (Bengaluru)
+2026-10-20 13:31:37,893 - scraper.multi_platform - INFO - [185/252] Scraping Zip_recruiter for 'DevOps Architect' in Bengaluru...
+2026-10-20 13:31:38,687 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:38] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:38,952 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'DevOps Architect' (Bengaluru)
+2026-10-20 13:31:39,453 - scraper.multi_platform - INFO - [186/252] Scraping Zip_recruiter for 'Cloud Solutions Architect' in Bengaluru...
+2026-10-20 13:31:40,183 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:40] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:40,268 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'Cloud Solutions Architect' (Bengaluru)
+2026-10-20 13:31:40,769 - scraper.multi_platform - INFO - [187/252] Scraping Zip_recruiter for 'Infrastructure Operations Architect' in Bengaluru...
+2026-10-20 13:31:41,656 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'Infrastructure Operations Architect' (Bengaluru)
+2026-10-20 13:31:41,695 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:41] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:42,158 - scraper.multi_platform - INFO - [188/252] Scraping Zip_recruiter for 'Forward Deployed Systems Engineer' in Bengaluru...
+2026-10-20 13:31:43,077 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'Forward Deployed Systems Engineer' (Bengaluru)
+2026-10-20 13:31:43,184 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:43] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:43,578 - scraper.multi_platform - INFO - [189/252] Scraping Zip_recruiter for 'Forward Deployed Engineer' in Bengaluru...
+2026-10-20 13:31:44,442 - scraper.multi_platform - INFO -   - zip_recruiter: No jobs returned for 'Forward Deployed Engineer' (Bengaluru)
+2026-10-20 13:31:44,684 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:44] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:44,942 - scraper.multi_platform - INFO - [190/252] Scraping Google for 'Cloud Engineer' in Bengaluru...
+2026-10-20 13:31:45,402 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Cloud Engineer' (Bengaluru)
+2026-10-20 13:31:45,798 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:45] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:31:45,903 - scraper.multi_platform - INFO - [191/252] Scraping Google for 'DevOps Engineer' in Bengaluru...
+2026-10-20 13:31:46,191 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:46] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:46,293 - scraper.multi_platform - INFO -   - google: No jobs returned for 'DevOps Engineer' (Bengaluru)
+2026-10-20 13:31:46,794 - scraper.multi_platform - INFO - [192/252] Scraping Google for 'Site Reliability Engineer' in Bengaluru...
+2026-10-20 13:31:47,310 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Site Reliability Engineer' (Bengaluru)
+2026-10-20 13:31:47,686 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:47] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:47,811 - scraper.multi_platform - INFO - [193/252] Scraping Google for 'SRE' in Bengaluru...
+2026-10-20 13:31:48,190 - scraper.multi_platform - INFO -   - google: No jobs returned for 'SRE' (Bengaluru)
+2026-10-20 13:31:48,690 - scraper.multi_platform - INFO - [194/252] Scraping Google for 'AWS Cloud Engineer' in Bengaluru...
+2026-10-20 13:31:49,140 - scraper.multi_platform - INFO -   - google: No jobs returned for 'AWS Cloud Engineer' (Bengaluru)
+2026-10-20 13:31:49,182 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:49,643 - scraper.multi_platform - INFO - [195/252] Scraping Google for 'Azure Cloud Engineer' in Bengaluru...
+2026-10-20 13:31:50,078 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Azure Cloud Engineer' (Bengaluru)
+2026-10-20 13:31:50,578 - scraper.multi_platform - INFO - [196/252] Scraping Google for 'GCP Cloud Engineer' in Bengaluru...
+2026-10-20 13:31:50,682 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:50] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:50,995 - scraper.multi_platform - INFO -   - google: No jobs returned for 'GCP Cloud Engineer' (Bengaluru)
+2026-10-20 13:31:51,496 - scraper.multi_platform - INFO - [197/252] Scraping Google for 'Google Cloud Engineer' in Bengaluru...
+2026-10-20 13:31:51,892 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Google Cloud Engineer' (Bengaluru)
+2026-10-20 13:31:52,179 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:52] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:52,394 - scraper.multi_platform - INFO - [198/252] Scraping Google for 'System Engineer' in Bengaluru...
+2026-10-20 13:31:52,765 - scraper.multi_platform - INFO -   - google: No jobs returned for 'System Engineer' (Bengaluru)
+2026-10-20 13:31:53,266 - scraper.multi_platform - INFO - [199/252] Scraping Google for 'Platform Engineer' in Bengaluru...
+2026-10-20 13:31:53,632 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Platform Engineer' (Bengaluru)
+2026-10-20 13:31:53,682 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:53] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:54,133 - scraper.multi_platform - INFO - [200/252] Scraping Google for 'Infrastructure Engineer' in Bengaluru...
+2026-10-20 13:31:54,595 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Infrastructure Engineer' (Bengaluru)
+2026-10-20 13:31:55,096 - scraper.multi_platform - INFO - [201/252] Scraping Google for 'Cloud Support Engineer' in Bengaluru...
+2026-10-20 13:31:55,187 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:55] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:55,490 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Cloud Support Engineer' (Bengaluru)
+2026-10-20 13:31:55,994 - scraper.multi_platform - INFO - [202/252] Scraping Google for 'DevSecOps Engineer' in Bengaluru...
+2026-10-20 13:31:56,476 - scraper.multi_platform - INFO -   - google: No jobs returned for 'DevSecOps Engineer' (Bengaluru)
+2026-10-20 13:31:56,693 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:56] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:56,977 - scraper.multi_platform - INFO - [203/252] Scraping Google for 'Cloud Operations Engineer' in Bengaluru...
+2026-10-20 13:31:57,362 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Cloud Operations Engineer' (Bengaluru)
+2026-10-20 13:31:57,863 - scraper.multi_platform - INFO - [204/252] Scraping Google for 'Cloud Operations Architect' in Bengaluru...
+2026-10-20 13:31:58,193 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:58] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:58,404 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Cloud Operations Architect' (Bengaluru)
+2026-10-20 13:31:58,905 - scraper.multi_platform - INFO - [205/252] Scraping Google for 'Cloud Architect' in Bengaluru...
+2026-10-20 13:31:59,335 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Cloud Architect' (Bengaluru)
+2026-10-20 13:31:59,693 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:31:59] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:31:59,836 - scraper.multi_platform - INFO - [206/252] Scraping Google for 'DevOps Architect' in Bengaluru...
+2026-10-20 13:32:00,210 - scraper.multi_platform - INFO -   - google: No jobs returned for 'DevOps Architect' (Bengaluru)
+2026-10-20 13:32:00,711 - scraper.multi_platform - INFO - [207/252] Scraping Google for 'Cloud Solutions Architect' in Bengaluru...
+2026-10-20 13:32:01,127 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Cloud Solutions Architect' (Bengaluru)
+2026-10-20 13:32:01,179 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:01] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:01,628 - scraper.multi_platform - INFO - [208/252] Scraping Google for 'Infrastructure Operations Architect' in Bengaluru...
+2026-10-20 13:32:02,060 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Infrastructure Operations Architect' (Bengaluru)
+2026-10-20 13:32:02,560 - scraper.multi_platform - INFO - [209/252] Scraping Google for 'Forward Deployed Systems Engineer' in Bengaluru...
+2026-10-20 13:32:02,683 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:02] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:02,975 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Forward Deployed Systems Engineer' (Bengaluru)
+2026-10-20 13:32:03,476 - scraper.multi_platform - INFO - [210/252] Scraping Google for 'Forward Deployed Engineer' in Bengaluru...
+2026-10-20 13:32:03,906 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Forward Deployed Engineer' (Bengaluru)
+2026-10-20 13:32:04,193 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:04] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:04,407 - scraper.multi_platform - INFO - [211/252] Scraping Google for 'Cloud Engineer' in India (Remote)...
+2026-10-20 13:32:04,933 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Cloud Engineer' (India (Remote))
+2026-10-20 13:32:05,434 - scraper.multi_platform - INFO - [212/252] Scraping Google for 'DevOps Engineer' in India (Remote)...
+2026-10-20 13:32:05,681 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:05] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:05,791 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:05] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:32:05,863 - scraper.multi_platform - INFO -   - google: No jobs returned for 'DevOps Engineer' (India (Remote))
+2026-10-20 13:32:06,364 - scraper.multi_platform - INFO - [213/252] Scraping Google for 'Site Reliability Engineer' in India (Remote)...
+2026-10-20 13:32:06,819 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Site Reliability Engineer' (India (Remote))
+2026-10-20 13:32:07,192 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:07] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:07,320 - scraper.multi_platform - INFO - [214/252] Scraping Google for 'SRE' in India (Remote)...
+2026-10-20 13:32:07,771 - scraper.multi_platform - INFO -   - google: No jobs returned for 'SRE' (India (Remote))
+2026-10-20 13:32:08,272 - scraper.multi_platform - INFO - [215/252] Scraping Google for 'AWS Cloud Engineer' in India (Remote)...
+2026-10-20 13:32:08,694 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:08] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:08,729 - scraper.multi_platform - INFO -   - google: No jobs returned for 'AWS Cloud Engineer' (India (Remote))
+2026-10-20 13:32:09,230 - scraper.multi_platform - INFO - [216/252] Scraping Google for 'Azure Cloud Engineer' in India (Remote)...
+2026-10-20 13:32:09,758 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Azure Cloud Engineer' (India (Remote))
+2026-10-20 13:32:10,182 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:10] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:10,260 - scraper.multi_platform - INFO - [217/252] Scraping Google for 'GCP Cloud Engineer' in India (Remote)...
+2026-10-20 13:32:10,721 - scraper.multi_platform - INFO -   - google: No jobs returned for 'GCP Cloud Engineer' (India (Remote))
+2026-10-20 13:32:11,223 - scraper.multi_platform - INFO - [218/252] Scraping Google for 'Google Cloud Engineer' in India (Remote)...
+2026-10-20 13:32:11,601 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Google Cloud Engineer' (India (Remote))
+2026-10-20 13:32:11,694 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:11] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:12,102 - scraper.multi_platform - INFO - [219/252] Scraping Google for 'System Engineer' in India (Remote)...
+2026-10-20 13:32:12,546 - scraper.multi_platform - INFO -   - google: No jobs returned for 'System Engineer' (India (Remote))
+2026-10-20 13:32:13,047 - scraper.multi_platform - INFO - [220/252] Scraping Google for 'Platform Engineer' in India (Remote)...
+2026-10-20 13:32:13,193 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:13] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:13,495 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Platform Engineer' (India (Remote))
+2026-10-20 13:32:13,996 - scraper.multi_platform - INFO - [221/252] Scraping Google for 'Infrastructure Engineer' in India (Remote)...
+2026-10-20 13:32:14,407 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Infrastructure Engineer' (India (Remote))
+2026-10-20 13:32:14,688 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:14] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:14,908 - scraper.multi_platform - INFO - [222/252] Scraping Google for 'Cloud Support Engineer' in India (Remote)...
+2026-10-20 13:32:15,341 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Cloud Support Engineer' (India (Remote))
+2026-10-20 13:32:15,842 - scraper.multi_platform - INFO - [223/252] Scraping Google for 'DevSecOps Engineer' in India (Remote)...
+2026-10-20 13:32:16,193 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:16] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:16,281 - scraper.multi_platform - INFO -   - google: No jobs returned for 'DevSecOps Engineer' (India (Remote))
+2026-10-20 13:32:16,783 - scraper.multi_platform - INFO - [224/252] Scraping Google for 'Cloud Operations Engineer' in India (Remote)...
+2026-10-20 13:32:17,194 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Cloud Operations Engineer' (India (Remote))
+2026-10-20 13:32:17,682 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:17] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:17,695 - scraper.multi_platform - INFO - [225/252] Scraping Google for 'Cloud Operations Architect' in India (Remote)...
+2026-10-20 13:32:18,127 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Cloud Operations Architect' (India (Remote))
+2026-10-20 13:32:18,627 - scraper.multi_platform - INFO - [226/252] Scraping Google for 'Cloud Architect' in India (Remote)...
+2026-10-20 13:32:19,103 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Cloud Architect' (India (Remote))
+2026-10-20 13:32:19,193 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:19] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:19,604 - scraper.multi_platform - INFO - [227/252] Scraping Google for 'DevOps Architect' in India (Remote)...
+2026-10-20 13:32:20,011 - scraper.multi_platform - INFO -   - google: No jobs returned for 'DevOps Architect' (India (Remote))
+2026-10-20 13:32:20,512 - scraper.multi_platform - INFO - [228/252] Scraping Google for 'Cloud Solutions Architect' in India (Remote)...
+2026-10-20 13:32:20,690 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:20] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:20,981 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Cloud Solutions Architect' (India (Remote))
+2026-10-20 13:32:21,482 - scraper.multi_platform - INFO - [229/252] Scraping Google for 'Infrastructure Operations Architect' in India (Remote)...
+2026-10-20 13:32:21,957 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Infrastructure Operations Architect' (India (Remote))
+2026-10-20 13:32:22,180 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:22] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:22,458 - scraper.multi_platform - INFO - [230/252] Scraping Google for 'Forward Deployed Systems Engineer' in India (Remote)...
+2026-10-20 13:32:22,853 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Forward Deployed Systems Engineer' (India (Remote))
+2026-10-20 13:32:23,354 - scraper.multi_platform - INFO - [231/252] Scraping Google for 'Forward Deployed Engineer' in India (Remote)...
+2026-10-20 13:32:23,683 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:23] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:23,710 - scraper.multi_platform - INFO -   - google: No jobs returned for 'Forward Deployed Engineer' (India (Remote))
+2026-10-20 13:32:24,210 - scraper.multi_platform - INFO - [232/252] Scraping Bayt for 'Cloud Engineer' in Bengaluru...
+2026-10-20 13:32:25,184 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:25] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:25,899 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:25] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:32:26,289 - scraper.multi_platform - INFO -   ✓ bayt: Found 1 jobs for 'Cloud Engineer' (Bengaluru)
+2026-10-20 13:32:26,683 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:26] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:26,791 - scraper.multi_platform - INFO - [233/252] Scraping Bayt for 'DevOps Engineer' in Bengaluru...
+2026-10-20 13:32:28,185 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:28] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:28,586 - scraper.multi_platform - INFO -   - bayt: No jobs returned for 'DevOps Engineer' (Bengaluru)
+2026-10-20 13:32:29,087 - scraper.multi_platform - INFO - [234/252] Scraping Bayt for 'Site Reliability Engineer' in Bengaluru...
+2026-10-20 13:32:29,681 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:29] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:30,750 - scraper.multi_platform - INFO -   - bayt: No jobs returned for 'Site Reliability Engineer' (Bengaluru)
+2026-10-20 13:32:31,183 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:31] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:31,251 - scraper.multi_platform - INFO - [235/252] Scraping Bayt for 'SRE' in Bengaluru...
+2026-10-20 13:32:32,685 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:32] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:32,837 - scraper.multi_platform - INFO -   - bayt: No jobs returned for 'SRE' (Bengaluru)
+2026-10-20 13:32:33,338 - scraper.multi_platform - INFO - [236/252] Scraping Bayt for 'AWS Cloud Engineer' in Bengaluru...
+2026-10-20 13:32:34,186 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:34] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:35,132 - scraper.multi_platform - INFO -   - bayt: No jobs returned for 'AWS Cloud Engineer' (Bengaluru)
+2026-10-20 13:32:35,639 - scraper.multi_platform - INFO - [237/252] Scraping Bayt for 'Azure Cloud Engineer' in Bengaluru...
+2026-10-20 13:32:35,686 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:35] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:37,186 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:37] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:37,512 - scraper.multi_platform - INFO -   - bayt: No jobs returned for 'Azure Cloud Engineer' (Bengaluru)
+2026-10-20 13:32:38,013 - scraper.multi_platform - INFO - [238/252] Scraping Bayt for 'GCP Cloud Engineer' in Bengaluru...
+2026-10-20 13:32:38,683 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:38] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:39,990 - scraper.multi_platform - INFO -   ✓ bayt: Found 1 jobs for 'GCP Cloud Engineer' (Bengaluru)
+2026-10-20 13:32:40,184 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:40] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:40,493 - scraper.multi_platform - INFO - [239/252] Scraping Bayt for 'Google Cloud Engineer' in Bengaluru...
+2026-10-20 13:32:41,681 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:41] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:42,700 - scraper.multi_platform - INFO -   ✓ bayt: Found 1 jobs for 'Google Cloud Engineer' (Bengaluru)
+2026-10-20 13:32:43,182 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:43] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:43,201 - scraper.multi_platform - INFO - [240/252] Scraping Bayt for 'System Engineer' in Bengaluru...
+2026-10-20 13:32:44,690 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:44] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:45,147 - scraper.multi_platform - INFO -   - bayt: No jobs returned for 'System Engineer' (Bengaluru)
+2026-10-20 13:32:45,648 - scraper.multi_platform - INFO - [241/252] Scraping Bayt for 'Platform Engineer' in Bengaluru...
+2026-10-20 13:32:45,890 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:45] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:32:46,190 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:46] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:47,683 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:47] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:47,779 - scraper.multi_platform - INFO -   - bayt: No jobs returned for 'Platform Engineer' (Bengaluru)
+2026-10-20 13:32:48,280 - scraper.multi_platform - INFO - [242/252] Scraping Bayt for 'Infrastructure Engineer' in Bengaluru...
+2026-10-20 13:32:49,191 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:49] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:49,904 - scraper.multi_platform - INFO -   - bayt: No jobs returned for 'Infrastructure Engineer' (Bengaluru)
+2026-10-20 13:32:50,405 - scraper.multi_platform - INFO - [243/252] Scraping Bayt for 'Cloud Support Engineer' in Bengaluru...
+2026-10-20 13:32:50,690 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:50] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:52,181 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:52] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:52,770 - scraper.multi_platform - INFO -   ✓ bayt: Found 1 jobs for 'Cloud Support Engineer' (Bengaluru)
+2026-10-20 13:32:53,271 - scraper.multi_platform - INFO - [244/252] Scraping Bayt for 'DevSecOps Engineer' in Bengaluru...
+2026-10-20 13:32:53,691 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:53] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:54,967 - scraper.multi_platform - INFO -   - bayt: No jobs returned for 'DevSecOps Engineer' (Bengaluru)
+2026-10-20 13:32:55,179 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:55] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:55,468 - scraper.multi_platform - INFO - [245/252] Scraping Bayt for 'Cloud Operations Engineer' in Bengaluru...
+2026-10-20 13:32:56,686 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:56] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:57,220 - scraper.multi_platform - INFO -   - bayt: No jobs returned for 'Cloud Operations Engineer' (Bengaluru)
+2026-10-20 13:32:57,721 - scraper.multi_platform - INFO - [246/252] Scraping Bayt for 'Cloud Operations Architect' in Bengaluru...
+2026-10-20 13:32:58,190 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:58] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:59,680 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:32:59] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:32:59,837 - scraper.multi_platform - INFO -   - bayt: No jobs returned for 'Cloud Operations Architect' (Bengaluru)
+2026-10-20 13:33:00,338 - scraper.multi_platform - INFO - [247/252] Scraping Bayt for 'Cloud Architect' in Bengaluru...
+2026-10-20 13:33:01,180 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:01] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:33:02,449 - scraper.multi_platform - INFO -   ✓ bayt: Found 1 jobs for 'Cloud Architect' (Bengaluru)
+2026-10-20 13:33:02,693 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:02] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:33:02,950 - scraper.multi_platform - INFO - [248/252] Scraping Bayt for 'DevOps Architect' in Bengaluru...
+2026-10-20 13:33:04,190 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:04] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:33:04,518 - scraper.multi_platform - INFO -   - bayt: No jobs returned for 'DevOps Architect' (Bengaluru)
+2026-10-20 13:33:05,020 - scraper.multi_platform - INFO - [249/252] Scraping Bayt for 'Cloud Solutions Architect' in Bengaluru...
+2026-10-20 13:33:05,683 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:05] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:33:05,931 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:05] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:33:07,078 - scraper.multi_platform - INFO -   ✓ bayt: Found 1 jobs for 'Cloud Solutions Architect' (Bengaluru)
+2026-10-20 13:33:07,185 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:07] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:33:07,578 - scraper.multi_platform - INFO - [250/252] Scraping Bayt for 'Infrastructure Operations Architect' in Bengaluru...
+2026-10-20 13:33:08,680 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:08] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:33:09,899 - scraper.multi_platform - INFO -   - bayt: No jobs returned for 'Infrastructure Operations Architect' (Bengaluru)
+2026-10-20 13:33:10,190 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:10] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:33:10,400 - scraper.multi_platform - INFO - [251/252] Scraping Bayt for 'Forward Deployed Systems Engineer' in Bengaluru...
+2026-10-20 13:33:11,691 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:11] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:33:12,086 - scraper.multi_platform - INFO -   - bayt: No jobs returned for 'Forward Deployed Systems Engineer' (Bengaluru)
+2026-10-20 13:33:12,587 - scraper.multi_platform - INFO - [252/252] Scraping Bayt for 'Forward Deployed Engineer' in Bengaluru...
+2026-10-20 13:33:13,189 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:13] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:33:14,440 - scraper.multi_platform - INFO -   - bayt: No jobs returned for 'Forward Deployed Engineer' (Bengaluru)
+2026-10-20 13:33:14,686 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:14] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:33:14,941 - scraper.multi_platform - INFO - ✓ Scraping complete: 862 raw → 283 unique jobs
+2026-10-20 13:33:14,943 - filter.engine - INFO - 🔎 Filtering 283 jobs (today_only=True, max_hours=2, location_mode=both)...
+2026-10-20 13:33:15,539 - filter.engine - INFO - ✓ Filter result: 283 → 52 jobs matched
+2026-10-20 13:33:15,578 - web.routes - INFO - ✓ Background scrape finished. Added 52 new jobs to DB.
+2026-10-20 13:33:16,181 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:16] "GET /api/scrape-status HTTP/1.1" 200 -
+2026-10-20 13:33:16,225 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:16] "GET /api/jobs?page=1&per_page=12&status=all&location=both&hours=2 HTTP/1.1" 200 -
+2026-10-20 13:33:17,048 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:17] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:33:26,434 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:26] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:33:44,865 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:44] "PUT /api/job/636/status HTTP/1.1" 200 -
+2026-10-20 13:33:45,713 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:45] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:33:46,546 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:33:46] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:34:06,295 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:34:06] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:34:26,351 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:34:26] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:34:46,310 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:34:46] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:34:53,521 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:34:53] "PUT /api/job/637/status HTTP/1.1" 200 -
+2026-10-20 13:34:54,394 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:34:54] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:35:06,332 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:35:06] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:35:12,489 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:35:12] "PUT /api/job/638/status HTTP/1.1" 200 -
+2026-10-20 13:35:13,336 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:35:13] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:35:26,390 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:35:26] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:35:46,690 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:35:46] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:36:06,289 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:36:06] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:36:38,918 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:36:38] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:36:40,047 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:36:40] "PUT /api/job/640/status HTTP/1.1" 200 -
+2026-10-20 13:36:40,924 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:36:40] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:36:42,022 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:36:42] "PUT /api/job/639/status HTTP/1.1" 200 -
+2026-10-20 13:36:42,854 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:36:42] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:36:46,532 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:36:46] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:37:06,325 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:37:06] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:37:26,402 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:37:26] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:37:50,387 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:37:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:38:50,442 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:38:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:39:50,410 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:39:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:40:50,439 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:40:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:41:50,443 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:41:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:42:50,461 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:42:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:43:50,351 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:43:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:44:50,480 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:44:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:45:50,442 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:45:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:46:50,393 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:46:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:47:50,335 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:47:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:48:50,611 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:48:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:49:50,316 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:49:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -
+2026-10-20 13:50:50,379 - werkzeug - INFO - 127.0.0.1 - - [20/Oct/2026 13:50:50] "GET /api/stats?hours=2 HTTP/1.1" 200 -

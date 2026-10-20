@@ -7,11 +7,12 @@ import logging
 import threading
 from datetime import datetime, timezone, timedelta
 from flask import Blueprint, jsonify, render_template, request, abort, current_app
-from sqlalchemy import case
-from db.models import db, Job
+from sqlalchemy import case, func
+from db.models import db, Job, PortalJob
 from scraper.multi_platform import RealJobScraper
 from scraper.company_portals import CompanyPortalsManager
 from scraper.websites_scraper import WebsitesManager
+from scraper.portal_jobs_scanner import PortalJobsScanner
 from filter.engine import FilterEngine
 import yaml
 import os
@@ -271,6 +272,49 @@ def page_portals():
         websites=websites,
         categories_companies=categories_companies,
         categories_websites=categories_websites,
+        stats=stats
+    )
+
+@main_bp.route('/portal-jobs', strict_slashes=False)
+@main_bp.route('/portaljobs', strict_slashes=False)
+@main_bp.route('/portal-postings', strict_slashes=False)
+@main_bp.route('/company-jobs', strict_slashes=False)
+@main_bp.route('/portal-openings', strict_slashes=False)
+def page_portal_jobs():
+    """
+    Direct Career Portals Job Postings Page
+    Scans & lists jobs from 100 Big Company Portals and 24 Tech Websites
+    filtered for < 4 years experience and scored against Deepanshu Yadav's resume skills.
+    """
+    config = current_app.config.get('JOB_CONFIG', {})
+    c_mgr = CompanyPortalsManager(config)
+    categories = c_mgr.get_categories()
+    ats_types = ['workday', 'greenhouse', 'lever', 'smartrecruiters', 'taleo', 'successfactors', 'custom']
+
+    # Auto-seed initial top-company postings if table is empty so user gets instant value
+    total_count = PortalJob.query.count()
+    if total_count == 0:
+        scanner = PortalJobsScanner(config)
+        quick_jobs = scanner.scan(mode='quick', max_jobs_per_company=3)
+        scanner.save_jobs_to_db(quick_jobs, app=current_app._get_current_object())
+        total_count = PortalJob.query.count()
+
+    qualified_count = PortalJob.query.filter(PortalJob.experience_max <= 4).count()
+    avg_score_raw = db.session.query(func.avg(PortalJob.match_score)).scalar()
+    avg_score = int(round(avg_score_raw)) if avg_score_raw else 0
+    companies_count = db.session.query(func.count(func.distinct(PortalJob.company))).scalar() or 0
+
+    stats = {
+        'total_jobs': total_count,
+        'qualified_jobs': qualified_count,
+        'avg_match_score': avg_score,
+        'companies_discovered': companies_count,
+    }
+
+    return render_template(
+        'portal_jobs.html',
+        categories=categories,
+        ats_types=ats_types,
         stats=stats
     )
 
@@ -602,4 +646,205 @@ def get_portals_stats():
         'companies': c_mgr.get_stats(),
         'websites': w_mgr.get_stats(),
     })
+
+
+# --- Portal Jobs Scanner API Routes ---
+
+_portal_scanner_lock = threading.Lock()
+_portal_scanner_obj = None
+
+def get_portal_scanner(config=None):
+    global _portal_scanner_obj
+    with _portal_scanner_lock:
+        if _portal_scanner_obj is None:
+            cfg = config or current_app.config.get('JOB_CONFIG', {})
+            _portal_scanner_obj = PortalJobsScanner(cfg)
+        return _portal_scanner_obj
+
+@api_bp.route('/portal-jobs', methods=['GET'], strict_slashes=False)
+@api_bp.route('/portaljobs', methods=['GET'], strict_slashes=False)
+@api_bp.route('/company-jobs', methods=['GET'], strict_slashes=False)
+def get_portal_jobs():
+    """Return paginated, filtered, and scored portal jobs"""
+    page = request.args.get('page', 1, type=int)
+    per_page = min(request.args.get('per_page', 15, type=int), 100)
+    q = request.args.get('q', '').strip()
+    category = request.args.get('category', 'all').strip()
+    ats = request.args.get('ats', request.args.get('ats_type', 'all')).strip()
+    status = request.args.get('status', 'all').strip()
+    min_score = request.args.get('min_score', 0, type=int)
+    max_exp = request.args.get('max_exp', 4, type=int)
+    sort_by = request.args.get('sort_by', 'score').strip().lower()
+
+    query = PortalJob.query
+
+    # Filter: Sector / Category
+    if category and category.lower() != 'all':
+        query = query.filter(PortalJob.category.ilike(f"%{category}%"))
+
+    # Filter: ATS Type
+    if ats and ats.lower() != 'all':
+        query = query.filter(PortalJob.ats_type.ilike(f"%{ats}%"))
+
+    # Filter: Status (exclude rejected by default unless requested)
+    if status and status.lower() != 'all':
+        query = query.filter(PortalJob.status == status.lower())
+    else:
+        query = query.filter((PortalJob.status.is_(None)) | (PortalJob.status != 'rejected'))
+
+    # Filter: Experience cap (< 4 years)
+    if max_exp and max_exp > 0:
+        query = query.filter(PortalJob.experience_max <= max_exp)
+    else:
+        query = query.filter(PortalJob.experience_max <= 4)
+
+    # Filter: Minimum match score
+    if min_score and min_score > 0:
+        query = query.filter(PortalJob.match_score >= min_score)
+
+    # Filter: Text search
+    if q:
+        term = f"%{q}%"
+        query = query.filter(
+            (PortalJob.title.ilike(term)) |
+            (PortalJob.company.ilike(term)) |
+            (PortalJob.location.ilike(term)) |
+            (PortalJob.matched_skills.ilike(term)) |
+            (PortalJob.description.ilike(term))
+        )
+
+    # Sorting
+    if sort_by == 'newest':
+        query = query.order_by(PortalJob.date_posted.desc(), PortalJob.id.desc())
+    elif sort_by == 'company':
+        query = query.order_by(PortalJob.company.asc(), PortalJob.match_score.desc())
+    elif sort_by == 'skills':
+        query = query.order_by(PortalJob.skills_count.desc(), PortalJob.match_score.desc())
+    else:  # 'score' (default)
+        query = query.order_by(PortalJob.match_score.desc(), PortalJob.skills_count.desc(), PortalJob.date_posted.desc())
+
+    total = query.count()
+    jobs_page = query.offset((page - 1) * per_page).limit(per_page).all()
+
+    return jsonify({
+        'total': total,
+        'page': page,
+        'per_page': per_page,
+        'total_pages': max(1, (total + per_page - 1) // per_page),
+        'jobs': [j.to_dict() for j in jobs_page]
+    })
+
+@api_bp.route('/scan-portal-jobs', methods=['POST'], strict_slashes=False)
+def trigger_portal_scan():
+    """Trigger background scanning across company portals and specialized sites"""
+    scanner = get_portal_scanner()
+    if scanner.is_running():
+        return jsonify({
+            'status': 'already_running',
+            'message': 'Portal scanning is already active in background.'
+        }), 409
+
+    data = request.get_json(silent=True) or {}
+    mode = data.get('mode', 'all')
+    category = data.get('category')
+    portal_ids = data.get('portal_ids')
+
+    app_obj = current_app._get_current_object()
+
+    def _run_scan_thread():
+        with app_obj.app_context():
+            try:
+                results = scanner.scan(
+                    mode=mode,
+                    category=category,
+                    portal_ids=portal_ids
+                )
+                scanner.save_jobs_to_db(results, app=app_obj)
+                logger.info(f"✓ Background portal scan complete: saved {len(results)} jobs.")
+            except Exception as e:
+                logger.error(f"Portal scan thread error: {e}", exc_info=True)
+
+    thread = threading.Thread(target=_run_scan_thread, daemon=True)
+    thread.start()
+
+    return jsonify({
+        'status': 'started',
+        'mode': mode,
+        'message': f"Started portal scan in mode '{mode}'."
+    })
+
+@api_bp.route('/scan-portal-jobs/status', methods=['GET'], strict_slashes=False)
+def get_portal_scan_status():
+    """Get live progress status of the portal scanner"""
+    scanner = get_portal_scanner()
+    return jsonify(scanner.get_status())
+
+@api_bp.route('/scan-portal-jobs/stop', methods=['POST'], strict_slashes=False)
+def stop_portal_scan():
+    """Stop active portal scan immediately"""
+    scanner = get_portal_scanner()
+    scanner.stop()
+    return jsonify({'status': 'stopping', 'message': 'Stop signal sent to scanner.'})
+
+@api_bp.route('/portal-job/<int:job_id>/status', methods=['PUT', 'POST'], strict_slashes=False)
+def update_portal_job_status(job_id: int):
+    """Update status of a portal job (new, applied, saved, rejected)"""
+    job = db.session.get(PortalJob, job_id)
+    if not job:
+        return jsonify({'error': 'Portal job not found'}), 404
+
+    data = request.get_json(silent=True) or {}
+    new_status = data.get('status', '').lower().strip()
+    if new_status not in ('new', 'applied', 'saved', 'rejected'):
+        return jsonify({'error': 'Invalid status'}), 400
+
+    job.status = new_status
+    if new_status == 'applied':
+        job.applied_at = datetime.now(timezone.utc)
+    db.session.commit()
+    return jsonify({'status': 'success', 'job_id': job_id, 'new_status': new_status})
+
+@api_bp.route('/portal-jobs/stats', methods=['GET'], strict_slashes=False)
+def get_portal_jobs_stats():
+    """Return aggregated metrics for portal jobs"""
+    total = PortalJob.query.count()
+    qualified = PortalJob.query.filter(PortalJob.experience_max <= 4).count()
+
+    by_status = {
+        'new': PortalJob.query.filter_by(status='new').count(),
+        'applied': PortalJob.query.filter_by(status='applied').count(),
+        'saved': PortalJob.query.filter_by(status='saved').count(),
+        'rejected': PortalJob.query.filter_by(status='rejected').count(),
+    }
+
+    avg_score_raw = db.session.query(func.avg(PortalJob.match_score)).scalar()
+    avg_score = int(round(avg_score_raw)) if avg_score_raw else 0
+
+    companies_count = db.session.query(func.count(func.distinct(PortalJob.company))).scalar() or 0
+
+    return jsonify({
+        'total': total,
+        'qualified': qualified,
+        'by_status': by_status,
+        'avg_match_score': avg_score,
+        'companies_count': companies_count
+    })
+
+@api_bp.route('/portal-jobs/clear', methods=['DELETE', 'POST'], strict_slashes=False)
+def clear_portal_jobs():
+    """Clear all portal jobs"""
+    count = PortalJob.query.delete()
+    db.session.commit()
+    return jsonify({'status': 'cleared', 'count': count})
+
+@api_bp.route('/portal-jobs/seed', methods=['POST', 'GET'], strict_slashes=False)
+def seed_portal_jobs():
+    """Seed or refresh qualified portal jobs from top companies"""
+    config = current_app.config.get('JOB_CONFIG', {})
+    scanner = get_portal_scanner(config)
+    mode = request.args.get('mode', 'quick')
+    jobs = scanner.scan(mode=mode)
+    saved = scanner.save_jobs_to_db(jobs, app=current_app._get_current_object())
+    return jsonify({'status': 'success', 'saved_count': saved, 'total': PortalJob.query.count()})
+
 

@@ -110,6 +110,94 @@ class ApplicationLog(db.Model):
             'created_at': self.created_at.strftime('%Y-%m-%d %H:%M') if self.created_at else ''
         }
 
+class PortalJob(db.Model):
+    """Represents a job discovered directly from company career portals and specialized sites"""
+    __tablename__ = 'portal_jobs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    portal_id = db.Column(db.String(100), nullable=False)   # amazon_aws, google, swiggy, etc.
+    company = db.Column(db.String(255), nullable=False)
+    category = db.Column(db.String(100))                    # Cloud Hyperscalers, SaaS, FinTech, etc.
+    ats_type = db.Column(db.String(50))                     # greenhouse, lever, workday, etc.
+    title = db.Column(db.String(255), nullable=False)
+    location = db.Column(db.String(255))
+    url = db.Column(db.Text, unique=True, nullable=False)
+    description = db.Column(db.Text)
+    experience_req = db.Column(db.String(100), default='0-4 years')  # 0-4y, 2-4y, 1-3y
+    experience_max = db.Column(db.Integer, default=4)       # strictly <= 4 years
+    matched_skills = db.Column(db.Text)                     # comma-separated matched skills
+    match_score = db.Column(db.Integer, default=0)          # 0-100%
+    skills_count = db.Column(db.Integer, default=0)
+    salary = db.Column(db.String(100))
+    date_posted = db.Column(db.DateTime)
+    job_type = db.Column(db.String(50), default='Full-time')
+    is_easy_apply = db.Column(db.Boolean, default=False)
+
+    # Tracking fields
+    status = db.Column(db.String(20), default='new')        # new, applied, saved, rejected
+    applied_at = db.Column(db.DateTime)
+    notes = db.Column(db.Text)
+
+    created_at = db.Column(db.DateTime, default=utcnow)
+    updated_at = db.Column(db.DateTime, default=utcnow, onupdate=utcnow)
+
+    def to_dict(self):
+        """Serialize portal job to JSON-compatible dictionary"""
+        date_str = ''
+        if self.date_posted:
+            try:
+                date_str = self.date_posted.strftime('%Y-%m-%d')
+            except Exception:
+                date_str = str(self.date_posted)
+
+        created_str = ''
+        if self.created_at:
+            try:
+                created_str = self.created_at.strftime('%Y-%m-%d %H:%M')
+            except Exception:
+                created_str = str(self.created_at)
+
+        applied_str = None
+        if self.applied_at:
+            try:
+                applied_str = self.applied_at.strftime('%Y-%m-%d %H:%M')
+            except Exception:
+                applied_str = str(self.applied_at)
+
+        desc_short = ''
+        if self.description:
+            desc_short = self.description[:260] + ('...' if len(self.description) > 260 else '')
+
+        # Parse matched skills to list
+        skills_list = []
+        if self.matched_skills:
+            skills_list = [s.strip() for s in self.matched_skills.split(',') if s.strip()]
+
+        return {
+            'id': self.id,
+            'portal_id': self.portal_id,
+            'company': self.company,
+            'category': self.category or 'General Tech',
+            'ats_type': self.ats_type or 'portal',
+            'title': self.title,
+            'location': self.location or 'Bengaluru / Remote',
+            'url': self.url,
+            'description': desc_short,
+            'description_full': self.description or '',
+            'experience_req': self.experience_req or '< 4 years',
+            'experience_max': self.experience_max or 4,
+            'matched_skills': skills_list,
+            'skills_count': self.skills_count or len(skills_list),
+            'match_score': self.match_score or 0,
+            'salary': self.salary or '',
+            'date_posted': date_str,
+            'job_type': self.job_type or 'Full-time',
+            'status': self.status or 'new',
+            'applied_at': applied_str,
+            'created_at': created_str,
+            'notes': self.notes or '',
+        }
+
 def _migrate_sqlite_columns(app=None):
     """Ensure newly added columns exist in SQLite database if it already exists."""
     import os, sqlite3

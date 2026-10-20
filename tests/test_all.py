@@ -3526,6 +3526,374 @@ class TestInfrastructureAndForwardDeployedRoles:
         assert 'Forward Deployed Engineer' in roles, "Forward Deployed Engineer must be in config.yaml roles"
 
 
+# ─────────────────────────────────────────────
+# 15. Enterprise Career Portal Jobs Scanner Tests
+# ─────────────────────────────────────────────
+
+class TestPortalJobsScanner:
+    """
+    Automated test suite verifying the Enterprise Career Portal Jobs Scanner:
+    1. Rollback safeguards and backup validity.
+    2. Scanner initialization, portal discovery, and ATS connectors.
+    3. Strict < 4 years experience cap enforcement (0-4y allowed, >=5y rejected).
+    4. Senior and lead title exclusions.
+    5. Candidate resume skill extraction and match scoring.
+    6. PortalJob database model CRUD, fields, and to_dict serialization.
+    7. Page route and all URL aliases returning HTTP 200.
+    8. REST API endpoints for filtering, pagination, search, scan, status, and stats.
+    9. HTML template null-safety and edge cases.
+    10. Frontend JavaScript syntax validation via node.
+    11. Navigation links present across all application templates.
+    """
+
+    def test_portal_jobs_rollback_safeguards(self):
+        """
+        Verify that backup snapshots and revert_portal_jobs.py exist and compile cleanly.
+        """
+        backups = [
+            PROJECT_ROOT / 'web' / 'routes.py.portal_jobs_backup',
+            PROJECT_ROOT / 'db' / 'models.py.portal_jobs_backup',
+            PROJECT_ROOT / 'web' / 'templates' / 'base.html.portal_jobs_backup',
+            PROJECT_ROOT / 'web' / 'templates' / 'portals.html.portal_jobs_backup',
+            PROJECT_ROOT / 'web' / 'templates' / 'index.html.portal_jobs_backup',
+            PROJECT_ROOT / 'web' / 'templates' / 'jobs.html.portal_jobs_backup',
+        ]
+        revert_script = PROJECT_ROOT / 'revert_portal_jobs.py'
+
+        for bp in backups:
+            assert bp.exists(), f"Backup file {bp} must exist"
+
+        assert revert_script.exists(), "revert_portal_jobs.py must exist"
+        with open(revert_script, 'r', encoding='utf-8') as f:
+            code = f.read()
+        compile(code, str(revert_script), 'exec')
+
+    def test_portal_scanner_initialization_and_catalog(self):
+        """
+        Verify PortalJobsScanner initializes correctly with CompanyPortalsManager
+        and correctly loads the 100 enterprise career portals.
+        """
+        from scraper.portal_jobs_scanner import PortalJobsScanner
+        scanner = PortalJobsScanner()
+        assert scanner.c_mgr is not None
+        assert scanner.c_mgr.count() >= 100
+        assert scanner.is_running() is False
+
+        status = scanner.get_status()
+        assert status['running'] is False
+        assert status['jobs_found'] == 0
+        assert status['jobs_qualified'] == 0
+
+    def test_portal_scanner_strict_experience_cap_under_4_years(self):
+        """
+        Verify that postings requiring < 4 years experience qualify,
+        while postings requiring 5+ years or senior ranges are strictly rejected.
+        """
+        from scraper.portal_jobs_scanner import PortalJobsScanner
+        scanner = PortalJobsScanner()
+
+        # Qualified cases (< 4y)
+        qualified_cases = [
+            ('DevOps Engineer', 'Looking for 0-2 years of experience in AWS.'),
+            ('Cloud Engineer', 'Requirements: 1 to 3 years experience with Docker and Kubernetes.'),
+            ('Site Reliability Engineer', 'Experience required: 2-4 years in Linux and Terraform.'),
+            ('Associate Cloud Systems Engineer', 'Freshers or 1-2 years experience welcome.'),
+            ('Junior Infrastructure Engineer', 'Must have 1+ years experience in automation.'),
+            ('Cloud Operations Architect', 'Mid-level role requiring 3-4 years experience in AWS.')
+        ]
+
+        for title, desc in qualified_cases:
+            is_q, label, max_y = scanner.is_qualified_experience(title, desc)
+            assert is_q is True, f"Expected '{title}' with desc '{desc}' to qualify, got label: {label}"
+            assert max_y <= 4
+
+        # Unqualified cases (>= 5y)
+        unqualified_cases = [
+            ('DevOps Engineer', 'Must have 5+ years of experience in distributed systems.'),
+            ('Cloud Engineer', 'Requires minimum 7 years of hands-on cloud experience.'),
+            ('Platform Engineer', 'Experience required: 6-9 years in enterprise infrastructure.'),
+            ('Site Reliability Engineer', 'Looking for at least 8 yrs of production experience.'),
+            ('Infrastructure Engineer', '10+ years experience required.')
+        ]
+
+        for title, desc in unqualified_cases:
+            is_q, label, max_y = scanner.is_qualified_experience(title, desc)
+            assert is_q is False, f"Expected '{title}' with desc '{desc}' to be rejected, got: {label}"
+
+    def test_portal_scanner_senior_and_lead_titles_rejected(self):
+        """
+        Verify that Senior, Lead, Principal, Staff, Director, Manager prefixes
+        are strictly rejected regardless of description.
+        """
+        from scraper.portal_jobs_scanner import PortalJobsScanner
+        scanner = PortalJobsScanner()
+
+        senior_titles = [
+            'Senior DevOps Engineer',
+            'Sr. Cloud Engineer',
+            'Lead Site Reliability Engineer',
+            'Principal Platform Engineer',
+            'Staff Infrastructure Engineer',
+            'Director of Cloud Operations',
+            'DevOps Engineering Manager',
+            'VP of Infrastructure',
+            'Head of Cloud Architecture'
+        ]
+
+        for title in senior_titles:
+            is_q, label, max_y = scanner.is_qualified_experience(title, "2-3 years experience in AWS")
+            assert is_q is False, f"Expected senior title '{title}' to be rejected, got label: {label}"
+
+    def test_portal_scanner_resume_skills_matching(self):
+        """
+        Verify that candidate's skills from Swiggy, Starwatt, and AWS Cert
+        (AWS, Terraform, Kubernetes, Docker, CI/CD, Python, Linux) are accurately extracted.
+        """
+        from scraper.portal_jobs_scanner import PortalJobsScanner
+        scanner = PortalJobsScanner()
+
+        job_desc = "Hands-on experience with AWS, Terraform modules, Docker containers, Kubernetes clusters, CI/CD automation, and Python scripting on Linux."
+        matched = scanner.match_resume_skills(job_desc)
+
+        assert 'AWS' in matched
+        assert 'Terraform' in matched
+        assert 'Docker' in matched
+        assert 'Kubernetes' in matched
+        assert 'CI/CD' in matched
+        assert 'Python' in matched
+        assert 'Linux' in matched
+
+        score = scanner.calculate_match_score(matched, 'Cloud DevOps Engineer', job_desc)
+        assert score >= 70, f"Expected high match score for core resume stack, got: {score}"
+
+    def test_portal_job_model_crud_and_to_dict(self, app):
+        """
+        Verify PortalJob SQLAlchemy model operations, fields, and to_dict serialization.
+        """
+        from db.models import db, PortalJob
+        with app.app_context():
+            job = PortalJob(
+                portal_id='amazon_aws',
+                company='Amazon / AWS',
+                category='Cloud Hyperscalers & Infrastructure',
+                ats_type='amazon_jobs',
+                title='Cloud DevOps Engineer',
+                location='Bengaluru, Karnataka',
+                url='https://example.com/test-portal-job-model',
+                description='Automate AWS CodePipeline deployments and manage ECS clusters.',
+                experience_req='2-4 years',
+                experience_max=4,
+                matched_skills='AWS, Docker, Kubernetes, Terraform, Python',
+                match_score=92,
+                skills_count=5,
+                salary='₹22,00,000 - ₹32,00,000',
+                status='new'
+            )
+            db.session.add(job)
+            db.session.commit()
+
+            fetched = PortalJob.query.filter_by(url='https://example.com/test-portal-job-model').first()
+            assert fetched is not None
+            assert fetched.company == 'Amazon / AWS'
+            assert fetched.experience_max == 4
+
+            data = fetched.to_dict()
+            assert data['company'] == 'Amazon / AWS'
+            assert data['title'] == 'Cloud DevOps Engineer'
+            assert data['match_score'] == 92
+            assert 'AWS' in data['matched_skills']
+            assert isinstance(data['matched_skills'], list)
+            assert data['experience_req'] == '2-4 years'
+
+    def test_portal_jobs_page_renders_successfully(self, client):
+        """
+        Verify that GET /portal-jobs returns HTTP 200 and renders
+        the JobPilot portal jobs scanner dashboard.
+        """
+        resp = client.get('/portal-jobs')
+        assert resp.status_code == 200
+        html = resp.data.decode('utf-8')
+        assert 'Enterprise Career Portal' in html
+        assert 'PORTAL JOBS' in html
+        assert 'Quick Scan (Top 20)' in html
+        assert 'stat-total-jobs' in html
+        assert 'portal-search-input' in html
+
+    def test_portal_jobs_url_aliases_and_slashes_return_200(self, client):
+        """
+        Verify that all URL aliases and slash variants for /portal-jobs return HTTP 200.
+        """
+        urls = [
+            '/portal-jobs',
+            '/portal-jobs/',
+            '/portaljobs',
+            '/portaljobs/',
+            '/portal-postings',
+            '/company-jobs',
+            '/portal-openings'
+        ]
+        for u in urls:
+            resp = client.get(u, follow_redirects=True)
+            assert resp.status_code == 200, f"Expected {u} to return 200, got {resp.status_code}"
+
+    def test_api_portal_jobs_endpoints(self, client, app):
+        """
+        Verify GET /api/portal-jobs, filtering by category, search text, and sorting.
+        """
+        from db.models import db, PortalJob
+        with app.app_context():
+            job = PortalJob(
+                portal_id='google',
+                company='Google / Alphabet',
+                category='Cloud Hyperscalers & Infrastructure',
+                ats_type='google_careers',
+                title='Site Reliability Engineer - Cloud Platforms',
+                location='Bengaluru, India',
+                url='https://example.com/test-api-portal-job',
+                description='GCP, Kubernetes, Prometheus SRE role with 1-3 years exp.',
+                experience_req='1-3 years',
+                experience_max=3,
+                matched_skills='GCP, Kubernetes, Prometheus, Python',
+                match_score=88,
+                skills_count=4,
+                status='new'
+            )
+            db.session.add(job)
+            db.session.commit()
+
+        # 1. Base API query
+        resp = client.get('/api/portal-jobs')
+        assert resp.status_code == 200
+        data = resp.get_json()
+        assert 'total' in data
+        assert 'jobs' in data
+        assert data['total'] >= 1
+
+        # 2. Search query
+        resp_search = client.get('/api/portal-jobs?q=Google')
+        assert resp_search.status_code == 200
+        data_s = resp_search.get_json()
+        assert any(j['company'] == 'Google / Alphabet' for j in data_s['jobs'])
+
+        # 3. Stats endpoint
+        resp_stats = client.get('/api/portal-jobs/stats')
+        assert resp_stats.status_code == 200
+        stats = resp_stats.get_json()
+        assert 'total' in stats
+        assert 'qualified' in stats
+        assert 'avg_match_score' in stats
+        assert stats['total'] >= 1
+
+    def test_api_portal_job_status_update(self, client, app):
+        """
+        Verify updating job status via /api/portal-job/<id>/status.
+        """
+        from db.models import db, PortalJob
+        job_id = None
+        with app.app_context():
+            job = PortalJob(
+                portal_id='swiggy',
+                company='Swiggy',
+                category='High-Growth Tech, E-Commerce & Unicorns',
+                ats_type='swiggy_careers',
+                title='System Engineer 1 - Cloud Automation',
+                location='Bengaluru, Karnataka',
+                url='https://example.com/test-swiggy-status',
+                description='AWS, Python script runner, Terraform IAM automation.',
+                experience_req='1-3 years',
+                experience_max=3,
+                matched_skills='AWS, Python, Terraform, IAM',
+                match_score=95,
+                status='new'
+            )
+            db.session.add(job)
+            db.session.commit()
+            job_id = job.id
+
+        # Update to applied
+        resp = client.post(f'/api/portal-job/{job_id}/status', json={'status': 'applied'})
+        assert resp.status_code == 200
+        data = resp.get_json()
+        assert data['status'] == 'success'
+        assert data['new_status'] == 'applied'
+
+        with app.app_context():
+            updated = db.session.get(PortalJob, job_id)
+            assert updated.status == 'applied'
+            assert updated.applied_at is not None
+
+    def test_api_scan_portal_jobs_trigger_and_status(self, client):
+        """
+        Verify POST /api/scan-portal-jobs, status polling, and stop signal.
+        """
+        resp_status = client.get('/api/scan-portal-jobs/status')
+        assert resp_status.status_code == 200
+        status_data = resp_status.get_json()
+        assert 'running' in status_data
+        assert 'progress_pct' in status_data
+
+        resp_stop = client.post('/api/scan-portal-jobs/stop')
+        assert resp_stop.status_code == 200
+
+    def test_portal_jobs_html_template_null_safety(self, app):
+        """
+        Verify portal_jobs.html renders safely with None/empty stats and categories.
+        """
+        from flask import render_template
+        with app.test_request_context('/portal-jobs'):
+            rendered = render_template(
+                'portal_jobs.html',
+                categories=None,
+                ats_types=None,
+                stats=None
+            )
+            assert 'Enterprise Career Portal' in rendered
+
+    def test_portal_jobs_frontend_js_syntax_valid(self):
+        """
+        Verify that all JavaScript script blocks in portal_jobs.html are 100% syntactically valid via node --check.
+        """
+        import re
+        import subprocess
+        import tempfile
+
+        template_path = PROJECT_ROOT / 'web' / 'templates' / 'portal_jobs.html'
+        with open(template_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        scripts = re.findall(r'<script>(.*?)</script>', content, re.DOTALL)
+        assert len(scripts) >= 2, "Expected at least 2 script blocks in portal_jobs.html"
+
+        for i, s in enumerate(scripts):
+            with tempfile.NamedTemporaryFile('w', suffix='.js', delete=False, encoding='utf-8') as tf:
+                tf.write(s)
+                temp_path = tf.name
+            try:
+                res = subprocess.run(['node', '--check', temp_path], capture_output=True, text=True)
+                assert res.returncode == 0, f"Syntax error in script block {i}: {res.stderr}"
+            finally:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
+
+    def test_navigation_links_to_portal_jobs_in_all_templates(self):
+        """
+        Verify that href="/portal-jobs" link is present across
+        base.html, portals.html, index.html, and jobs.html.
+        """
+        templates = [
+            PROJECT_ROOT / 'web' / 'templates' / 'base.html',
+            PROJECT_ROOT / 'web' / 'templates' / 'portals.html',
+            PROJECT_ROOT / 'web' / 'templates' / 'index.html',
+            PROJECT_ROOT / 'web' / 'templates' / 'jobs.html',
+        ]
+
+        for tmpl in templates:
+            with open(tmpl, 'r', encoding='utf-8') as f:
+                content = f.read()
+            assert '/portal-jobs' in content, f"Expected '/portal-jobs' link in {tmpl.name}"
+
+
+
 
 
 

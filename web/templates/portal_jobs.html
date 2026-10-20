@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobPilot — Enterprise Career Portal Jobs (<4y Experience)</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <script>
+        (function() {
+            try {
+                var theme = localStorage.getItem('jobpilot_theme');
+                if (theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } catch(e) {}
+        })();
+    </script>
+
+    <style>
+        :root {
+            --jp-primary: #4f46e5;
+            --jp-primary-hover: #4338ca;
+            --jp-primary-light: #eef2ff;
+            --jp-secondary: #06b6d4;
+            --jp-accent: #f43f5e;
+            --jp-success: #10b981;
+            --jp-warning: #f59e0b;
+            --jp-danger: #ef4444;
+            --jp-dark: #0f172a;
+            --jp-dark-surface: #1e293b;
+            --jp-bg: #f8fafc;
+            --jp-border: #e2e8f0;
+            --jp-card-bg: #ffffff;
+            --jp-card-radius: 14px;
+            --jp-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
+            --jp-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+            --jp-shadow-lg: 0 12px 30px -4px rgba(15, 23, 42, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --jp-dark: #f8fafc;
+            --jp-dark-surface: #0f172a;
+            --jp-bg: #090d16;
+            --jp-border: #1e293b;
+            --jp-card-bg: #111827;
+            --jp-primary-light: #1e1b4b;
+            --jp-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --jp-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+            --jp-shadow-lg: 0 12px 30px -4px rgba(0, 0, 0, 0.6);
+            color-scheme: dark;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--jp-bg);
+            color: #334155;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        [data-theme="dark"] body {
+            background-color: var(--jp-bg);
+            color: #e2e8f0;
+        }
+
+        /* Top Brand Navbar */
+        .jp-navbar {
+            background: #0f172a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 14px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .jp-brand-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .jp-logo-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 18px;
+        }
+
+        /* Hero Header */
+        .jp-hero {
+            background: linear-gradient(180deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            color: #ffffff;
+            padding: 38px 0 54px 0;
+            position: relative;
+        }
+        .jp-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #c7d2fe;
+            margin-bottom: 12px;
+        }
+        .jp-hero-title {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+        .jp-hero-title-accent {
+            background: linear-gradient(90deg, #a5b4fc 0%, #67e8f9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Main Container Overlap */
+        .jp-main-container {
+            margin-top: -30px;
+            padding-bottom: 70px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Stat Summary Cards */
+        .jp-stat-card {
+            background: var(--jp-card-bg);
+            border-radius: var(--jp-card-radius);
+            box-shadow: var(--jp-shadow);
+            border: 1px solid var(--jp-border);
+            padding: 18px 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .jp-stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--jp-shadow-lg);
+        }
+
+        /* Scan Command Deck */
+        .jp-control-card {
+            background: var(--jp-card-bg);
+            border-radius: var(--jp-card-radius);
+            border: 1px solid var(--jp-border);
+            padding: 20px 24px;
+            box-shadow: var(--jp-shadow);
+            margin-bottom: 24px;
+        }
+
+        /* Live Scan Monitor Box */
+        .scrape-monitor {
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+            border: 1px solid #3730a3;
+            border-radius: 12px;
+            padding: 16px 20px;
+            color: #ffffff;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .scrape-monitor.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Filter Bar */
+        .jp-filter-bar {
+            background: var(--jp-card-bg);
+            border-radius: var(--jp-card-radius);
+            border: 1px solid var(--jp-border);
+            padding: 16px 20px;
+            box-shadow: var(--jp-shadow-sm);
+            margin-bottom: 22px;
+        }
+
+        /* Status Navigation Tabs */
+        .jp-nav-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+        .jp-pill-btn {
+            border: 1px solid var(--jp-border);
+            background: var(--jp-card-bg);
+            color: #64748b;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 7px 16px;
+            border-radius: 20px;
+            transition: all 0.15s ease;
+            cursor: pointer;
+        }
+        [data-theme="dark"] .jp-pill-btn {
+            color: #94a3b8;
+        }
+        .jp-pill-btn.active {
+            background: var(--jp-primary);
+            color: #ffffff;
+            border-color: var(--jp-primary);
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Opportunity Job Cards */
+        .portal-job-card {
+            background: var(--jp-card-bg);
+            border-radius: var(--jp-card-radius);
+            border: 1px solid var(--jp-border);
+            box-shadow: var(--jp-shadow-sm);
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+            display: flex;
+            gap: 20px;
+        }
+        .portal-job-card:hover {
+            box-shadow: var(--jp-shadow-lg);
+            border-color: #818cf8;
+            transform: translateY(-2px);
+        }
+        [data-theme="dark"] .portal-job-card:hover {
+            border-color: #4f46e5;
+        }
+
+        /* Number Badge */
+        .job-number-badge {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--jp-primary-light);
+            color: var(--jp-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+        [data-theme="dark"] .job-number-badge {
+            background: #1e1b4b;
+            color: #a5b4fc;
+        }
+
+        /* Score Badge */
+        .match-score-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 700;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            letter-spacing: -0.2px;
+        }
+
+        .exp-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: #e0e7ff;
+            color: #3730a3;
+            border: 1px solid #c7d2fe;
+        }
+        [data-theme="dark"] .exp-badge {
+            background: #1e1b4b;
+            color: #c7d2fe;
+            border-color: #3730a3;
+        }
+
+        .sector-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: #475569;
+        }
+        [data-theme="dark"] .sector-badge {
+            background: #1e293b;
+            color: #94a3b8;
+        }
+
+        .ats-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 600;
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: 6px;
+            background: #ecfeff;
+            color: #0891b2;
+            border: 1px solid #cffafe;
+            text-transform: uppercase;
+        }
+        [data-theme="dark"] .ats-badge {
+            background: #083344;
+            color: #67e8f9;
+            border-color: #155e75;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: #eef2ff;
+            color: #4338ca;
+            border: 1px solid #c7d2fe;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+        [data-theme="dark"] .skill-tag {
+            background: #1e1b4b;
+            color: #c7d2fe;
+            border-color: #3730a3;
+        }
+
+        .status-applied {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            color: #ffffff !important;
+            border: 1px solid #b91c1c !important;
+        }
+
+        .btn-apply-portal {
+            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 7px 16px;
+            border-radius: 8px;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+        .btn-apply-portal:hover {
+            background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Navbar -->
+    <nav class="jp-navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/" class="jp-brand-logo">
+                <div class="jp-logo-icon">
+                    <i class="bi bi-compass"></i>
+                </div>
+                <span>JobPilot</span>
+                <span class="badge bg-info-subtle text-info border border-info-subtle fw-semibold px-2 py-0 ms-1" style="font-size: 10px;">PORTAL JOBS</span>
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-sm btn-outline-light d-inline-flex align-items-center gap-2 px-3 fw-semibold shadow-sm" id="btn-theme-toggle" onclick="toggleDarkMode()" title="Toggle Dark/Light Mode">
+                    <i class="bi bi-moon-stars-fill" id="theme-toggle-icon"></i>
+                    <span id="theme-toggle-text">Dark Mode</span>
+                </button>
+                <div class="jp-nav-status d-none d-sm-inline-flex text-white small px-2 py-1 rounded" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);">
+                    <span class="status-pulse-dot" style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10b981; margin-right: 6px;"></span>
+                    <span>Scanner Active</span>
+                </div>
+                <a href="/" class="btn btn-sm btn-outline-light px-3 fw-semibold">
+                    <i class="bi bi-house-door me-1"></i> Dashboard
+                </a>
+                <a href="/jobs" class="btn btn-sm btn-outline-light px-3 fw-semibold">
+                    <i class="bi bi-table me-1"></i> Tabular View
+                </a>
+                <a href="/portals" class="btn btn-sm btn-outline-light px-3 fw-semibold">
+                    <i class="bi bi-buildings me-1"></i> Portals Directory
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Header -->
+    <header class="jp-hero">
+        <div class="container position-relative">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div>
+                    <div class="jp-hero-badge">
+                        <i class="bi bi-shield-check text-info"></i>
+                        <span>100 Big Companies + 24 Specialized Sites • Strict < 4y Experience Cap</span>
+                    </div>
+                    <h1 class="jp-hero-title">
+                        Enterprise Career Portal <span class="jp-hero-title-accent">Job Scanner</span>
+                    </h1>
+                    <p class="mb-0 text-light opacity-75" style="max-width: 740px; font-size: 15px;">
+                        Direct job openings discovered and scanned from official company career portals (Amazon, Google, Microsoft, Meta, Swiggy, Flipkart, FinTech GCCs, Top SaaS)
+                        and specialized tech boards. Strictly filtered for <strong>< 4 years experience</strong> and scored against <strong>Deepanshu Yadav's Cloud/DevOps resume</strong>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container jp-main-container">
+
+        <!-- Stat Summary Cards Row -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="jp-stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-secondary fw-semibold small text-uppercase">Total Portal Jobs</span>
+                        <i class="bi bi-briefcase text-primary fs-5"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0 mt-2 text-primary" id="stat-total-jobs">{{ (stats and stats.total_jobs) or 0 }}</h3>
+                    <small class="text-muted">Direct Career Sites</small>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="jp-stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-secondary fw-semibold small text-uppercase">Qualified (< 4y)</span>
+                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0 mt-2 text-success" id="stat-qualified-jobs">{{ (stats and stats.qualified_jobs) or 0 }}</h3>
+                    <small class="text-muted">0-4y Experience Cap</small>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="jp-stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-secondary fw-semibold small text-uppercase">Companies Found</span>
+                        <i class="bi bi-buildings text-info fs-5"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0 mt-2 text-info" id="stat-companies-count">{{ (stats and stats.companies_discovered) or 0 }}</h3>
+                    <small class="text-muted">Enterprise Employers</small>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="jp-stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-secondary fw-semibold small text-uppercase">Avg Match Score</span>
+                        <i class="bi bi-stars text-warning fs-5"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0 mt-2 text-warning" id="stat-avg-score">{{ (stats and stats.avg_match_score) or 0 }}%</h3>
+                    <small class="text-muted">Resume Skill Fit</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scanner Command Deck -->
+        <div class="jp-control-card">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h5 class="fw-bold mb-1"><i class="bi bi-radar text-primary me-2"></i>Career Portal Scanner Engine</h5>
+                    <p class="text-muted small mb-0">Scan 100 Big Company ATS platforms and 24 Tech boards for fresh Cloud/DevOps openings.</p>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                    <div class="btn-group">
+                        <button class="btn btn-primary fw-semibold px-3" id="btn-trigger-scan" onclick="triggerScan('quick')">
+                            <i class="bi bi-lightning-charge-fill me-1"></i> Quick Scan (Top 20)
+                        </button>
+                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                            <li><a class="dropdown-item fw-semibold" href="#" onclick="triggerScan('quick'); return false;"><i class="bi bi-lightning me-2 text-warning"></i>Quick Scan (Top 20 Big Companies)</a></li>
+                            <li><a class="dropdown-item fw-semibold" href="#" onclick="triggerScan('all'); return false;"><i class="bi bi-globe me-2 text-primary"></i>Full Scan (All 100 Portals + 24 Sites)</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger fw-semibold" href="#" onclick="confirmClearJobs(); return false;"><i class="bi bi-trash3 me-2"></i>Clear Scanned Jobs</a></li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-outline-secondary fw-semibold px-3" onclick="loadPortalJobs()">
+                        <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Live Scan Monitor Box -->
+            <div class="scrape-monitor mt-3" id="scan-monitor-box">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="spinner-border spinner-border-sm text-info" role="status"></div>
+                        <span class="fw-bold" id="monitor-status-text">Scanning career portals...</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="badge bg-secondary-subtle text-light border border-secondary" id="monitor-timer">⏱️ 0:00</span>
+                        <button class="btn btn-xs btn-outline-danger py-0 px-2" onclick="stopScan()">Stop</button>
+                    </div>
+                </div>
+                <div class="progress mb-2" style="height: 8px; background: rgba(255,255,255,0.1);">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" id="monitor-progress-bar" style="width: 0%"></div>
+                </div>
+                <div class="d-flex justify-content-between small opacity-75">
+                    <span id="monitor-company-ticker">Target: Amazon / AWS</span>
+                    <span id="monitor-counts-ticker">0 jobs qualified (< 4y)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Deck -->
+        <div class="jp-filter-bar">
+            <!-- Status Navigation Pills -->
+            <div class="jp-nav-pills">
+                <button class="jp-pill-btn active" data-status="all" onclick="setStatusFilter('all')">
+                    All Jobs (<span id="pill-count-all">0</span>)
+                </button>
+                <button class="jp-pill-btn" data-status="new" onclick="setStatusFilter('new')">
+                    Fresh / New (<span id="pill-count-new">0</span>)
+                </button>
+                <button class="jp-pill-btn" data-status="applied" onclick="setStatusFilter('applied')">
+                    Applied (<span id="pill-count-applied">0</span>)
+                </button>
+                <button class="jp-pill-btn" data-status="saved" onclick="setStatusFilter('saved')">
+                    Saved (<span id="pill-count-saved">0</span>)
+                </button>
+                <button class="jp-pill-btn" data-status="rejected" onclick="setStatusFilter('rejected')">
+                    Dismissed (<span id="pill-count-rejected">0</span>)
+                </button>
+            </div>
+
+            <!-- Search and Multi-Select Filters Row -->
+            <div class="row g-2 align-items-center">
+                <div class="col-12 col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" class="form-control border-start-0" id="portal-search-input" placeholder="Search by title, company, skill (e.g. AWS, Terraform)..." oninput="debounceSearch()">
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <select class="form-select" id="portal-category-select" onchange="loadPortalJobs(1)">
+                        <option value="all">All Sectors & Categories</option>
+                        {% for cat in (categories or []) %}
+                        <option value="{{ cat }}">{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <select class="form-select" id="portal-ats-select" onchange="loadPortalJobs(1)">
+                        <option value="all">All ATS Platforms</option>
+                        {% for a in (ats_types or []) %}
+                        <option value="{{ a }}">{{ a | upper }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <select class="form-select" id="portal-sort-select" onchange="loadPortalJobs(1)">
+                        <option value="score">Highest Match %</option>
+                        <option value="newest">Newest Posted</option>
+                        <option value="skills">Most Skills Matched</option>
+                        <option value="company">Company Name</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-1">
+                    <button class="btn btn-outline-secondary w-100" onclick="resetFilters()" title="Reset Filters">
+                        <i class="bi bi-x-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Job Cards Stream Container -->
+        <div id="portal-jobs-container">
+            <!-- Dynamically rendered via JS -->
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="text-muted mt-2">Loading qualified portal jobs...</p>
+            </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="d-flex justify-content-between align-items-center mt-4" id="pagination-controls" style="display: none !important;">
+            <span class="text-muted small" id="pagination-info">Showing 1-15 of 60</span>
+            <div class="btn-group">
+                <button class="btn btn-sm btn-outline-secondary" id="btn-prev-page" onclick="changePage(-1)">Previous</button>
+                <button class="btn btn-sm btn-outline-secondary" id="btn-next-page" onclick="changePage(1)">Next</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Dismiss Confirmation Modal -->
+    <div class="modal fade" id="dismissConfirmModal" tabindex="-1" aria-labelledby="dismissConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 14px; overflow: hidden;">
+                <div class="modal-header bg-danger text-white border-0 py-3">
+                    <h6 class="modal-title fw-bold" id="dismissConfirmModalLabel"><i class="bi bi-exclamation-triangle-fill me-2"></i>Dismiss Portal Job</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="mb-2">Are you sure you want to dismiss this opportunity?</p>
+                    <div class="p-3 bg-light rounded border mb-3 text-dark">
+                        <strong id="modal-dismiss-title">Role Title</strong><br>
+                        <small class="text-muted" id="modal-dismiss-company">Company</small>
+                    </div>
+                    <small class="text-muted">Dismissed jobs will be excluded from the active portal feed but remain accessible under the Dismissed tab.</small>
+                </div>
+                <div class="modal-footer border-0 bg-light py-2 px-3">
+                    <button type="button" class="btn btn-sm btn-secondary fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-danger fw-semibold" id="btn-confirm-dismiss" onclick="executeDismiss()">Yes, Dismiss Job</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // State management
+        let currentPage = 1;
+        let totalPages = 1;
+        let activeStatus = 'all';
+        let searchTimer = null;
+        let pollTimer = null;
+        let scanStartTime = null;
+        let jobToDismiss = null;
+
+        // Theme Toggle Controller
+        function toggleDarkMode() {
+            var currentTheme = document.documentElement.getAttribute('data-theme');
+            var newTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            try {
+                localStorage.setItem('jobpilot_theme', newTheme);
+            } catch(e) {}
+            updateThemeButtonText();
+        }
+
+        function updateThemeButtonText() {
+            var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            var icon = document.getElementById('theme-toggle-icon');
+            var text = document.getElementById('theme-toggle-text');
+            if (icon && text) {
+                if (isDark) {
+                    icon.className = 'bi bi-sun-fill text-warning';
+                    text.textContent = 'Light Mode';
+                } else {
+                    icon.className = 'bi bi-moon-stars-fill';
+                    text.textContent = 'Dark Mode';
+                }
+            }
+        }
+        updateThemeButtonText();
+
+        // Status Tabs Controller
+        function setStatusFilter(status) {
+            activeStatus = status;
+            document.querySelectorAll('.jp-pill-btn').forEach(function(btn) {
+                if (btn.getAttribute('data-status') === status) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            loadPortalJobs(1);
+        }
+
+        // Search Debounce
+        function debounceSearch() {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(function() {
+                loadPortalJobs(1);
+            }, 300);
+        }
+
+        function resetFilters() {
+            document.getElementById('portal-search-input').value = '';
+            document.getElementById('portal-category-select').value = 'all';
+            document.getElementById('portal-ats-select').value = 'all';
+            document.getElementById('portal-sort-select').value = 'score';
+            setStatusFilter('all');
+        }
+
+        // Pagination
+        function changePage(delta) {
+            let next = currentPage + delta;
+            if (next >= 1 && next <= totalPages) {
+                loadPortalJobs(next);
+            }
+        }
+
+        // Fetch & Render Portal Jobs
+        function loadPortalJobs(page) {
+            if (page) currentPage = page;
+            const container = document.getElementById('portal-jobs-container');
+            const q = document.getElementById('portal-search-input').value.trim();
+            const category = document.getElementById('portal-category-select').value;
+            const ats = document.getElementById('portal-ats-select').value;
+            const sortBy = document.getElementById('portal-sort-select').value;
+
+            const url = `/api/portal-jobs?page=${currentPage}&per_page=15&q=${encodeURIComponent(q)}&category=${encodeURIComponent(category)}&ats=${encodeURIComponent(ats)}&status=${encodeURIComponent(activeStatus)}&sort_by=${encodeURIComponent(sortBy)}`;
+
+            fetch(url)
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    renderJobs(data.jobs, (currentPage - 1) * 15);
+                    totalPages = data.total_pages || 1;
+                    updatePaginationUI(data.total, data.page, data.per_page);
+                    refreshStats();
+                })
+                .catch(function(err) {
+                    container.innerHTML = `<div class="alert alert-danger">Error loading portal jobs: ${err.message}</div>`;
+                });
+        }
+
+        // Render Job Cards
+        function renderJobs(jobs, baseIndex) {
+            const container = document.getElementById('portal-jobs-container');
+            if (!jobs || jobs.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5 bg-white rounded-3 border" style="background: var(--jp-card-bg) !important;">
+                        <i class="bi bi-briefcase text-muted fs-1"></i>
+                        <h5 class="fw-bold mt-2">No Portal Jobs Found</h5>
+                        <p class="text-muted small">No jobs match the current filters. Click "Quick Scan" above to discover opportunities.</p>
+                        <button class="btn btn-sm btn-primary fw-semibold" onclick="triggerScan('quick')">
+                            <i class="bi bi-lightning-charge-fill me-1"></i> Scan Top Companies
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            jobs.forEach(function(job, idx) {
+                const globalIndex = baseIndex + idx + 1;
+                const isApplied = job.status === 'applied';
+                const isSaved = job.status === 'saved';
+
+                // Skills tags
+                let skillsHtml = '';
+                if (job.matched_skills && job.matched_skills.length > 0) {
+                    job.matched_skills.slice(0, 8).forEach(function(skill) {
+                        skillsHtml += `<span class="skill-tag">${escapeHtml(skill)}</span>`;
+                    });
+                    if (job.matched_skills.length > 8) {
+                        skillsHtml += `<span class="skill-tag">+${job.matched_skills.length - 8} more</span>`;
+                    }
+                }
+
+                html += `
+                <div class="portal-job-card" id="job-card-${job.id}">
+                    <div class="job-number-badge">#${globalIndex}</div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+                            <div>
+                                <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                                    <span class="fw-bold text-dark fs-6" style="color: var(--jp-dark) !important;">${escapeHtml(job.company)}</span>
+                                    <span class="sector-badge">${escapeHtml(job.category)}</span>
+                                    <span class="ats-badge">${escapeHtml(job.ats_type)}</span>
+                                    <span class="exp-badge"><i class="bi bi-mortarboard-fill"></i> ${escapeHtml(job.experience_req)}</span>
+                                </div>
+                                <h5 class="fw-bold mb-1 text-primary">${escapeHtml(job.title)}</h5>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="match-score-badge"><i class="bi bi-stars"></i> ${job.match_score}% Match</span>
+                            </div>
+                        </div>
+
+                        <!-- Meta row -->
+                        <div class="d-flex align-items-center gap-3 text-muted small flex-wrap mb-2">
+                            <span><i class="bi bi-geo-alt me-1 text-secondary"></i>${escapeHtml(job.location)}</span>
+                            ${job.salary ? `<span><i class="bi bi-cash me-1 text-success"></i>${escapeHtml(job.salary)}</span>` : ''}
+                            ${job.date_posted ? `<span><i class="bi bi-calendar3 me-1"></i>${escapeHtml(job.date_posted)}</span>` : ''}
+                            <span class="badge ${isApplied ? 'status-applied' : (isSaved ? 'bg-warning text-dark' : 'bg-primary-subtle text-primary')} text-uppercase" id="status-pill-${job.id}">
+                                ${escapeHtml(job.status || 'new')}
+                            </span>
+                        </div>
+
+                        <!-- Description excerpt -->
+                        <p class="small text-muted mb-2" style="line-height: 1.5;">${escapeHtml(job.description || '')}</p>
+
+                        <!-- Matched Resume Skills -->
+                        <div class="mb-3">
+                            <span class="small fw-semibold text-secondary me-2"><i class="bi bi-check2-circle text-success me-1"></i>Matched Skills:</span>
+                            ${skillsHtml}
+                        </div>
+
+                        <!-- Card Action Buttons -->
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top flex-wrap gap-2" style="border-color: var(--jp-border) !important;">
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm ${isApplied ? 'btn-danger' : 'btn-outline-success'} fw-semibold" onclick="updateJobStatus(${job.id}, 'applied')">
+                                    <i class="bi bi-check2-all me-1"></i> ${isApplied ? 'Applied' : 'Mark Applied'}
+                                </button>
+                                <button class="btn btn-sm ${isSaved ? 'btn-warning text-dark' : 'btn-outline-warning'} fw-semibold" onclick="updateJobStatus(${job.id}, 'saved')">
+                                    <i class="bi bi-bookmark me-1"></i> ${isSaved ? 'Saved' : 'Save'}
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger fw-semibold" onclick="confirmDismiss(${job.id}, '${escapeHtml(job.title)}', '${escapeHtml(job.company)}')">
+                                    <i class="bi bi-x-circle me-1"></i> Dismiss
+                                </button>
+                            </div>
+                            <div>
+                                <a href="${escapeHtml(job.url)}" target="_blank" rel="noopener noreferrer" class="btn-apply-portal">
+                                    <span>Apply on Official Portal</span>
+                                    <i class="bi bi-box-arrow-up-right small"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function updatePaginationUI(total, page, perPage) {
+            const controls = document.getElementById('pagination-controls');
+            if (!controls) return;
+            if (total > perPage) {
+                controls.style.display = 'flex';
+                controls.removeAttribute('style');
+                const start = (page - 1) * perPage + 1;
+                const end = Math.min(page * perPage, total);
+                document.getElementById('pagination-info').textContent = `Showing ${start}-${end} of ${total} Portal Opportunities`;
+                document.getElementById('btn-prev-page').disabled = (page <= 1);
+                document.getElementById('btn-next-page').disabled = (page >= totalPages);
+            } else {
+                controls.style.display = 'none';
+            }
+        }
+
+        // Job Status Updates
+        function updateJobStatus(jobId, newStatus) {
+            fetch(`/api/portal-job/${jobId}/status`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.status === 'success') {
+                    const pill = document.getElementById(`status-pill-${jobId}`);
+                    if (pill) {
+                        pill.textContent = newStatus.toUpperCase();
+                        if (newStatus === 'applied') {
+                            pill.className = 'badge status-applied text-uppercase';
+                        } else if (newStatus === 'saved') {
+                            pill.className = 'badge bg-warning text-dark text-uppercase';
+                        } else {
+                            pill.className = 'badge bg-primary-subtle text-primary text-uppercase';
+                        }
+                    }
+                    refreshStats();
+                }
+            })
+            .catch(function(err) {
+                alert('Error updating status: ' + err.message);
+            });
+        }
+
+        // Dismiss Modal Logic
+        function confirmDismiss(jobId, title, company) {
+            jobToDismiss = jobId;
+            document.getElementById('modal-dismiss-title').textContent = title;
+            document.getElementById('modal-dismiss-company').textContent = company;
+            const modal = new bootstrap.Modal(document.getElementById('dismissConfirmModal'));
+            modal.show();
+        }
+
+        function executeDismiss() {
+            if (!jobToDismiss) return;
+            updateJobStatus(jobToDismiss, 'rejected');
+            const card = document.getElementById(`job-card-${jobToDismiss}`);
+            if (card) {
+                card.style.opacity = '0.3';
+                card.style.transform = 'scale(0.98)';
+                setTimeout(function() {
+                    card.remove();
+                }, 300);
+            }
+            const modalEl = document.getElementById('dismissConfirmModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+            jobToDismiss = null;
+        }
+
+        // Trigger Scanner
+        function triggerScan(mode) {
+            const btn = document.getElementById('btn-trigger-scan');
+            if (btn) btn.disabled = true;
+
+            fetch('/api/scan-portal-jobs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mode: mode })
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                showScanMonitor();
+                startPolling();
+            })
+            .catch(function(err) {
+                alert('Error starting scan: ' + err.message);
+                if (btn) btn.disabled = false;
+            });
+        }
+
+        function stopScan() {
+            fetch('/api/scan-portal-jobs/stop', { method: 'POST' })
+                .then(function() {
+                    document.getElementById('monitor-status-text').textContent = 'Stopping scan...';
+                });
+        }
+
+        function showScanMonitor() {
+            const box = document.getElementById('scan-monitor-box');
+            if (box) box.classList.add('active');
+            scanStartTime = Date.now();
+        }
+
+        function hideScanMonitor() {
+            const box = document.getElementById('scan-monitor-box');
+            if (box) box.classList.remove('active');
+            const btn = document.getElementById('btn-trigger-scan');
+            if (btn) btn.disabled = false;
+        }
+
+        function startPolling() {
+            clearInterval(pollTimer);
+            pollTimer = setInterval(function() {
+                fetch('/api/scan-portal-jobs/status')
+                    .then(function(res) { return res.json(); })
+                    .then(function(status) {
+                        updateMonitorUI(status);
+                        if (!status.running) {
+                            clearInterval(pollTimer);
+                            setTimeout(function() {
+                                hideScanMonitor();
+                                loadPortalJobs(1);
+                            }, 1200);
+                        }
+                    })
+                    .catch(function() {
+                        clearInterval(pollTimer);
+                        hideScanMonitor();
+                    });
+            }, 800);
+        }
+
+        function updateMonitorUI(status) {
+            const bar = document.getElementById('monitor-progress-bar');
+            if (bar) bar.style.width = `${status.progress_pct}%`;
+
+            const statusText = document.getElementById('monitor-status-text');
+            if (statusText) statusText.textContent = `Scanning: ${status.current_company || 'Active'}`;
+
+            const ticker = document.getElementById('monitor-company-ticker');
+            if (ticker) ticker.textContent = `Companies: ${status.companies_scanned} / ${status.total_companies}`;
+
+            const counts = document.getElementById('monitor-counts-ticker');
+            if (counts) counts.textContent = `${status.jobs_qualified} qualified jobs (< 4y)`;
+
+            if (scanStartTime) {
+                const elapsed = Math.floor((Date.now() - scanStartTime) / 1000);
+                const m = Math.floor(elapsed / 60);
+                const s = elapsed % 60;
+                const timerEl = document.getElementById('monitor-timer');
+                if (timerEl) timerEl.textContent = `⏱️ ${m}:${s < 10 ? '0' : ''}${s}`;
+            }
+        }
+
+        function refreshStats() {
+            fetch('/api/portal-jobs/stats')
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (document.getElementById('stat-total-jobs')) document.getElementById('stat-total-jobs').textContent = data.total || 0;
+                    if (document.getElementById('stat-qualified-jobs')) document.getElementById('stat-qualified-jobs').textContent = data.qualified || 0;
+                    if (document.getElementById('stat-companies-count')) document.getElementById('stat-companies-count').textContent = data.companies_count || 0;
+                    if (document.getElementById('stat-avg-score')) document.getElementById('stat-avg-score').textContent = `${data.avg_match_score || 0}%`;
+
+                    if (data.by_status) {
+                        if (document.getElementById('pill-count-all')) document.getElementById('pill-count-all').textContent = data.total || 0;
+                        if (document.getElementById('pill-count-new')) document.getElementById('pill-count-new').textContent = data.by_status.new || 0;
+                        if (document.getElementById('pill-count-applied')) document.getElementById('pill-count-applied').textContent = data.by_status.applied || 0;
+                        if (document.getElementById('pill-count-saved')) document.getElementById('pill-count-saved').textContent = data.by_status.saved || 0;
+                        if (document.getElementById('pill-count-rejected')) document.getElementById('pill-count-rejected').textContent = data.by_status.rejected || 0;
+                    }
+                })
+                .catch(function(e) {});
+        }
+
+        function confirmClearJobs() {
+            if (confirm('Are you sure you want to clear all scanned portal jobs?')) {
+                fetch('/api/portal-jobs/clear', { method: 'POST' })
+                    .then(function() {
+                        loadPortalJobs(1);
+                    });
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // Initialize on DOM load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPortalJobs(1);
+        });
+    </script>
+</body>
+</html>
