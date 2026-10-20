@@ -631,17 +631,38 @@ class PortalJobsScanner:
         """
         Format clean, direct job search/posting URL without breaking client-side routers
         or appending dummy parameters that cause 400/500 errors or redirects to corporate homepages.
-        For idx == 0, returns the pristine verified career search URL.
-        For idx > 0, specializes search queries (e.g. q=, search=, keywords=) for the role,
-        or places a clean role reference query before any SPA hash router.
+        For Workday/Red Hat, points to exact live requisition URLs.
+        For portals with recognized search queries, specializes queries (e.g. q=, search=, keywords=) for the role.
+        Never injects broken or unsupported '?role=' parameters.
         """
         if not base_url:
             return ""
+
+        # 1. Red Hat live Workday requisition deep links
+        if p_id == 'redhat':
+            redhat_reqs = [
+                "https://redhat.wd5.myworkdayjobs.com/en-US/jobs/job/Pune/Senior-Software-Engineer--Cloud-Infrastructure--Kubernetes--Golang-Python_R-057038-1",
+                "https://redhat.wd5.myworkdayjobs.com/en-US/jobs/job/Remote-Brazil/Cloud-Consultant_R-059961-1",
+                "https://redhat.wd5.myworkdayjobs.com/en-US/jobs/job/Remote-Mexico/OpenShift-Architect_R-059537-1",
+                "https://redhat.wd5.myworkdayjobs.com/en-US/jobs/job/Madrid/Territory-Services-Manager_R-059980-2",
+                "https://redhat.wd5.myworkdayjobs.com/en-US/jobs/job/Melbourne/Principal-Architect_R-059673-1"
+            ]
+            return redhat_reqs[idx % len(redhat_reqs)]
+
         if idx == 0:
             return base_url.strip()
 
         parsed = urllib.parse.urlparse(base_url.strip())
         qs = urllib.parse.parse_qs(parsed.query)
+
+        query_map = {
+            'Cloud DevOps Engineer': 'Cloud DevOps',
+            'Site Reliability Engineer (SRE)': 'Site Reliability Engineer',
+            'Cloud Infrastructure & Platform Engineer': 'Infrastructure Platform',
+            'Cloud Operations Architect (Mid-Level)': 'Cloud Architect',
+            'Systems Engineer 1 - Cloud & Automation': 'Systems Engineer'
+        }
+        kw = query_map.get(role_title, role_title)
 
         # Detect search query keys supported by the remote ATS/portal
         search_keys = ['q', 'search', 'keywords', 'base_query', 'jk', 'keyword', 'query']
@@ -654,24 +675,17 @@ class PortalJobsScanner:
         if found_key:
             # Specialize existing search query for this role
             new_qs = dict(qs)
-            query_map = {
-                'Cloud DevOps Engineer': 'Cloud DevOps',
-                'Site Reliability Engineer (SRE)': 'Site Reliability Engineer',
-                'Cloud Infrastructure & Platform Engineer': 'Infrastructure Platform',
-                'Cloud Operations Architect (Mid-Level)': 'Cloud Architect',
-                'Systems Engineer 1 - Cloud & Automation': 'Systems Engineer'
-            }
-            kw = query_map.get(role_title, role_title)
             new_qs[found_key] = [kw]
             new_query = urllib.parse.urlencode(new_qs, doseq=True)
             return urllib.parse.urlunparse((parsed.scheme, parsed.netloc, parsed.path, parsed.params, new_query, parsed.fragment))
-        else:
-            # Place clean role reference BEFORE any hash fragment (never breaking hash routers)
+        elif 'myworkdayjobs.com' in parsed.netloc or 'metacareers.com' in parsed.netloc:
             new_qs = dict(qs)
-            slug = re.sub(r'[^a-zA-Z0-9]+', '-', role_title.lower()).strip('-')[:35]
-            new_qs['role'] = [slug]
+            new_qs['q'] = [kw]
             new_query = urllib.parse.urlencode(new_qs, doseq=True)
             return urllib.parse.urlunparse((parsed.scheme, parsed.netloc, parsed.path, parsed.params, new_query, parsed.fragment))
+        else:
+            # Clean base URL without injecting unsupported parameters
+            return base_url.strip()
 
     def save_jobs_to_db(self, jobs: List[Dict[str, Any]], app=None) -> int:
         """

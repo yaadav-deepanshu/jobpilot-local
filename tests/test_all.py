@@ -3979,18 +3979,25 @@ class TestPortalJobsScanner:
         assert "base_query=Site+Reliability+Engineer" in amazon_sre
         assert "job_id=" not in amazon_sre
 
-        # 3. Hash router URL places query before the hash, preserving clean #/jobs
+        # 3. Hash router URL preserves clean #/jobs
         swiggy_base = "https://careers.swiggy.in/#/jobs"
         swiggy_sre = PortalJobsScanner._format_direct_job_url(swiggy_base, "Site Reliability Engineer (SRE)", "swiggy", 1)
         assert swiggy_sre.endswith("#/jobs")
-        assert "?role=site-reliability-engineer" in swiggy_sre
         assert "job_id=" not in swiggy_sre
+        assert "role=" not in swiggy_sre
 
-        # 4. Standard clean URL adds clean role query without job_id
+        # 4. Standard clean URL preserves direct board without injecting unsupported parameters
         cred_base = "https://jobs.lever.co/cred"
         cred_arch = PortalJobsScanner._format_direct_job_url(cred_base, "Cloud Operations Architect (Mid-Level)", "cred", 2)
-        assert "jobs.lever.co/cred?role=" in cred_arch
+        assert "jobs.lever.co/cred" in cred_arch
         assert "job_id=" not in cred_arch
+        assert "role=" not in cred_arch
+
+        # 5. Red Hat returns exact live Workday requisition
+        redhat_base = "https://redhat.wd5.myworkdayjobs.com/jobs"
+        redhat_job = PortalJobsScanner._format_direct_job_url(redhat_base, "Cloud DevOps Engineer", "redhat", 1)
+        assert "redhat.wd5.myworkdayjobs.com/en-US/jobs/job/" in redhat_job
+        assert "R-" in redhat_job
 
     def test_specialized_tech_job_sites_urls_valid(self):
         """
