@@ -3919,6 +3919,115 @@ class TestPortalJobsScanner:
         assert 'setScrollMode(' in content
         assert 'changePerPage(' in content
 
+    def test_all_100_company_portal_urls_valid_and_direct(self):
+        """
+        Verify all 100 enterprise portals have direct, valid HTTPS URLs pointing to
+        exact careers boards and job search pages, without dummy or broken parameters.
+        """
+        from scraper.company_portals import BIG_COMPANY_PORTALS
+
+        assert len(BIG_COMPANY_PORTALS) == 100, f"Expected 100 portals, found {len(BIG_COMPANY_PORTALS)}"
+
+        for p in BIG_COMPANY_PORTALS:
+            p_id = p.get('id')
+            portal_url = p.get('portal_url', '')
+            search_url = p.get('search_url', '')
+
+            assert portal_url.startswith('https://'), f"Portal {p_id} portal_url must start with https://, got: {portal_url}"
+            assert search_url.startswith('https://'), f"Portal {p_id} search_url must start with https://, got: {search_url}"
+
+            # Ensure no dummy job_id parameters
+            assert 'job_id=' not in search_url, f"Portal {p_id} search_url must not contain dummy job_id parameter: {search_url}"
+            assert 'job_id=' not in portal_url, f"Portal {p_id} portal_url must not contain dummy job_id parameter: {portal_url}"
+
+            # Ensure no broken or non-existent domains
+            assert 'jobs.netflix.net' not in search_url, f"Portal {p_id} must not use defunct jobs.netflix.net"
+            assert 'jobs.netflix.net' not in portal_url, f"Portal {p_id} must not use defunct jobs.netflix.net"
+
+            # Ensure Indian tech portals point to direct careers boards rather than food/consumer apps
+            if p_id == 'swiggy':
+                assert 'careers.swiggy.in' in search_url, f"Swiggy must point to careers.swiggy.in, got: {search_url}"
+            if p_id == 'zomato':
+                assert 'eternal.com' in search_url or 'zomato.com/careers' in search_url, f"Zomato must point to valid careers board, got: {search_url}"
+            if p_id == 'cred':
+                assert 'lever.co/cred' in search_url or 'careers.cred.club' in search_url, f"Cred must point to Lever/careers, got: {search_url}"
+            if p_id == 'goldmansachs':
+                assert 'higher.gs.com' in search_url, f"Goldman Sachs must point to higher.gs.com results, got: {search_url}"
+            if p_id == 'salesforce':
+                assert 'careers.salesforce.com' in search_url, f"Salesforce must point to careers.salesforce.com, got: {search_url}"
+            if p_id == 'uber':
+                assert 'jobs.uber.com' in search_url, f"Uber must point to jobs.uber.com, got: {search_url}"
+
+    def test_format_direct_job_url_logic(self):
+        """
+        Verify PortalJobsScanner._format_direct_job_url produces clean, valid URLs
+        that specialize queries without breaking SPA hash routers or adding dummy params.
+        """
+        from scraper.portal_jobs_scanner import PortalJobsScanner
+
+        # 1. Index 0 returns exact base URL
+        base = "https://higher.gs.com/results"
+        assert PortalJobsScanner._format_direct_job_url(base, "Cloud DevOps Engineer", "goldmansachs", 0) == base
+
+        # 2. Existing search parameter is specialized for the role
+        amazon_base = "https://www.amazon.jobs/en/search?base_query=DevOps"
+        amazon_sre = PortalJobsScanner._format_direct_job_url(amazon_base, "Site Reliability Engineer (SRE)", "amazon_aws", 1)
+        assert "base_query=Site+Reliability+Engineer" in amazon_sre
+        assert "job_id=" not in amazon_sre
+
+        # 3. Hash router URL places query before the hash, preserving clean #/jobs
+        swiggy_base = "https://careers.swiggy.in/#/jobs"
+        swiggy_sre = PortalJobsScanner._format_direct_job_url(swiggy_base, "Site Reliability Engineer (SRE)", "swiggy", 1)
+        assert swiggy_sre.endswith("#/jobs")
+        assert "?role=site-reliability-engineer" in swiggy_sre
+        assert "job_id=" not in swiggy_sre
+
+        # 4. Standard clean URL adds clean role query without job_id
+        cred_base = "https://jobs.lever.co/cred"
+        cred_arch = PortalJobsScanner._format_direct_job_url(cred_base, "Cloud Operations Architect (Mid-Level)", "cred", 2)
+        assert "jobs.lever.co/cred?role=" in cred_arch
+        assert "job_id=" not in cred_arch
+
+    def test_specialized_tech_job_sites_urls_valid(self):
+        """
+        Verify all 24 specialized tech job platforms have valid HTTPS URLs
+        and direct search endpoints (e.g. Instahyre, Jobspresso, Otta).
+        """
+        from scraper.websites_scraper import SPECIALIZED_JOB_WEBSITES
+
+        assert len(SPECIALIZED_JOB_WEBSITES) == 24, f"Expected 24 websites, found {len(SPECIALIZED_JOB_WEBSITES)}"
+
+        for s in SPECIALIZED_JOB_WEBSITES:
+            s_id = s.get('id')
+            url = s.get('url', '')
+            search_url = s.get('search_url', '')
+
+            assert url.startswith('https://'), f"Site {s_id} url must start with https://"
+            assert search_url.startswith('https://'), f"Site {s_id} search_url must start with https://"
+
+            # Specific verified endpoints
+            if s_id == 'instahyre':
+                assert 'instahyre.com/search-jobs' in search_url
+            if s_id == 'jobspresso':
+                assert 'jobspresso.co/#jobs' in search_url
+            if s_id == 'otta':
+                assert 'welcometothejungle.com' in search_url
+            if s_id == 'hirist':
+                assert 'hirist.tech/c/devops-sre-jobs' in search_url
+
+    def test_db_portal_jobs_have_clean_direct_links(self, app):
+        """
+        Verify PortalJob database records have valid direct links without dummy job_id parameters.
+        """
+        from db.models import PortalJob
+        with app.app_context():
+            jobs = PortalJob.query.limit(50).all()
+            for j in jobs:
+                assert j.url.startswith('https://'), f"Job {j.id} URL must start with https://, got: {j.url}"
+                assert 'job_id=' not in j.url, f"Job {j.id} URL must not contain dummy job_id: {j.url}"
+                assert 'jobs.netflix.net' not in j.url, f"Job {j.id} URL must not contain defunct domain: {j.url}"
+
+
 
 
 

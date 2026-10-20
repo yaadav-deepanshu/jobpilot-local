@@ -11,6 +11,7 @@ import time
 import json
 import logging
 import threading
+import urllib.parse
 from datetime import datetime, timezone, timedelta
 from typing import List, Dict, Any, Optional, Callable, Set
 
@@ -554,7 +555,7 @@ class PortalJobsScanner:
         selected_templates = templates[:3] if p_id != 'amazon_aws' and p_id != 'google' else templates
 
         for idx, tpl in enumerate(selected_templates):
-            job_url = f"{base_search_url}&job_id={p_id}_{idx+101}" if '?' in base_search_url else f"{base_search_url}?job_id={p_id}_{idx+101}"
+            job_url = self._format_direct_job_url(base_search_url, tpl['title_suffix'], p_id, idx)
             company_jobs.append({
                 'portal_id': p_id,
                 'company': company,
@@ -570,6 +571,53 @@ class PortalJobsScanner:
             })
 
         return company_jobs
+
+    @staticmethod
+    def _format_direct_job_url(base_url: str, role_title: str, p_id: str, idx: int) -> str:
+        """
+        Format clean, direct job search/posting URL without breaking client-side routers
+        or appending dummy parameters that cause 400/500 errors or redirects to corporate homepages.
+        For idx == 0, returns the pristine verified career search URL.
+        For idx > 0, specializes search queries (e.g. q=, search=, keywords=) for the role,
+        or places a clean role reference query before any SPA hash router.
+        """
+        if not base_url:
+            return ""
+        if idx == 0:
+            return base_url.strip()
+
+        parsed = urllib.parse.urlparse(base_url.strip())
+        qs = urllib.parse.parse_qs(parsed.query)
+
+        # Detect search query keys supported by the remote ATS/portal
+        search_keys = ['q', 'search', 'keywords', 'base_query', 'jk', 'keyword', 'query']
+        found_key = None
+        for k in search_keys:
+            if k in qs:
+                found_key = k
+                break
+
+        if found_key:
+            # Specialize existing search query for this role
+            new_qs = dict(qs)
+            query_map = {
+                'Cloud DevOps Engineer': 'Cloud DevOps',
+                'Site Reliability Engineer (SRE)': 'Site Reliability Engineer',
+                'Cloud Infrastructure & Platform Engineer': 'Infrastructure Platform',
+                'Cloud Operations Architect (Mid-Level)': 'Cloud Architect',
+                'Systems Engineer 1 - Cloud & Automation': 'Systems Engineer'
+            }
+            kw = query_map.get(role_title, role_title)
+            new_qs[found_key] = [kw]
+            new_query = urllib.parse.urlencode(new_qs, doseq=True)
+            return urllib.parse.urlunparse((parsed.scheme, parsed.netloc, parsed.path, parsed.params, new_query, parsed.fragment))
+        else:
+            # Place clean role reference BEFORE any hash fragment (never breaking hash routers)
+            new_qs = dict(qs)
+            slug = re.sub(r'[^a-zA-Z0-9]+', '-', role_title.lower()).strip('-')[:35]
+            new_qs['role'] = [slug]
+            new_query = urllib.parse.urlencode(new_qs, doseq=True)
+            return urllib.parse.urlunparse((parsed.scheme, parsed.netloc, parsed.path, parsed.params, new_query, parsed.fragment))
 
     def save_jobs_to_db(self, jobs: List[Dict[str, Any]], app=None) -> int:
         """

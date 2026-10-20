@@ -1213,11 +1213,11 @@
                         <!-- Card Action Buttons -->
                         <div class="d-flex justify-content-between align-items-center pt-2 border-top flex-wrap gap-2" style="border-color: var(--jp-border) !important;">
                             <div class="d-flex gap-2">
-                                <button class="btn btn-sm ${isApplied ? 'btn-danger' : 'btn-outline-success'} fw-semibold" onclick="updateJobStatus(${job.id}, 'applied')">
+                                <button class="btn btn-sm ${isApplied ? 'btn-danger' : 'btn-outline-success'} fw-semibold" id="btn-applied-${job.id}" onclick="toggleJobStatus(${job.id}, 'applied')">
                                     <i class="bi bi-check2-all me-1"></i> ${isApplied ? 'Applied' : 'Mark Applied'}
                                 </button>
-                                <button class="btn btn-sm ${isSaved ? 'btn-warning text-dark' : 'btn-outline-warning'} fw-semibold" onclick="updateJobStatus(${job.id}, 'saved')">
-                                    <i class="bi bi-bookmark me-1"></i> ${isSaved ? 'Saved' : 'Save'}
+                                <button class="btn btn-sm ${isSaved ? 'btn-warning text-dark' : 'btn-outline-warning'} fw-semibold" id="btn-saved-${job.id}" onclick="toggleJobStatus(${job.id}, 'saved')">
+                                    <i class="bi ${isSaved ? 'bi-bookmark-fill' : 'bi-bookmark'} me-1"></i> ${isSaved ? 'Saved' : 'Save'}
                                 </button>
                                 <button class="btn btn-sm btn-outline-danger fw-semibold" onclick="confirmDismiss(${job.id}, '${escapeHtml(job.title)}', '${escapeHtml(job.company)}')">
                                     <i class="bi bi-x-circle me-1"></i> Dismiss
@@ -1243,7 +1243,21 @@
             }
         }
 
-        // Job Status Updates
+        // Job Status Toggling & Persistence
+        function toggleJobStatus(jobId, targetStatus) {
+            let currentStatus = 'new';
+            const jobObj = loadedJobs.find(function(j) { return j.id === jobId; });
+            if (jobObj && jobObj.status) {
+                currentStatus = jobObj.status;
+            } else {
+                const pill = document.getElementById(`status-pill-${jobId}`);
+                if (pill) currentStatus = pill.textContent.trim().toLowerCase();
+            }
+
+            const newStatus = (currentStatus === targetStatus) ? 'new' : targetStatus;
+            updateJobStatus(jobId, newStatus);
+        }
+
         function updateJobStatus(jobId, newStatus) {
             fetch(`/api/portal-job/${jobId}/status`, {
                 method: 'POST',
@@ -1253,6 +1267,9 @@
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 if (data.status === 'success') {
+                    const jobObj = loadedJobs.find(function(j) { return j.id === jobId; });
+                    if (jobObj) jobObj.status = newStatus;
+
                     const pill = document.getElementById(`status-pill-${jobId}`);
                     if (pill) {
                         pill.textContent = newStatus.toUpperCase();
@@ -1264,7 +1281,39 @@
                             pill.className = 'badge bg-primary-subtle text-primary text-uppercase';
                         }
                     }
+
+                    const btnApplied = document.getElementById(`btn-applied-${jobId}`);
+                    if (btnApplied) {
+                        if (newStatus === 'applied') {
+                            btnApplied.className = 'btn btn-sm btn-danger fw-semibold';
+                            btnApplied.innerHTML = '<i class="bi bi-check2-all me-1"></i> Applied';
+                        } else {
+                            btnApplied.className = 'btn btn-sm btn-outline-success fw-semibold';
+                            btnApplied.innerHTML = '<i class="bi bi-check2-all me-1"></i> Mark Applied';
+                        }
+                    }
+
+                    const btnSaved = document.getElementById(`btn-saved-${jobId}`);
+                    if (btnSaved) {
+                        if (newStatus === 'saved') {
+                            btnSaved.className = 'btn btn-sm btn-warning text-dark fw-semibold';
+                            btnSaved.innerHTML = '<i class="bi bi-bookmark-fill me-1"></i> Saved';
+                        } else {
+                            btnSaved.className = 'btn btn-sm btn-outline-warning fw-semibold';
+                            btnSaved.innerHTML = '<i class="bi bi-bookmark me-1"></i> Save';
+                        }
+                    }
+
                     refreshStats();
+
+                    if (activeStatus !== 'all' && activeStatus !== newStatus) {
+                        const card = document.getElementById(`job-card-${jobId}`);
+                        if (card) {
+                            card.style.opacity = '0.3';
+                            card.style.transform = 'scale(0.98)';
+                            setTimeout(function() { card.remove(); }, 250);
+                        }
+                    }
                 }
             })
             .catch(function(err) {
