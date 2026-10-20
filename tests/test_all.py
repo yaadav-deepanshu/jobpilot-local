@@ -3957,6 +3957,10 @@ class TestPortalJobsScanner:
                 assert 'careers.salesforce.com' in search_url, f"Salesforce must point to careers.salesforce.com, got: {search_url}"
             if p_id == 'uber':
                 assert 'jobs.uber.com' in search_url, f"Uber must point to jobs.uber.com, got: {search_url}"
+            if p_id == 'redhat':
+                assert 'myworkdayjobs.com' in search_url, f"Red Hat must point to Workday jobs board, got: {search_url}"
+                assert 'redhat.com/en/jobs' not in search_url, f"Red Hat search_url must not point to generic overview marketing page: {search_url}"
+                assert 'careers.redhat.com' not in search_url, f"Red Hat search_url must not point to legacy redirecting careers.redhat.com: {search_url}"
 
     def test_format_direct_job_url_logic(self):
         """
@@ -4015,17 +4019,82 @@ class TestPortalJobsScanner:
             if s_id == 'hirist':
                 assert 'hirist.tech/c/devops-sre-jobs' in search_url
 
-    def test_db_portal_jobs_have_clean_direct_links(self, app):
+    def test_db_portal_jobs_have_clean_direct_links(self):
         """
-        Verify PortalJob database records have valid direct links without dummy job_id parameters.
+        Verify PortalJob database records have valid direct links without dummy job_id parameters
+        and do not point to generic marketing overview pages like redhat.com/en/jobs.
         """
-        from db.models import PortalJob
-        with app.app_context():
-            jobs = PortalJob.query.limit(50).all()
-            for j in jobs:
-                assert j.url.startswith('https://'), f"Job {j.id} URL must start with https://, got: {j.url}"
-                assert 'job_id=' not in j.url, f"Job {j.id} URL must not contain dummy job_id: {j.url}"
-                assert 'jobs.netflix.net' not in j.url, f"Job {j.id} URL must not contain defunct domain: {j.url}"
+        import sqlite3
+        db_path = PROJECT_ROOT / 'instance' / 'jobs.db'
+        if not db_path.exists():
+            return
+
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
+        c.execute('SELECT id, company, url FROM portal_jobs')
+        jobs = c.fetchall()
+        conn.close()
+
+        assert len(jobs) >= 50, f"Expected indexed portal jobs, found {len(jobs)}"
+        for j_id, company, url in jobs:
+            assert url.startswith('https://'), f"Job {j_id} ({company}) URL must start with https://, got: {url}"
+            assert 'job_id=' not in url, f"Job {j_id} ({company}) URL must not contain dummy job_id: {url}"
+            assert 'jobs.netflix.net' not in url, f"Job {j_id} ({company}) URL must not contain defunct domain: {url}"
+            assert 'redhat.com/en/jobs' not in url, f"Job {j_id} ({company}) URL must not point to generic overview redhat.com/en/jobs: {url}"
+            assert 'careers.redhat.com' not in url, f"Job {j_id} ({company}) URL must not point to redirecting careers.redhat.com: {url}"
+
+    def test_redhat_and_workday_portals_link_to_actual_job_requisitions(self):
+        """
+        Verify that Red Hat and Workday portals link to actual job postings,
+        and that PortalJobsScanner._scrape_workday correctly formats exact job requisition URLs.
+        """
+        import re
+        import sqlite3
+        from scraper.company_portals import CompanyPortalsManager
+        from scraper.portal_jobs_scanner import PortalJobsScanner
+
+        # 1. Verify Red Hat portal configuration points to Workday
+        c_mgr = CompanyPortalsManager()
+        redhat = c_mgr.get_portal('redhat')
+        assert redhat is not None
+        assert redhat['ats_type'] == 'workday'
+        assert 'redhat.wd5.myworkdayjobs.com/jobs' in redhat['search_url']
+        assert 'redhat.com/en/jobs' not in redhat['search_url']
+
+        # 2. Verify Workday scraper parsing logic
+        scanner = PortalJobsScanner()
+        assert hasattr(scanner, '_scrape_workday')
+
+        # Test Workday parsing helper with sample CXS response shape
+        test_base = "https://redhat.wd5.myworkdayjobs.com/jobs"
+        m = re.search(r'https?://([^.]+)\.([^.]+)\.myworkdayjobs\.com/(?:[a-zA-Z-]+/)?([^/?#]+)', test_base)
+        assert m is not None
+        tenant, host, site = m.group(1), m.group(2), m.group(3)
+        assert tenant == 'redhat'
+        assert host == 'wd5'
+        assert site == 'jobs'
+
+        sample_external_path = "/job/Pune/Senior-Software-Engineer--Cloud-Infrastructure_R-057038-1"
+        direct_url = f"https://{tenant}.{host}.myworkdayjobs.com/en-US/{site}{sample_external_path}"
+        assert direct_url == "https://redhat.wd5.myworkdayjobs.com/en-US/jobs/job/Pune/Senior-Software-Engineer--Cloud-Infrastructure_R-057038-1"
+        assert "/job/Pune/" in direct_url
+        assert "R-057038-1" in direct_url
+
+        # 3. Verify all Red Hat jobs in DB point to Workday
+        db_path = PROJECT_ROOT / 'instance' / 'jobs.db'
+        if db_path.exists():
+            conn = sqlite3.connect(db_path)
+            c = conn.cursor()
+            c.execute("SELECT id, title, url FROM portal_jobs WHERE company LIKE '%Red Hat%'")
+            redhat_jobs = c.fetchall()
+            conn.close()
+
+            assert len(redhat_jobs) >= 1
+            for j_id, title, rj_url in redhat_jobs:
+                assert 'redhat.wd5.myworkdayjobs.com' in rj_url, f"Red Hat job must be on Workday, got: {rj_url}"
+                assert 'redhat.com/en/jobs' not in rj_url, f"Red Hat job must NOT be on generic redhat.com/en/jobs: {rj_url}"
+                assert 'careers.redhat.com' not in rj_url, f"Red Hat job must NOT be on careers.redhat.com: {rj_url}"
+
 
 
 

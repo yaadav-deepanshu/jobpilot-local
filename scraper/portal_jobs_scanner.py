@@ -392,6 +392,8 @@ class PortalJobsScanner:
             jobs = self._scrape_lever(p_id, company, category, search_url or portal_url)
         elif ats_type == 'smartrecruiters':
             jobs = self._scrape_smartrecruiters(p_id, company, category, search_url or portal_url)
+        elif ats_type == 'workday' or 'myworkdayjobs.com' in (search_url or portal_url):
+            jobs = self._scrape_workday(p_id, company, category, search_url or portal_url)
 
         # If direct ATS retrieval returned jobs, use them
         if jobs:
@@ -493,6 +495,58 @@ class PortalJobsScanner:
                             })
         except Exception as e:
             logger.debug(f"SmartRecruiters API query skipped for {p_id}: {e}")
+        return jobs
+
+    def _scrape_workday(self, p_id: str, company: str, category: str, base_url: str) -> List[Dict[str, Any]]:
+        """Query Workday public CXS jobs API to retrieve actual live job postings with exact requisition URLs"""
+        import urllib.request
+        jobs = []
+        try:
+            m = re.search(r'https?://([^.]+)\.([^.]+)\.myworkdayjobs\.com/(?:[a-zA-Z-]+/)?([^/?#]+)', base_url)
+            if not m:
+                return []
+            tenant, host, site = m.group(1), m.group(2), m.group(3)
+            api_url = f"https://{tenant}.{host}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/jobs"
+            payload = json.dumps({
+                "appliedFacets": {},
+                "limit": 20,
+                "offset": 0,
+                "searchText": "Cloud"
+            }).encode('utf-8')
+            req = urllib.request.Request(
+                api_url,
+                data=payload,
+                headers={
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            )
+            with urllib.request.urlopen(req, timeout=5) as response:
+                if response.status == 200:
+                    data = json.loads(response.read().decode('utf-8'))
+                    for rj in data.get('jobPostings', []):
+                        t = rj.get('title', '')
+                        ext = rj.get('externalPath', '')
+                        if not ext:
+                            continue
+                        direct_url = f"https://{tenant}.{host}.myworkdayjobs.com/en-US/{site}{ext}"
+                        loc = rj.get('locationsText', 'Bengaluru / Remote')
+                        jobs.append({
+                            'portal_id': p_id,
+                            'company': company,
+                            'category': category,
+                            'ats_type': 'workday',
+                            'title': t,
+                            'location': loc,
+                            'url': direct_url,
+                            'description': f"{t} opportunity at {company}. Direct career application on official Workday board.",
+                            'date_posted': datetime.now(timezone.utc),
+                            'salary': 'Competitive Tech Salary',
+                            'job_type': 'Full-time'
+                        })
+        except Exception as e:
+            logger.debug(f"Workday API query skipped for {p_id}: {e}")
         return jobs
 
     def _get_company_active_postings(self, portal: Dict[str, Any]) -> List[Dict[str, Any]]:

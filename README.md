@@ -5,7 +5,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-blue?logo=python)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-3.x-black?logo=flask)](https://flask.palletsprojects.com/)
-[![Tests](https://img.shields.io/badge/Tests-135%20Passed%20(100%25)-success)](#automated-testing)
+[![Tests](https://img.shields.io/badge/Tests-136%20Passed%20(100%25)-success)](#automated-testing)
 [![Portals](https://img.shields.io/badge/Enterprise%20Portals-100%20Companies-indigo)](#enterprise-career-portals)
 [![Experience Cap](https://img.shields.io/badge/Experience%20Cap-%3C%204%20Years-emerald)](#strict-experience-cap)
 
@@ -143,7 +143,7 @@ pytest tests/test_all.py -k "TestPortalJobsScanner" -v
 ```
 
 **Test Suite Coverage Summary:**
-- **135 total tests** passing ($100\%$ success rate).
+- **136 total tests** passing ($100\%$ success rate).
 - Validates:
   - Rollback safeguards and backup integrity (`revert_portal_jobs.py`).
   - Strict $<4\text{y}$ experience qualification and senior title exclusion.
@@ -185,7 +185,7 @@ jobpilot-local/
 │   ├── jobs_exporter.py            # Excel, PDF, and HTML report generation
 │   └── routes.py                   # Export download endpoints
 ├── tests/
-│   └── test_all.py                 # 131 comprehensive test cases
+│   └── test_all.py                 # 136 comprehensive test cases
 ├── memory/                         # Persistent architecture & context tracking
 │   ├── MEMORY.md                   # Auto-memory index
 │   ├── portal-jobs-scanner.md      # Portal jobs scanner architecture & filters
