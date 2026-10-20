@@ -731,6 +731,7 @@ def get_portal_jobs():
         'page': page,
         'per_page': per_page,
         'total_pages': max(1, (total + per_page - 1) // per_page),
+        'pages': max(1, (total + per_page - 1) // per_page),
         'jobs': [j.to_dict() for j in jobs_page]
     })
 

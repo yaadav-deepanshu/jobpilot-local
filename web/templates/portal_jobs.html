@@ -373,6 +373,124 @@
             box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
         }
 
+        /* Infinite Scroll Elements */
+        .infinite-scroll-status {
+            text-align: center;
+            padding: 16px 0 24px 0;
+        }
+        .infinite-loader-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 24px;
+            background: #eef2ff;
+            border: 1px solid #c7d2fe;
+            border-radius: 30px;
+            color: var(--jp-primary-hover);
+            font-weight: 700;
+            font-size: 13px;
+            box-shadow: 0 2px 10px rgba(79, 70, 229, 0.12);
+        }
+        [data-theme="dark"] .infinite-loader-box {
+            background: #1e1b4b;
+            border-color: #3730a3;
+            color: #a5b4fc;
+        }
+        .infinite-end-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 24px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 30px;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        [data-theme="dark"] .infinite-end-box {
+            background: #1e293b;
+            border-color: #334155;
+            color: #94a3b8;
+        }
+
+        /* Floating Back to Top Button */
+        #btn-back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1040;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--jp-primary);
+            color: #ffffff;
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(12px);
+        }
+        #btn-back-to-top.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+        #btn-back-to-top:hover {
+            background: var(--jp-primary-hover);
+            box-shadow: 0 8px 26px rgba(79, 70, 229, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* Pagination Item Theming */
+        .page-link {
+            color: var(--jp-primary);
+            border-color: var(--jp-border);
+            background-color: var(--jp-card-bg);
+            transition: all 0.15s ease;
+        }
+        .page-link:hover {
+            background-color: var(--jp-primary-light);
+            border-color: var(--jp-primary);
+            color: var(--jp-primary);
+        }
+        .page-item.active .page-link {
+            background-color: var(--jp-primary);
+            border-color: var(--jp-primary);
+            color: #ffffff;
+            font-weight: 700;
+            box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3);
+        }
+        .page-item.disabled .page-link {
+            background-color: var(--jp-bg);
+            border-color: var(--jp-border);
+            color: #94a3b8;
+        }
+        [data-theme="dark"] .page-link {
+            background-color: #1e293b;
+            border-color: #334155;
+            color: #cbd5e1;
+        }
+        [data-theme="dark"] .page-link:hover {
+            background-color: #334155;
+            color: #ffffff;
+        }
+        [data-theme="dark"] .page-item.active .page-link {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+            color: #ffffff;
+        }
+        [data-theme="dark"] .page-item.disabled .page-link {
+            background-color: #0f172a;
+            border-color: #1e293b;
+            color: #64748b;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-6px); }
             to { opacity: 1; transform: translateY(0); }
@@ -533,23 +651,35 @@
 
         <!-- Filter Deck -->
         <div class="jp-filter-bar">
-            <!-- Status Navigation Pills -->
-            <div class="jp-nav-pills">
-                <button class="jp-pill-btn active" data-status="all" onclick="setStatusFilter('all')">
-                    All Jobs (<span id="pill-count-all">0</span>)
-                </button>
-                <button class="jp-pill-btn" data-status="new" onclick="setStatusFilter('new')">
-                    Fresh / New (<span id="pill-count-new">0</span>)
-                </button>
-                <button class="jp-pill-btn" data-status="applied" onclick="setStatusFilter('applied')">
-                    Applied (<span id="pill-count-applied">0</span>)
-                </button>
-                <button class="jp-pill-btn" data-status="saved" onclick="setStatusFilter('saved')">
-                    Saved (<span id="pill-count-saved">0</span>)
-                </button>
-                <button class="jp-pill-btn" data-status="rejected" onclick="setStatusFilter('rejected')">
-                    Dismissed (<span id="pill-count-rejected">0</span>)
-                </button>
+            <!-- Status Navigation Pills and Mode Switcher Row -->
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                <div class="jp-nav-pills mb-0">
+                    <button class="jp-pill-btn active" data-status="all" onclick="setStatusFilter('all')">
+                        All Jobs (<span id="pill-count-all">0</span>)
+                    </button>
+                    <button class="jp-pill-btn" data-status="new" onclick="setStatusFilter('new')">
+                        Fresh / New (<span id="pill-count-new">0</span>)
+                    </button>
+                    <button class="jp-pill-btn" data-status="applied" onclick="setStatusFilter('applied')">
+                        Applied (<span id="pill-count-applied">0</span>)
+                    </button>
+                    <button class="jp-pill-btn" data-status="saved" onclick="setStatusFilter('saved')">
+                        Saved (<span id="pill-count-saved">0</span>)
+                    </button>
+                    <button class="jp-pill-btn" data-status="rejected" onclick="setStatusFilter('rejected')">
+                        Dismissed (<span id="pill-count-rejected">0</span>)
+                    </button>
+                </div>
+
+                <!-- Pagination / Scroll Mode Toggle (Infinite vs Pages) -->
+                <div class="btn-group btn-group-sm shadow-sm" id="pagination-mode-toggle" role="group">
+                    <button type="button" class="btn btn-primary btn-sm fw-semibold" id="mode-infinite-btn" onclick="setScrollMode('infinite')" title="Infinite scroll: loads more jobs automatically as you scroll down">
+                        <i class="bi bi-infinity me-1"></i> Infinite
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="mode-classic-btn" onclick="setScrollMode('classic')" title="Classic pages: Previous, Next, and Page Numbers">
+                        <i class="bi bi-file-earmark-break me-1"></i> Pages
+                    </button>
+                </div>
             </div>
 
             <!-- Search and Multi-Select Filters Row -->
@@ -601,14 +731,48 @@
             </div>
         </div>
 
-        <!-- Pagination Controls -->
-        <div class="d-flex justify-content-between align-items-center mt-4" id="pagination-controls" style="display: none !important;">
-            <span class="text-muted small" id="pagination-info">Showing 1-15 of 60</span>
-            <div class="btn-group">
-                <button class="btn btn-sm btn-outline-secondary" id="btn-prev-page" onclick="changePage(-1)">Previous</button>
-                <button class="btn btn-sm btn-outline-secondary" id="btn-next-page" onclick="changePage(1)">Next</button>
+        <!-- Infinite Scroll Footer & Sentinel -->
+        <div id="infinite-scroll-footer" class="infinite-scroll-status mt-3 d-none">
+            <div id="infinite-scroll-loader" class="infinite-loader-box d-none mb-3">
+                <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+                <span>Loading more qualified portal jobs...</span>
             </div>
+            <div id="infinite-scroll-info" class="text-muted small mb-2 text-center"></div>
+            <div id="infinite-scroll-action" class="text-center mb-2">
+                <button id="btn-load-more" class="btn btn-outline-primary btn-sm px-4 py-2 fw-semibold shadow-sm" onclick="loadMoreJobs()">
+                    <i class="bi bi-arrow-down-circle me-1"></i> Load More Portal Jobs
+                </button>
+            </div>
+            <div id="infinite-scroll-end" class="infinite-end-box d-none text-center">
+                <i class="bi bi-check-circle-fill text-success me-1"></i>
+                <span id="infinite-scroll-end-text">All qualified portal jobs loaded</span>
+            </div>
+            <!-- Invisible trigger sentinel for IntersectionObserver -->
+            <div id="infinite-scroll-sentinel" style="height: 10px;"></div>
         </div>
+
+        <!-- Classic Pagination Controls -->
+        <div class="d-none justify-content-between align-items-center mt-4 flex-wrap gap-3" id="pagination-controls">
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-muted small" id="pagination-info">Showing page 1</span>
+                <select class="form-select form-select-sm" id="portal-per-page-select" style="width: auto;" onchange="changePerPage(this.value)">
+                    <option value="15" selected>15 / page</option>
+                    <option value="25">25 / page</option>
+                    <option value="50">50 / page</option>
+                    <option value="100">100 / page</option>
+                </select>
+            </div>
+            <nav aria-label="Portal jobs pagination">
+                <ul class="pagination pagination-sm mb-0 shadow-sm" id="pagination-pills">
+                    <!-- Populated dynamically via JS -->
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Floating Back to Top Button -->
+        <button id="btn-back-to-top" onclick="scrollToTop()" title="Scroll back to top">
+            <i class="bi bi-arrow-up fs-5"></i>
+        </button>
 
     </div>
 
@@ -642,11 +806,54 @@
         // State management
         let currentPage = 1;
         let totalPages = 1;
+        let totalJobs = 0;
+        let perPage = 15;
+        try {
+            perPage = parseInt(localStorage.getItem('portal_jobs_per_page') || '15', 10);
+        } catch(e) {}
         let activeStatus = 'all';
+        let scrollMode = 'infinite';
+        try {
+            scrollMode = localStorage.getItem('portal_jobs_pagination_mode') || 'infinite';
+        } catch(e) {}
+        let isLoadingMore = false;
+        let hasMorePages = true;
+        let intersectionObserver = null;
         let searchTimer = null;
         let pollTimer = null;
         let scanStartTime = null;
         let jobToDismiss = null;
+        let loadedJobs = [];
+
+        // Scroll Mode Controller (Infinite vs Classic Pages)
+        function setScrollMode(mode) {
+            scrollMode = mode;
+            try {
+                localStorage.setItem('portal_jobs_pagination_mode', mode);
+            } catch(e) {}
+            updateScrollModeButtons();
+            loadPortalJobs(1, false);
+        }
+
+        function updateScrollModeButtons() {
+            const btnInf = document.getElementById('mode-infinite-btn');
+            const btnCls = document.getElementById('mode-classic-btn');
+            if (scrollMode === 'infinite') {
+                if (btnInf) btnInf.className = 'btn btn-primary btn-sm fw-semibold';
+                if (btnCls) btnCls.className = 'btn btn-outline-secondary btn-sm';
+            } else {
+                if (btnInf) btnInf.className = 'btn btn-outline-secondary btn-sm';
+                if (btnCls) btnCls.className = 'btn btn-primary btn-sm fw-semibold';
+            }
+        }
+
+        function changePerPage(val) {
+            perPage = parseInt(val, 10) || 15;
+            try {
+                localStorage.setItem('portal_jobs_per_page', perPage);
+            } catch(e) {}
+            loadPortalJobs(1, false);
+        }
 
         // Theme Toggle Controller
         function toggleDarkMode() {
@@ -685,14 +892,14 @@
                     btn.classList.remove('active');
                 }
             });
-            loadPortalJobs(1);
+            loadPortalJobs(1, false);
         }
 
         // Search Debounce
         function debounceSearch() {
             clearTimeout(searchTimer);
             searchTimer = setTimeout(function() {
-                loadPortalJobs(1);
+                loadPortalJobs(1, false);
             }, 300);
         }
 
@@ -704,42 +911,237 @@
             setStatusFilter('all');
         }
 
-        // Pagination
-        function changePage(delta) {
-            let next = currentPage + delta;
-            if (next >= 1 && next <= totalPages) {
-                loadPortalJobs(next);
-            }
-        }
-
         // Fetch & Render Portal Jobs
-        function loadPortalJobs(page) {
+        function loadPortalJobs(page, append) {
+            if (typeof append === 'undefined') append = false;
             if (page) currentPage = page;
+
             const container = document.getElementById('portal-jobs-container');
+            if (!append && container) {
+                loadedJobs = [];
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="text-muted mt-2">Loading qualified portal jobs...</p>
+                    </div>
+                `;
+                const footer = document.getElementById('infinite-scroll-footer');
+                if (footer) footer.classList.add('d-none');
+                const controls = document.getElementById('pagination-controls');
+                if (controls) {
+                    controls.classList.add('d-none');
+                    controls.classList.remove('d-flex');
+                }
+            }
+
             const q = document.getElementById('portal-search-input').value.trim();
             const category = document.getElementById('portal-category-select').value;
             const ats = document.getElementById('portal-ats-select').value;
             const sortBy = document.getElementById('portal-sort-select').value;
 
-            const url = `/api/portal-jobs?page=${currentPage}&per_page=15&q=${encodeURIComponent(q)}&category=${encodeURIComponent(category)}&ats=${encodeURIComponent(ats)}&status=${encodeURIComponent(activeStatus)}&sort_by=${encodeURIComponent(sortBy)}`;
+            const url = `/api/portal-jobs?page=${currentPage}&per_page=${perPage}&q=${encodeURIComponent(q)}&category=${encodeURIComponent(category)}&ats=${encodeURIComponent(ats)}&status=${encodeURIComponent(activeStatus)}&sort_by=${encodeURIComponent(sortBy)}`;
 
             fetch(url)
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
-                    renderJobs(data.jobs, (currentPage - 1) * 15);
-                    totalPages = data.total_pages || 1;
-                    updatePaginationUI(data.total, data.page, data.per_page);
+                    const jobs = data.jobs || [];
+                    totalPages = data.total_pages || data.pages || 1;
+                    totalJobs = data.total || 0;
+
+                    if (append) {
+                        const previousCount = loadedJobs.length;
+                        loadedJobs = loadedJobs.concat(jobs);
+                        renderJobs(jobs, true, previousCount);
+                    } else {
+                        loadedJobs = jobs.slice();
+                        renderJobs(jobs, false, (currentPage - 1) * perPage);
+                    }
+
+                    if (scrollMode === 'infinite') {
+                        const controls = document.getElementById('pagination-controls');
+                        if (controls) {
+                            controls.classList.add('d-none');
+                            controls.classList.remove('d-flex');
+                        }
+
+                        const footer = document.getElementById('infinite-scroll-footer');
+                        if (footer && totalJobs > 0) {
+                            footer.classList.remove('d-none');
+                            hasMorePages = currentPage < totalPages;
+                            const infoEl = document.getElementById('infinite-scroll-info');
+                            if (infoEl) {
+                                infoEl.textContent = `Showing ${loadedJobs.length} of ${totalJobs} matching opportunities (Page ${currentPage} of ${totalPages})`;
+                            }
+
+                            const action = document.getElementById('infinite-scroll-action');
+                            const loader = document.getElementById('infinite-scroll-loader');
+                            const endBox = document.getElementById('infinite-scroll-end');
+                            const endText = document.getElementById('infinite-scroll-end-text');
+
+                            if (loader) loader.classList.add('d-none');
+
+                            if (hasMorePages) {
+                                if (action) action.classList.remove('d-none');
+                                if (endBox) endBox.classList.add('d-none');
+                                setupIntersectionObserver();
+                            } else {
+                                if (action) action.classList.add('d-none');
+                                if (endBox) endBox.classList.remove('d-none');
+                                if (endText) endText.textContent = `✨ All ${totalJobs} qualified portal jobs loaded (${totalPages} ${totalPages === 1 ? 'page' : 'pages'})`;
+                            }
+                        } else if (footer) {
+                            footer.classList.add('d-none');
+                        }
+                    } else {
+                        const footer = document.getElementById('infinite-scroll-footer');
+                        if (footer) footer.classList.add('d-none');
+                        renderPagination(totalJobs, data.page || currentPage, totalPages, data.per_page || perPage);
+                    }
+
                     refreshStats();
+                    isLoadingMore = false;
                 })
                 .catch(function(err) {
-                    container.innerHTML = `<div class="alert alert-danger">Error loading portal jobs: ${err.message}</div>`;
+                    isLoadingMore = false;
+                    const container = document.getElementById('portal-jobs-container');
+                    if (container && !append) {
+                        container.innerHTML = `<div class="alert alert-danger">Error loading portal jobs: ${escapeHtml(err.message)}</div>`;
+                    }
                 });
         }
 
-        // Render Job Cards
-        function renderJobs(jobs, baseIndex) {
+        // Infinite Scroll Next Batch
+        function loadMoreJobs() {
+            if (isLoadingMore || !hasMorePages || currentPage >= totalPages) return;
+            isLoadingMore = true;
+
+            const loader = document.getElementById('infinite-scroll-loader');
+            const action = document.getElementById('infinite-scroll-action');
+            if (loader) loader.classList.remove('d-none');
+            if (action) action.classList.add('d-none');
+
+            currentPage++;
+            loadPortalJobs(currentPage, true);
+        }
+
+        function setupIntersectionObserver() {
+            if (intersectionObserver) {
+                intersectionObserver.disconnect();
+            }
+            if (scrollMode !== 'infinite') return;
+
+            const sentinel = document.getElementById('infinite-scroll-sentinel');
+            if (!sentinel) return;
+
+            if ('IntersectionObserver' in window) {
+                intersectionObserver = new IntersectionObserver(function(entries) {
+                    const entry = entries[0];
+                    if (entry && entry.isIntersecting && !isLoadingMore && hasMorePages && currentPage < totalPages) {
+                        loadMoreJobs();
+                    }
+                }, {
+                    root: null,
+                    rootMargin: '250px',
+                    threshold: 0.05
+                });
+                intersectionObserver.observe(sentinel);
+            }
+        }
+
+        // Classic Pagination Renderer
+        function renderPagination(total, page, pages, perPageCount) {
+            const controls = document.getElementById('pagination-controls');
+            if (!controls) return;
+            if (total <= 0) {
+                controls.classList.add('d-none');
+                controls.classList.remove('d-flex');
+                return;
+            }
+
+            controls.classList.remove('d-none');
+            controls.classList.add('d-flex');
+
+            const start = (page - 1) * perPageCount + 1;
+            const end = Math.min(page * perPageCount, total);
+            const infoEl = document.getElementById('pagination-info');
+            if (infoEl) {
+                infoEl.textContent = `Showing ${start}-${end} of ${total} Portal Opportunities`;
+            }
+
+            const selectEl = document.getElementById('portal-per-page-select');
+            if (selectEl) selectEl.value = String(perPageCount);
+
+            const pills = document.getElementById('pagination-pills');
+            if (!pills) return;
+
+            let phtml = '';
+
+            // Previous button
+            const prevDisabled = page <= 1 ? 'disabled' : '';
+            phtml += `
+                <li class="page-item ${prevDisabled}">
+                    <a class="page-link" href="#" onclick="goToPage(${page - 1}); return false;" aria-label="Previous">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+            `;
+
+            // Dynamic page numbers with ellipsis
+            const maxVisible = 5;
+            let startPage = Math.max(1, page - 2);
+            let endPage = Math.min(pages, startPage + maxVisible - 1);
+            if (endPage - startPage < maxVisible - 1) {
+                startPage = Math.max(1, endPage - maxVisible + 1);
+            }
+
+            if (startPage > 1) {
+                phtml += `<li class="page-item"><a class="page-link" href="#" onclick="goToPage(1); return false;">1</a></li>`;
+                if (startPage > 2) {
+                    phtml += `<li class="page-item disabled"><span class="page-link">&hellip;</span></li>`;
+                }
+            }
+
+            for (let p = startPage; p <= endPage; p++) {
+                const active = p === page ? 'active' : '';
+                phtml += `<li class="page-item ${active}"><a class="page-link" href="#" onclick="goToPage(${p}); return false;">${p}</a></li>`;
+            }
+
+            if (endPage < pages) {
+                if (endPage < pages - 1) {
+                    phtml += `<li class="page-item disabled"><span class="page-link">&hellip;</span></li>`;
+                }
+                phtml += `<li class="page-item"><a class="page-link" href="#" onclick="goToPage(${pages}); return false;">${pages}</a></li>`;
+            }
+
+            // Next button
+            const nextDisabled = page >= pages ? 'disabled' : '';
+            phtml += `
+                <li class="page-item ${nextDisabled}">
+                    <a class="page-link" href="#" onclick="goToPage(${page + 1}); return false;" aria-label="Next">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            `;
+
+            pills.innerHTML = phtml;
+        }
+
+        function goToPage(p) {
+            if (p < 1 || p > totalPages || p === currentPage) return;
+            currentPage = p;
+            loadPortalJobs(currentPage, false);
             const container = document.getElementById('portal-jobs-container');
-            if (!jobs || jobs.length === 0) {
+            if (container) {
+                window.scrollTo({ top: container.offsetTop - 80, behavior: 'smooth' });
+            }
+        }
+
+        // Render Job Cards
+        function renderJobs(jobs, append, baseIndex) {
+            const container = document.getElementById('portal-jobs-container');
+            if (!container) return;
+
+            if (!append && (!jobs || jobs.length === 0)) {
                 container.innerHTML = `
                     <div class="text-center py-5 bg-white rounded-3 border" style="background: var(--jp-card-bg) !important;">
                         <i class="bi bi-briefcase text-muted fs-1"></i>
@@ -833,22 +1235,11 @@
                 </div>
                 `;
             });
-            container.innerHTML = html;
-        }
 
-        function updatePaginationUI(total, page, perPage) {
-            const controls = document.getElementById('pagination-controls');
-            if (!controls) return;
-            if (total > perPage) {
-                controls.style.display = 'flex';
-                controls.removeAttribute('style');
-                const start = (page - 1) * perPage + 1;
-                const end = Math.min(page * perPage, total);
-                document.getElementById('pagination-info').textContent = `Showing ${start}-${end} of ${total} Portal Opportunities`;
-                document.getElementById('btn-prev-page').disabled = (page <= 1);
-                document.getElementById('btn-next-page').disabled = (page >= totalPages);
+            if (append) {
+                container.insertAdjacentHTML('beforeend', html);
             } else {
-                controls.style.display = 'none';
+                container.innerHTML = html;
             }
         }
 
@@ -1031,9 +1422,25 @@
                 .replace(/'/g, '&#039;');
         }
 
+        // Back to top scroll listener
+        window.addEventListener('scroll', function() {
+            const btn = document.getElementById('btn-back-to-top');
+            if (!btn) return;
+            if (window.scrollY > 350) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         // Initialize on DOM load
         document.addEventListener('DOMContentLoaded', function() {
-            loadPortalJobs(1);
+            updateScrollModeButtons();
+            loadPortalJobs(1, false);
         });
     </script>
 </body>

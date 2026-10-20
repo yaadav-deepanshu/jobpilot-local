@@ -3892,6 +3892,33 @@ class TestPortalJobsScanner:
                 content = f.read()
             assert '/portal-jobs' in content, f"Expected '/portal-jobs' link in {tmpl.name}"
 
+    def test_portal_jobs_pagination_and_scroll_elements(self):
+        """
+        Verify that portal_jobs.html contains the pagination and infinite scroll elements:
+        - Mode switcher (Infinite vs Pages)
+        - Infinite scroll footer, loader, sentinel, and load more button
+        - Classic pagination controls, info text, per-page dropdown, and pagination pills
+        - Back to top floating button
+        """
+        template_path = PROJECT_ROOT / 'web' / 'templates' / 'portal_jobs.html'
+        with open(template_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        assert 'id="pagination-mode-toggle"' in content
+        assert 'id="mode-infinite-btn"' in content
+        assert 'id="mode-classic-btn"' in content
+        assert 'id="infinite-scroll-footer"' in content
+        assert 'id="infinite-scroll-loader"' in content
+        assert 'id="btn-load-more"' in content
+        assert 'id="infinite-scroll-sentinel"' in content
+        assert 'id="pagination-controls"' in content
+        assert 'id="pagination-info"' in content
+        assert 'id="portal-per-page-select"' in content
+        assert 'id="pagination-pills"' in content
+        assert 'id="btn-back-to-top"' in content
+        assert 'setScrollMode(' in content
+        assert 'changePerPage(' in content
+
 
 
 
