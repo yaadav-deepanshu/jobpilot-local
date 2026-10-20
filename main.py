@@ -101,6 +101,7 @@ def main():
     if alt_port:
         logger.info(f"📱 Companion Port:        http://{host}:{alt_port}")
     logger.info(f"🌐 Portals & Sites:       http://{host}:{port}/portals")
+    logger.info(f"🏢 Portal Jobs (<4y):     http://{host}:{port}/portal-jobs")
     logger.info("=" * 60)
 
     # Run the app
