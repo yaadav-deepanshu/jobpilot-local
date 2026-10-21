@@ -287,12 +287,14 @@ class PortalJobsScanner:
             target_ids = set(portal_ids)
             targets = [p for p in all_portals if p['id'] in target_ids]
         elif mode == 'quick':
-            # Top 20 premier companies with live ATS APIs across Hyperscalers, SaaS, FinTech, and Cloud
+            # Premier enterprise companies with live direct ATS APIs (Workday, Greenhouse, Lever, SmartRecruiters, Ashby, Amazon)
             quick_ids = {
                 'amazon_aws', 'redhat', 'salesforce', 'adobe', 'nvidia',
+                'cisco', 'intel', 'snowflake', 'servicenow', 'capitalone',
                 'cloudflare', 'elastic', 'mongodb', 'databricks', 'airbnb',
                 'workday', 'crowdstrike', 'mastercard', 'broadcom_vmware',
-                'pwc', 'spotify', 'inmobi', 'target', 'autodesk', 'boeing'
+                'pwc', 'spotify', 'inmobi', 'target', 'autodesk', 'boeing',
+                'paypal', 'blackrock', 'zoom', 'westerndigital', 'freshworks'
             }
             targets = [p for p in all_portals if p['id'] in quick_ids]
         elif category:
@@ -404,21 +406,35 @@ class PortalJobsScanner:
             'airbnb': 'airbnb', 'inmobi': 'inmobi', 'databricks': 'databricks',
             'okta': 'okta', 'gitlab': 'gitlab', 'canonical': 'canonical',
             'figma': 'figma', 'reddit': 'reddit', 'digitalocean': 'digitalocean',
-            'hashicorp': 'hashicorp', 'postman': 'postman', 'snowflake': 'snowflake',
+            'hashicorp': 'hashicorp', 'postman': 'postman',
             'coinbase': 'coinbase', 'discord': 'discord', 'grafanalabs': 'grafanalabs',
             'pagerduty': 'pagerduty', 'pinterest': 'pinterest', 'airtable': 'airtable',
-            'instacart': 'instacart'
+            'instacart': 'instacart', 'datadog': 'datadog', 'lyft': 'lyft',
+            'robinhood': 'robinhood', 'scaleai': 'scaleai'
         }
         lever_map = {
             'spotify': 'spotify', 'cred': 'cred', 'meesho': 'meesho',
-            'razorpay': 'razorpay', 'zepto': 'zepto', 'palantir': 'palantir'
+            'razorpay': 'razorpay', 'zepto': 'zepto', 'palantir': 'palantir',
+            'canonical': 'canonical'
         }
         sr_map = {
             'servicenow': 'ServiceNow', 'westerndigital': 'WesternDigital',
             'freshworks': 'Freshworks', 'paloaltonetworks': 'PaloAltoNetworks',
             'visa': 'Visa', 'bosch': 'BoschGroup'
         }
+        ashby_map = {
+            'snowflake': 'snowflake', 'docker': 'docker', 'snyk': 'snyk',
+            'notion': 'notion', 'supabase': 'supabase', 'perplexity': 'perplexity',
+            'cohere': 'cohere', 'linear': 'linear', 'ramp': 'ramp'
+        }
         wd_map = {
+            'cisco': 'https://cisco.wd5.myworkdayjobs.com/Cisco_Careers',
+            'splunk': 'https://cisco.wd5.myworkdayjobs.com/Cisco_Careers',
+            'intel': 'https://intel.wd1.myworkdayjobs.com/External',
+            'blackrock': 'https://blackrock.wd1.myworkdayjobs.com/BlackRock_Professional',
+            'paypal': 'https://paypal.wd1.myworkdayjobs.com/jobs',
+            'zoom': 'https://zoom.wd5.myworkdayjobs.com/Zoom',
+            'capitalone': 'https://capitalone.wd12.myworkdayjobs.com/Capital_One',
             'broadcom': 'https://broadcom.wd1.myworkdayjobs.com/External_Career',
             'broadcom_vmware': 'https://broadcom.wd1.myworkdayjobs.com/External_Career',
             'redhat': 'https://redhat.wd5.myworkdayjobs.com/jobs',
@@ -445,6 +461,9 @@ class PortalJobsScanner:
         elif p_id in sr_map or ats_type == 'smartrecruiters':
             comp_id = sr_map.get(p_id, p_id)
             jobs = self._scrape_smartrecruiters(p_id, company, category, search_url or portal_url, comp_id=comp_id)
+        elif p_id in ashby_map or ats_type == 'ashby':
+            board_token = ashby_map.get(p_id, p_id)
+            jobs = self._scrape_ashby(p_id, company, category, search_url or portal_url, board_token=board_token)
         elif p_id == 'amazon_aws' or ats_type == 'amazon_jobs':
             jobs = self._scrape_amazon(p_id, company, category, search_url or portal_url)
         elif p_id in wd_map or ats_type == 'workday' or 'myworkdayjobs.com' in (search_url or portal_url):
@@ -573,6 +592,49 @@ class PortalJobsScanner:
                             })
         except Exception as e:
             logger.debug(f"SmartRecruiters API query skipped for {p_id}: {e}")
+        return jobs
+
+    def _scrape_ashby(self, p_id: str, company: str, category: str, base_url: str, board_token: str = None) -> List[Dict[str, Any]]:
+        """Query Ashby public posting API to retrieve live job postings with exact requisition URLs"""
+        import urllib.request
+        import ssl
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        token = board_token or p_id
+        jobs = []
+        try:
+            api_url = f"https://api.ashbyhq.com/posting-api/job-board/{token}"
+            req = urllib.request.Request(api_url, headers={
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'application/json'
+            })
+            with urllib.request.urlopen(req, timeout=5, context=ctx) as response:
+                if response.status == 200:
+                    data = json.loads(response.read().decode('utf-8'))
+                    now = datetime.now(timezone.utc)
+                    for rj in data.get('jobs', []):
+                        t = rj.get('title', '')
+                        if not any(kw in t.lower() for kw in ['engineer', 'developer', 'devops', 'sre', 'cloud', 'platform', 'infrastructure', 'systems', 'architect', 'analyst', 'tech', 'software', 'site reliability']):
+                            continue
+                        direct_url = rj.get('jobUrl') or f"https://jobs.ashbyhq.com/{token}/{rj.get('id')}"
+                        loc = rj.get('location', 'Bengaluru / Remote')
+                        desc = f"{t} opportunity at {company}. Direct career application on official Ashby requisition page."
+                        jobs.append({
+                            'portal_id': p_id,
+                            'company': company,
+                            'category': category,
+                            'ats_type': 'ashby',
+                            'title': t,
+                            'location': loc,
+                            'url': direct_url,
+                            'description': desc,
+                            'date_posted': now,
+                            'salary': 'Competitive Tech Salary',
+                            'job_type': 'Full-time'
+                        })
+        except Exception as e:
+            logger.debug(f"Ashby API query skipped for {p_id}: {e}")
         return jobs
 
     def _scrape_amazon(self, p_id: str, company: str, category: str, base_url: str) -> List[Dict[str, Any]]:

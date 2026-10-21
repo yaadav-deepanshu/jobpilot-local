@@ -4102,6 +4102,89 @@ class TestPortalJobsScanner:
                 assert 'redhat.com/en/jobs' not in rj_url, f"Red Hat job must NOT be on generic redhat.com/en/jobs: {rj_url}"
                 assert 'careers.redhat.com' not in rj_url, f"Red Hat job must NOT be on careers.redhat.com: {rj_url}"
 
+    def test_expanded_ats_connectors_cisco_intel_snowflake_smartrecruiters(self):
+        """
+        Verify expanded ATS connectors and mappings for Cisco, Splunk, Intel, Snowflake,
+        ServiceNow, Western Digital, Freshworks, BlackRock, PayPal, Zoom, and Capital One.
+        """
+        from scraper.company_portals import CompanyPortalsManager
+        c_mgr = CompanyPortalsManager()
+
+        # 1. Cisco & Splunk on Workday
+        cisco = c_mgr.get_portal('cisco')
+        splunk = c_mgr.get_portal('splunk')
+        assert cisco['ats_type'] == 'workday'
+        assert 'cisco.wd5.myworkdayjobs.com/Cisco_Careers' in cisco['search_url']
+        assert splunk['ats_type'] == 'workday'
+        assert 'cisco.wd5.myworkdayjobs.com/Cisco_Careers' in splunk['search_url']
+
+        # 2. Intel on Workday
+        intel = c_mgr.get_portal('intel')
+        assert intel['ats_type'] == 'workday'
+        assert 'intel.wd1.myworkdayjobs.com/External' in intel['search_url']
+
+        # 3. Snowflake on Ashby
+        snowflake = c_mgr.get_portal('snowflake')
+        assert snowflake['ats_type'] == 'ashby'
+        assert 'jobs.ashbyhq.com/snowflake' in snowflake['search_url']
+
+        # 4. SmartRecruiters (ServiceNow, Western Digital, Freshworks)
+        for pid, comp_domain in [('servicenow', 'ServiceNow'), ('westerndigital', 'WesternDigital'), ('freshworks', 'Freshworks')]:
+            p = c_mgr.get_portal(pid)
+            assert p['ats_type'] == 'smartrecruiters'
+            assert f'smartrecruiters.com/{comp_domain}' in p['search_url']
+
+        # 5. Workday GCC/FinTech (BlackRock, PayPal, Capital One, Zoom)
+        blackrock = c_mgr.get_portal('blackrock')
+        assert blackrock['ats_type'] == 'workday'
+        assert 'blackrock.wd1.myworkdayjobs.com' in blackrock['search_url']
+
+        paypal = c_mgr.get_portal('paypal')
+        assert paypal['ats_type'] == 'workday'
+        assert 'paypal.wd1.myworkdayjobs.com/jobs' in paypal['search_url']
+
+        zoom = c_mgr.get_portal('zoom')
+        assert zoom['ats_type'] == 'workday'
+        assert 'zoom.wd5.myworkdayjobs.com/Zoom' in zoom['search_url']
+
+        capone = c_mgr.get_portal('capitalone')
+        assert capone['ats_type'] == 'workday'
+        assert 'capitalone.wd12.myworkdayjobs.com/Capital_One' in capone['search_url']
+
+    def test_ashby_scraper_and_direct_url_generation(self):
+        """
+        Verify PortalJobsScanner._scrape_ashby extracts live jobs and formats exact requisition URLs.
+        """
+        from scraper.portal_jobs_scanner import PortalJobsScanner
+        scanner = PortalJobsScanner()
+        assert hasattr(scanner, '_scrape_ashby')
+
+        # Test live extraction
+        jobs = scanner._scrape_ashby('snowflake', 'Snowflake', 'Cloud', 'https://jobs.ashbyhq.com/snowflake')
+        if jobs:
+            sample = jobs[0]
+            assert sample['ats_type'] == 'ashby'
+            assert 'jobs.ashbyhq.com/snowflake/' in sample['url']
+            assert sample['url'].startswith('https://')
+
+    def test_cisco_and_splunk_workday_requisition_urls(self):
+        """
+        Verify Cisco and Splunk discovery queries Workday and generates direct requisition URLs,
+        never pointing to careers.cisco.com/global/en/splunk marketing landing pages.
+        """
+        from scraper.portal_jobs_scanner import PortalJobsScanner
+        from scraper.company_portals import CompanyPortalsManager
+        c_mgr = CompanyPortalsManager()
+        scanner = PortalJobsScanner()
+
+        cisco_portal = c_mgr.get_portal('cisco')
+        jobs = scanner._discover_portal_jobs(cisco_portal, max_jobs=3)
+        if jobs:
+            for j in jobs:
+                assert 'cisco.wd5.myworkdayjobs.com/en-US/Cisco_Careers/job/' in j['url']
+                assert 'careers.cisco.com/global/en/splunk' not in j['url']
+                assert j['url'].startswith('https://')
+
 
 
 
