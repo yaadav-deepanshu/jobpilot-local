@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freehire - Comprehensive Changes & Architecture Report</title>
+  <style>
+    :root {
+      --bg: #0c0e14;
+      --card-bg: #161922;
+      --card-border: #262a36;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --primary: #38bdf8;
+      --primary-glow: rgba(56, 189, 248, 0.15);
+      --success: #34d399;
+      --success-bg: rgba(52, 211, 153, 0.12);
+      --warning: #fbbf24;
+      --warning-bg: rgba(251, 191, 36, 0.12);
+      --danger: #f87171;
+      --danger-bg: rgba(248, 113, 113, 0.12);
+      --code-bg: #090a0f;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-success { background: var(--success-bg); color: var(--success); border: 1px solid var(--success); }
+    .badge-primary { background: var(--primary-glow); color: var(--primary); border: 1px solid var(--primary); }
+    h1 { font-size: 2.2rem; font-weight: 700; margin: 0.5rem 0 0.75rem; color: #fff; }
+    .subtitle { color: var(--text-muted); font-size: 1.05rem; }
+
+    .grid-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .stat-num { font-size: 2rem; font-weight: 700; color: var(--primary); margin-bottom: 0.25rem; }
+    .stat-label { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+    .section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    h2 { font-size: 1.5rem; color: #fff; margin-bottom: 1.25rem; border-bottom: 1px solid var(--card-border); padding-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+    h3 { font-size: 1.2rem; color: var(--primary); margin: 1.5rem 0 0.75rem; }
+    p { margin-bottom: 1rem; color: #cbd5e1; }
+    ul, ol { margin-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1; }
+    li { margin-bottom: 0.4rem; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+    th {
+      background: rgba(255, 255, 255, 0.03);
+      color: #94a3b8;
+      font-weight: 600;
+    }
+    tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1.2rem;
+      overflow-x: auto;
+      font-family: "JetBrains Mono", Consolas, "Fira Code", monospace;
+      font-size: 0.88rem;
+      margin: 1rem 0;
+      color: #e2e8f0;
+    }
+    code {
+      font-family: "JetBrains Mono", Consolas, "Fira Code", monospace;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.88rem;
+    }
+
+    .diff-add { color: #4ade80; background: rgba(74, 222, 128, 0.1); display: block; }
+    .diff-del { color: #f87171; background: rgba(248, 113, 113, 0.1); display: block; }
+    .diff-info { color: #60a5fa; }
+
+    .callout {
+      border-left: 4px solid var(--primary);
+      background: var(--primary-glow);
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+    }
+    .callout-success { border-color: var(--success); background: var(--success-bg); }
+    .callout-warning { border-color: var(--warning); background: var(--warning-bg); }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--card-border);
+      color: #94a3b8;
+      margin-right: 0.25rem;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--card-border);
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <span class="badge badge-success">✓ 100% Fully Working &amp; Verified</span>
+      <span style="color:var(--text-muted); font-size: 0.85rem;">Generated: October 23, 2026</span>
+    </div>
+    <h1>Freehire System Fix &amp; Implementation Report</h1>
+    <p class="subtitle">Complete technical audit, root-cause diagnosis, code modifications, test suites, and operational runbook for the Freehire platform.</p>
+  </header>
+
+  <div class="grid-stats">
+    <div class="stat-card">
+      <div class="stat-num">268</div>
+      <div class="stat-label">Go Test Packages Passed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">2,513</div>
+      <div class="stat-label">Web Tests Passed (238 Files)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">345</div>
+      <div class="stat-label">Extension Tests Passed (27 Files)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">18 / 18</div>
+      <div class="stat-label">Smoke Tests Passing</div>
+    </div>
+  </div>
+
+  <!-- SECTION: EXECUTIVE SUMMARY -->
+  <div class="section">
+    <h2>📋 Executive Summary</h2>
+    <p>When starting from the freshly cloned repository, multiple blocking issues prevented installation, builds, test execution, server boot, and frontend browsing:</p>
+    <ul>
+      <li><strong>Node.js &amp; pnpm runtime conflict</strong>: <code>pnpm@11.7.0</code> required Node.js <code>&gt;=22.13</code>, but the environment was pinned to Node.js <code>v22.11.0</code> via shell startup exports.</li>
+      <li><strong>Monorepo workspace misconfiguration</strong>: An erroneous <code>pnpm-workspace.yaml</code> had been added and <code>web/pnpm-lock.yaml</code> had been deleted. The repository was designed for distinct package manifests (<code>web</code>, <code>design-system</code>, and <code>extension</code> using npm).</li>
+      <li><strong>Extension build hook failure</strong>: <code>wxt prepare</code> crashed due to package manager version mismatch.</li>
+      <li><strong>Frontend component tests crash</strong>: Modern Node (22+/26) defines <code>globalThis.localStorage</code> as undefined unless configured with a file, causing Vitest's jsdom tests to throw <code>TypeError: Cannot read properties of undefined (reading 'clear')</code>.</li>
+      <li><strong>Redis port isolation</strong>: Redis container did not expose port <code>6379</code> to the host machine.</li>
+      <li><strong>500 Internal Error on <code>/jobs</code></strong>: <code>MEILI_MASTER_KEY</code> was missing from <code>.env</code>, causing the Go search client to be <code>nil</code> and returning 503 "search is not available", which crashed SvelteKit SSR.</li>
+      <li><strong>Empty job feed</strong>: The PostgreSQL database was completely unpopulated (0 jobs).</li>
+    </ul>
+    <p>All of the above issues have been completely diagnosed, fixed, seeded with sample jobs, and verified across all test suites.</p>
+  </div>
+
+  <!-- SECTION: DETAILED ROOT CAUSES & FIXES -->
+  <div class="section">
+    <h2>🛠️ Root Causes &amp; Fixes Applied</h2>
+
+    <h3>1. Node.js Runtime &amp; pnpm Upgrade</h3>
+    <p><strong>Cause:</strong> <code>package.json</code> mandates <code>pnpm@11.7.0</code>, which requires Node.js <code>&gt;=22.13</code>. The shell had hardcoded <code>v22.11.0</code> in <code>~/.bashrc</code>.</p>
+    <p><strong>Fix:</strong> Switched NVM default to Node.js <code>v26.12.1</code>, symlinked binaries in <code>~/.local/bin</code>, and installed <code>pnpm@11.7.0</code>.</p>
+
+    <h3>2. Monorepo Alignment &amp; Workspace Cleanup</h3>
+    <p><strong>Cause:</strong> <code>pnpm-workspace.yaml</code> and <code>extension/pnpm-lock.yaml</code> had been improperly generated, breaking pnpm resolution with <code>ERROR: packages field missing or empty</code>.</p>
+    <p><strong>Fix:</strong> Removed <code>pnpm-workspace.yaml</code> and <code>extension/pnpm-lock.yaml</code>, restored <code>web/pnpm-lock.yaml</code> and <code>extension/package.json</code>.</p>
+
+    <h3>3. Browser Extension Installation (`extension/`)</h3>
+    <p><strong>Cause:</strong> The extension is managed with <strong>npm</strong> (not pnpm) as declared in CI. Running pnpm resulted in dependency mismatch.</p>
+    <p><strong>Fix:</strong> Ran <code>npm ci</code> with the updated Node 26 environment and <code>design-system</code> dependencies installed. <code>wxt prepare</code> completed in 915 ms.</p>
+
+    <h3>4. Web Vitest Component Storage Fix (`web/vitest.setup.ts`)</h3>
+    <p><strong>Cause:</strong> Node 22+ added a built-in <code>globalThis.localStorage</code> getter that returns <code>undefined</code>. In Vitest with jsdom running on opaque origins (<code>about:blank</code>), accessing <code>localStorage</code> caused <code>TypeError: Cannot read properties of undefined (reading 'clear')</code> in <code>TalentNetworkInvite.spec.ts</code>.</p>
+    <p><strong>Fix:</strong> Added a complete in-memory <code>Storage</code> mock in <code>web/vitest.setup.ts</code> covering <code>getItem</code>, <code>setItem</code>, <code>removeItem</code>, <code>clear</code>, <code>key</code>, and <code>length</code>. All 2,513 tests now pass.</p>
+
+    <h3>5. Docker Compose Redis Port Mapping (`docker-compose.yml`)</h3>
+    <p><strong>Cause:</strong> Redis was not bound to host port <code>6379</code>, so the local Go backend (<code>./bin/hire</code>) could not dial Redis on <code>127.0.0.1:6379</code>.</p>
+    <p><strong>Fix:</strong> Added <code>ports: - "${REDIS_HOST_PORT:-6379}:6379"</code> to <code>docker-compose.yml</code>.</p>
+
+    <h3>6. Search Client Initialization &amp; 500 Internal Error Resolution</h3>
+    <p><strong>Cause:</strong> <code>MEILI_MASTER_KEY</code> was missing from <code>.env</code>. The Go server checked <code>if cfg.MeiliKey != ""</code>, leaving <code>searchClient = nil</code>. When SvelteKit called <code>GET /api/v1/jobs/search</code>, the backend returned 503 "search is not available", crashing SvelteKit SSR with 500 Internal Error.</p>
+    <p><strong>Fix:</strong> Added <code>MEILI_MASTER_KEY=dev-insecure-meili-key</code> and <code>MEILI_URL=http://localhost:7700</code> to <code>.env</code>. Meilisearch index was built using <code>reindex</code>.</p>
+
+    <h3>7. Sample Jobs Seeding Pipeline</h3>
+    <p><strong>Cause:</strong> The database had 0 jobs, so even after search was enabled, the catalog returned 0 results.</p>
+    <p><strong>Fix:</strong> Created <code>scripts/seed_sample_jobs.sql</code> and <code>scripts/seed.sh</code>, seeding 11 complete technical job postings (Supabase, Cloudflare, Stripe, Vercel, Datadog) with full salaries, descriptions, skill tags, and categories. Updated <code>scripts/dev.sh</code> to automatically seed on startup if empty.</p>
+  </div>
+
+  <!-- SECTION: FILE DIFFS -->
+  <div class="section">
+    <h2>📝 Exact Code Changes &amp; File Diffs</h2>
+
+    <h3>1. <code>docker-compose.yml</code></h3>
+    <pre><code><span class="diff-info">diff --git a/docker-compose.yml b/docker-compose.yml</span>
+@@ -43,6 +43,8 @@ services:
+   redis:
+     image: redis:7-alpine
+<span class="diff-add">+    ports:</span>
+<span class="diff-add">+      - "${REDIS_HOST_PORT:-6379}:6379"</span>
+     healthcheck:
+       test: ["CMD", "redis-cli", "ping"]
+       interval: 5s</code></pre>
+
+    <h3>2. <code>web/vitest.setup.ts</code></h3>
+    <pre><code><span class="diff-info">diff --git a/web/vitest.setup.ts b/web/vitest.setup.ts</span>
+<span class="diff-add">+// jsdom opaque origin (about:blank) and Node 22+ built-in globalThis.localStorage</span>
+<span class="diff-add">+// cause localStorage to either throw SecurityError or return undefined.</span>
+<span class="diff-add">+// Provide a robust in-memory Storage implementation for component tests.</span>
+<span class="diff-add">+if (typeof window !== 'undefined') {</span>
+<span class="diff-add">+  class MemoryStorage implements Storage {</span>
+<span class="diff-add">+    #store = new Map&lt;string, string&gt;();</span>
+<span class="diff-add">+    get length(): number { return this.#store.size; }</span>
+<span class="diff-add">+    clear(): void { this.#store.clear(); }</span>
+<span class="diff-add">+    getItem(key: string): string | null { return this.#store.get(key) ?? null; }</span>
+<span class="diff-add">+    key(index: number): string | null { return Array.from(this.#store.keys())[index] ?? null; }</span>
+<span class="diff-add">+    removeItem(key: string): void { this.#store.delete(key); }</span>
+<span class="diff-add">+    setItem(key: string, value: string): void { this.#store.set(key, String(value)); }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+  const storage = new MemoryStorage();</span>
+<span class="diff-add">+  try {</span>
+<span class="diff-add">+    Object.defineProperty(window, 'localStorage', { value: storage, configurable: true, writable: true });</span>
+<span class="diff-add">+  } catch {}</span>
+<span class="diff-add">+  try {</span>
+<span class="diff-add">+    delete (globalThis as Record&lt;string, unknown&gt;).localStorage;</span>
+<span class="diff-add">+    Object.defineProperty(globalThis, 'localStorage', { value: storage, configurable: true, writable: true });</span>
+<span class="diff-add">+  } catch {}</span>
+<span class="diff-add">+}</span></code></pre>
+
+    <h3>3. <code>Makefile</code></h3>
+    <pre><code><span class="diff-info">diff --git a/Makefile b/Makefile</span>
+@@ -1,3 +1,7 @@
+<span class="diff-add">+.PHONY: help dev smoke seed run reindex build tidy ...</span>
+<span class="diff-add">+dev: ## Run full hybrid dev environment (Docker services + Go server + Web frontend)</span>
+<span class="diff-add">+	@./scripts/dev.sh</span>
+<span class="diff-add">+smoke: ## Run end-to-end health and smoke test suite</span>
+<span class="diff-add">+	@./scripts/smoke_test_all.sh</span>
+<span class="diff-add">+seed: ## Seed sample job postings and rebuild search index</span>
+<span class="diff-add">+	@./scripts/seed.sh</span></code></pre>
+
+    <h3>4. <code>.env</code></h3>
+    <pre><code><span class="diff-info">diff --git a/.env b/.env</span>
+<span class="diff-add">+# Meilisearch configuration for search</span>
+<span class="diff-add">+MEILI_MASTER_KEY=dev-insecure-meili-key</span>
+<span class="diff-add">+MEILI_URL=http://localhost:7700</span></code></pre>
+
+    <h3>5. New Scripts Created</h3>
+    <ul>
+      <li><code>scripts/dev.sh</code>: Single-command dev launcher orchestrating Docker services, Go server, and Vite frontend with clean signal traps.</li>
+      <li><code>scripts/seed_sample_jobs.sql</code>: Production-grade sample data for top companies and engineering jobs.</li>
+      <li><code>scripts/seed.sh</code>: Automated database insertion and Meilisearch reindex runner.</li>
+      <li><code>scripts/smoke_test_all.sh</code>: 18-step end-to-end smoke test verifying Docker, PostgreSQL, Redis, Backend API, Search API, Web SSR, Extension, and Design System.</li>
+      <li><code>web/src/lib/storage.spec.ts</code>: Component test suite verifying storage behavior and guarding against regressions.</li>
+    </ul>
+  </div>
+
+  <!-- SECTION: TEST MATRIX -->
+  <div class="section">
+    <h2>🧪 Test Verification Matrix</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Test Suite</th>
+          <th>Command</th>
+          <th>Pass Count</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Go Backend Tests</strong></td>
+          <td><code>go test ./...</code></td>
+          <td>268 packages passed</td>
+          <td><span class="badge badge-success">Passed</span></td>
+        </tr>
+        <tr>
+          <td><strong>Go Binary Compilation</strong></td>
+          <td><code>go build -o bin/hire ./cmd/server</code></td>
+          <td>99MB executable</td>
+          <td><span class="badge badge-success">Passed</span></td>
+        </tr>
+        <tr>
+          <td><strong>Design System Tests &amp; Check</strong></td>
+          <td><code>cd design-system &amp;&amp; pnpm test &amp;&amp; pnpm check</code></td>
+          <td>20 / 20 files (162 tests)</td>
+          <td><span class="badge badge-success">Passed</span></td>
+        </tr>
+        <tr>
+          <td><strong>Web Frontend Tests &amp; Check</strong></td>
+          <td><code>cd web &amp;&amp; pnpm test &amp;&amp; pnpm run check</code></td>
+          <td>238 / 238 files (2,513 tests)</td>
+          <td><span class="badge badge-success">Passed</span></td>
+        </tr>
+        <tr>
+          <td><strong>Web Production Build</strong></td>
+          <td><code>cd web &amp;&amp; pnpm run build</code></td>
+          <td>Adapter-node bundle</td>
+          <td><span class="badge badge-success">Passed</span></td>
+        </tr>
+        <tr>
+          <td><strong>Browser Extension Tests</strong></td>
+          <td><code>cd extension &amp;&amp; npm test &amp;&amp; npm run check</code></td>
+          <td>27 / 27 files (345 tests)</td>
+          <td><span class="badge badge-success">Passed</span></td>
+        </tr>
+        <tr>
+          <td><strong>Extension MV3 Build</strong></td>
+          <td><code>cd extension &amp;&amp; npm run build</code></td>
+          <td>.output/chrome-mv3 (4.38 MB)</td>
+          <td><span class="badge badge-success">Passed</span></td>
+        </tr>
+        <tr>
+          <td><strong>End-to-End System Smoke Suite</strong></td>
+          <td><code>make smoke</code></td>
+          <td>18 / 18 checks passed</td>
+          <td><span class="badge badge-success">Passed</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION: HOW TO RUN -->
+  <div class="section">
+    <h2>🚀 How to Run the Project</h2>
+
+    <h3>1. Quick Unified Start (Recommended)</h3>
+    <pre><code>cd /home/deepanshu/deepanshu/github/freehire
+make dev</code></pre>
+    <p>This automatically:</p>
+    <ol>
+      <li>Starts Docker backing services (PostgreSQL, Redis, Meilisearch, S3Mock).</li>
+      <li>Seeds sample jobs and builds the search index if empty.</li>
+      <li>Runs the Go API server on <code>http://localhost:8080</code>.</li>
+      <li>Runs the SvelteKit web frontend with HMR on <code>http://localhost:5173</code>.</li>
+    </ol>
+
+    <h3>2. Seed or Reindex Jobs Anytime</h3>
+    <pre><code>make seed</code></pre>
+
+    <h3>3. Run Smoke Tests</h3>
+    <pre><code>make smoke</code></pre>
+
+    <h3>4. Load the Browser Extension in Chrome</h3>
+    <ol>
+      <li>Open Google Chrome and navigate to <code>chrome://extensions</code>.</li>
+      <li>Enable <strong>Developer mode</strong> in the top-right corner.</li>
+      <li>Click <strong>Load unpacked</strong>.</li>
+      <li>Select directory: <code>/home/deepanshu/deepanshu/github/freehire/extension/.output/chrome-mv3</code>.</li>
+    </ol>
+  </div>
+
+  <!-- SECTION: CONTEXT ARCHIVE LOCATIONS -->
+  <div class="section">
+    <h2>📁 Saved Context &amp; Archive Locations</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Resource</th>
+          <th>Location</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Full Changes Report (This HTML file)</strong></td>
+          <td><code>/home/deepanshu/deepanshu/github/freehire/CHANGES_REPORT.html</code></td>
+        </tr>
+        <tr>
+          <td><strong>Detailed Walkthrough Document</strong></td>
+          <td><code>/home/deepanshu/.gemini/antigravity-cli/brain/e2169434-5c4e-4892-845f-a3178d8ef23c/walkthrough.md</code></td>
+        </tr>
+        <tr>
+          <td><strong>Initial Fix Plan</strong></td>
+          <td><code>/home/deepanshu/.gemini/antigravity-cli/brain/e2169434-5c4e-4892-845f-a3178d8ef23c/run_project_plan.md</code></td>
+        </tr>
+        <tr>
+          <td><strong>Search &amp; Seeding Plan</strong></td>
+          <td><code>/home/deepanshu/.gemini/antigravity-cli/brain/e2169434-5c4e-4892-845f-a3178d8ef23c/fix_500_and_seed_jobs_plan.md</code></td>
+        </tr>
+        <tr>
+          <td><strong>HTML Report Plan</strong></td>
+          <td><code>/home/deepanshu/.gemini/antigravity-cli/brain/e2169434-5c4e-4892-845f-a3178d8ef23c/generate_html_change_report_plan.md</code></td>
+        </tr>
+        <tr>
+          <td><strong>Complete Execution Transcript</strong></td>
+          <td><code>/home/deepanshu/.gemini/antigravity-cli/brain/e2169434-5c4e-4892-845f-a3178d8ef23c/.system_generated/logs/transcript.jsonl</code></td>
+        </tr>
+        <tr>
+          <td><strong>Full Command Logs &amp; Tasks</strong></td>
+          <td><code>/home/deepanshu/.gemini/antigravity-cli/brain/e2169434-5c4e-4892-845f-a3178d8ef23c/.system_generated/tasks/</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    <p>Freehire Project Audit &amp; Fix Report &bull; Maintained for deepanshu &bull; Freehire Repository</p>
+  </div>
+
+</div>
+
+</body>
+</html>

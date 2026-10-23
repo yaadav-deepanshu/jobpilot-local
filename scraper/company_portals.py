@@ -1036,10 +1036,36 @@ class CompanyPortalsManager:
         self.portals = self._load_portals()
 
     def _load_portals(self) -> List[Dict[str, Any]]:
-        """Load company portals from config or default to BIG_COMPANY_PORTALS"""
+        """Load company portals from config, config.yaml, or ALL_COMPANY_PORTALS"""
         cfg_portals = self.config.get("company_portals")
+        if cfg_portals and isinstance(cfg_portals, list) and len(cfg_portals) >= 1000:
+            return cfg_portals
+
+        # Attempt to load from project config.yaml if available
+        try:
+            from pathlib import Path
+            config_path = Path(__file__).resolve().parent.parent / 'config.yaml'
+            if config_path.exists():
+                with open(config_path, 'r', encoding='utf-8') as f:
+                    file_cfg = yaml.safe_load(f) or {}
+                file_portals = file_cfg.get("company_portals")
+                if file_portals and isinstance(file_portals, list) and len(file_portals) >= 1000:
+                    return file_portals
+        except Exception as e:
+            logger.debug(f"Could not load company_portals from config.yaml: {e}")
+
+        # If cfg_portals was provided with custom portals (e.g. testing), use it
         if cfg_portals and isinstance(cfg_portals, list) and len(cfg_portals) >= 10:
             return cfg_portals
+
+        # Use the scaled catalog (1,400 companies)
+        try:
+            from scraper.scaled_portals_catalog import ALL_COMPANY_PORTALS
+            if ALL_COMPANY_PORTALS and len(ALL_COMPANY_PORTALS) >= 1000:
+                return ALL_COMPANY_PORTALS
+        except Exception as e:
+            logger.debug(f"Could not load ALL_COMPANY_PORTALS: {e}")
+
         return BIG_COMPANY_PORTALS
 
     def count(self) -> int:

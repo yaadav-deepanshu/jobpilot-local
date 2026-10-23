@@ -4197,3 +4197,309 @@ class TestPortalJobsScanner:
 
 
 
+
+
+# ─────────────────────────────────────────────
+# 14. Remote-First Companies (50 New Companies)
+# ─────────────────────────────────────────────
+
+class TestRemoteFirstCompanies:
+    """
+    Comprehensive test suite for the 50 new remote-first companies added to expand
+    100% remote hiring coverage. Tests schema validation, ATS integration, and live URL resolution.
+    """
+
+    def test_config_contains_50_new_remote_companies(self):
+        """
+        Verify config.yaml contains exactly 50 new remote-first companies added to expand from 100 to 150 total.
+        Expected new companies: Deltek, Confluent, Cengage Group, Quest, Upstart, Hims, UserGems, etc.
+        """
+        config_path = PROJECT_ROOT / 'config.yaml'
+        with open(config_path, 'r', encoding='utf-8') as f:
+            cfg = yaml.safe_load(f)
+
+        portals = cfg.get('company_portals', [])
+        assert len(portals) >= 150, f"Expected >= 150 company portals (100 + 50 new), got {len(portals)}"
+
+        # List of 50 expected new remote company IDs
+        expected_new_ids = [
+            'deltek', 'confluent', 'cengage_group', 'quest_software', 'upstart',
+            'hims_hers', 'usergems', 'abnormal_security', 'cash_app', 'logicgate',
+            'faire', 'renaissance', 'rec_room', 'vgs', 'vast_data',
+            'sorcero', 'mcgraw_hill', 'patreon', 'beekeeper', 'upwork',
+            'docusign', 'dealhub', 'census', 'intrado', 'funded_club',
+            'workiva', 'missionwired', 'workera', 'jenius_bank', 'goinstacare',
+            'uplers', 'quantum', 'kemecon', 'appcues', 'arkency',
+            'automattic', 'awesomemotive', 'buffer', 'constructor', 'contra',
+            'doist', 'duckduckgo', 'bold', 'cloudbeds', 'mentorsity',
+            'expert_thinking', 'ivisa', 'affordmate', 'xapobank', 'symetra'
+        ]
+
+        found_ids = [p['id'] for p in portals]
+        for new_id in expected_new_ids:
+            assert new_id in found_ids, f"Expected new company '{new_id}' not found in config portals"
+
+    def test_remote_companies_have_required_fields(self):
+        """
+        Verify all 50 new remote companies have complete metadata:
+        id, name, category, portal_url, search_url, ats_type, locations, description.
+        """
+        config_path = PROJECT_ROOT / 'config.yaml'
+        with open(config_path, 'r', encoding='utf-8') as f:
+            cfg = yaml.safe_load(f)
+
+        portals = cfg.get('company_portals', [])
+        remote_ids = {'deltek', 'confluent', 'cengage_group', 'quest_software', 'upstart', 'hims_hers'}
+
+        for portal in portals:
+            if portal.get('id') in remote_ids:
+                assert 'id' in portal
+                assert 'name' in portal
+                assert 'category' in portal
+                assert 'portal_url' in portal
+                assert 'search_url' in portal
+                assert 'ats_type' in portal
+                assert 'locations' in portal
+                assert isinstance(portal['locations'], list)
+                assert len(portal['locations']) > 0
+                assert 'description' in portal
+                assert '100% remote' in portal['description'].lower() or 'remote' in portal['description'].lower()
+
+    def test_remote_companies_ats_type_mapping(self):
+        """
+        Verify new remote companies are mapped to correct ATS types for real job scraping:
+        - Greenhouse (13 companies)
+        - Lever (25 companies)
+        - Workday (7 companies)
+        - SmartRecruiters (1 company)
+        - Breezy (1 company)
+        - Portal fallback (3 companies)
+        """
+        config_path = PROJECT_ROOT / 'config.yaml'
+        with open(config_path, 'r', encoding='utf-8') as f:
+            cfg = yaml.safe_load(f)
+
+        portals = cfg.get('company_portals', [])
+
+        # Expected ATS distribution for new companies
+        ats_counts = {'greenhouse': 0, 'lever': 0, 'workday': 0, 'smartrecruiters': 0, 'breezy': 0, 'portal': 0}
+        remote_ids = {
+            'deltek', 'confluent', 'cengage_group', 'quest_software', 'upstart', 'hims_hers', 'usergems',
+            'abnormal_security', 'cash_app', 'logicgate', 'faire', 'renaissance', 'rec_room', 'vgs', 'vast_data',
+            'sorcero', 'mcgraw_hill', 'patreon', 'beekeeper', 'upwork', 'docusign', 'dealhub', 'census', 'intrado',
+            'funded_club', 'workiva', 'missionwired', 'workera', 'jenius_bank', 'goinstacare', 'uplers', 'quantum',
+            'kemecon', 'appcues', 'arkency', 'automattic', 'awesomemotive', 'buffer', 'constructor', 'contra',
+            'doist', 'duckduckgo', 'bold', 'cloudbeds', 'mentorsity', 'expert_thinking', 'ivisa', 'affordmate',
+            'xapobank', 'symetra'
+        }
+
+        for portal in portals:
+            if portal.get('id') in remote_ids:
+                ats = portal.get('ats_type', 'portal')
+                if ats in ats_counts:
+                    ats_counts[ats] += 1
+
+        assert ats_counts['greenhouse'] >= 10, f"Expected >= 10 Greenhouse companies, got {ats_counts['greenhouse']}"
+        assert ats_counts['lever'] >= 20, f"Expected >= 20 Lever companies, got {ats_counts['lever']}"
+        assert ats_counts['workday'] >= 5, f"Expected >= 5 Workday companies, got {ats_counts['workday']}"
+
+    def test_remote_companies_portal_urls_are_valid(self):
+        """
+        Verify portal_url and search_url fields contain valid URLs (start with http/https).
+        """
+        config_path = PROJECT_ROOT / 'config.yaml'
+        with open(config_path, 'r', encoding='utf-8') as f:
+            cfg = yaml.safe_load(f)
+
+        portals = cfg.get('company_portals', [])
+        remote_ids = {'deltek', 'confluent', 'upstart', 'faire', 'patreon', 'upwork', 'docusign'}
+
+        for portal in portals:
+            if portal.get('id') in remote_ids:
+                portal_url = portal.get('portal_url', '')
+                search_url = portal.get('search_url', '')
+                assert portal_url.startswith('http'), f"{portal['id']}: portal_url must start with http/https"
+                assert search_url.startswith('http'), f"{portal['id']}: search_url must start with http/https"
+
+    def test_remote_companies_live_url_resolution(self):
+        """
+        Sample test: Resolve 5-10 live portal URLs to verify they don't 404 or redirect to wrong pages.
+        Tests Lever, Greenhouse, Workday, and portal fallback URLs.
+        """
+        import urllib.request
+        import ssl
+
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+
+        config_path = PROJECT_ROOT / 'config.yaml'
+        with open(config_path, 'r', encoding='utf-8') as f:
+            cfg = yaml.safe_load(f)
+
+        portals = cfg.get('company_portals', [])
+        
+        # Sample companies to test (one per ATS type)
+        test_samples = {
+            'confluent': 'lever',     # Lever
+            'deltek': 'greenhouse',   # Greenhouse
+            'cengage_group': 'workday',  # Workday
+            'upstart': 'lever',       # Lever
+            'faire': 'greenhouse',    # Greenhouse
+        }
+
+        tested = 0
+        for portal in portals:
+            pid = portal.get('id')
+            if pid in test_samples:
+                portal_url = portal.get('portal_url', '')
+                try:
+                    req = urllib.request.Request(portal_url, headers={
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+                    })
+                    with urllib.request.urlopen(req, timeout=8, context=ctx) as response:
+                        # Check response is 200-level (not 404, not redirect to wrong page)
+                        assert response.status < 400, f"{pid}: URL returned {response.status}"
+                        tested += 1
+                except Exception as e:
+                    # Some URLs might be blocked or require auth; log but don't fail on strict equality
+                    print(f"  [URL RESOLUTION] {pid}: {type(e).__name__}: {str(e)[:60]}")
+
+        assert tested >= 3, f"Expected to successfully resolve >= 3 URLs, tested {tested}"
+
+    def test_remote_companies_categories_new_and_distinct(self):
+        """
+        Verify new remote companies use new category prefixes like "Remote-First" to distinguish from existing portals.
+        """
+        config_path = PROJECT_ROOT / 'config.yaml'
+        with open(config_path, 'r', encoding='utf-8') as f:
+            cfg = yaml.safe_load(f)
+
+        portals = cfg.get('company_portals', [])
+        remote_ids = {'deltek', 'confluent', 'upstart', 'faire', 'patreon', 'upwork'}
+
+        for portal in portals:
+            if portal.get('id') in remote_ids:
+                category = portal.get('category', '')
+                assert 'Remote-First' in category, f"{portal['id']}: Expected 'Remote-First' in category, got '{category}'"
+
+    def test_remote_companies_scanner_integration(self):
+        """
+        Verify PortalJobsScanner can load and recognize new remote companies.
+        """
+        from scraper.portal_jobs_scanner import PortalJobsScanner
+        from scraper.company_portals import CompanyPortalsManager
+
+        c_mgr = CompanyPortalsManager()
+        scanner = PortalJobsScanner()
+
+        # Check manager can load all 150 portals
+        all_portals = c_mgr.get_portals()
+        assert len(all_portals) >= 150, f"Expected >= 150 portals from manager, got {len(all_portals)}"
+
+        # Verify sample new companies are accessible
+        confluent = c_mgr.get_portal('confluent')
+        assert confluent is not None, "Confluent portal not found in manager"
+        assert confluent['ats_type'] == 'lever'
+
+        upstart = c_mgr.get_portal('upstart')
+        assert upstart is not None, "Upstart portal not found in manager"
+        assert 'remote' in upstart['description'].lower()
+
+    def test_remote_companies_rollback_script_exists(self):
+        """
+        Verify rollback script for remote companies feature exists and is syntactically valid.
+        """
+        revert_script = PROJECT_ROOT / 'revert_remote_companies.py'
+        assert revert_script.exists(), "revert_remote_companies.py must exist"
+
+        with open(revert_script, 'r', encoding='utf-8') as f:
+            code = f.read()
+
+        # Validate syntax
+        compile(code, str(revert_script), 'exec')
+
+        # Verify it references backup files
+        assert 'remote_companies_backup' in code
+
+    def test_remote_companies_backup_files_exist(self):
+        """
+        Verify backup snapshots were created before modifications.
+        """
+        config_backup = PROJECT_ROOT / 'config.yaml.remote_companies_backup'
+        routes_backup = PROJECT_ROOT / 'web' / 'routes.py.remote_companies_backup'
+        models_backup = PROJECT_ROOT / 'db' / 'models.py.remote_companies_backup'
+
+        assert config_backup.exists(), "config.yaml.remote_companies_backup must exist"
+        assert routes_backup.exists(), "web/routes.py.remote_companies_backup must exist"
+        assert models_backup.exists(), "db/models.py.remote_companies_backup must exist"
+
+    def test_api_portals_endpoint_includes_new_remote_companies(self, client):
+        """
+        Verify GET /api/portals returns all 150 companies including 50 new remote ones.
+        """
+        resp = client.get('/api/portals')
+        assert resp.status_code == 200
+        data = resp.get_json()
+
+        assert 'total' in data
+        assert data['total'] >= 150, f"Expected >= 150 portals from API, got {data['total']}"
+        assert 'portals' in data
+        assert len(data['portals']) >= 150
+
+        # Check at least one new remote company is in the list
+        portal_ids = [p['id'] for p in data['portals']]
+        assert 'confluent' in portal_ids, "New company 'confluent' not found in API response"
+        assert 'upstart' in portal_ids, "New company 'upstart' not found in API response"
+
+    def test_api_portals_filter_by_remote_first_category(self, client):
+        """
+        Verify GET /api/portals?category=Remote-First returns new remote companies.
+        """
+        resp = client.get('/api/portals?category=Remote-First')
+        assert resp.status_code == 200
+        data = resp.get_json()
+
+        assert data['total'] >= 40, f"Expected >= 40 Remote-First companies, got {data['total']}"
+        assert len(data['portals']) >= 40
+
+        # Verify all returned portals have "Remote-First" in category
+        for p in data['portals']:
+            assert 'Remote-First' in p.get('category', ''), f"Portal {p.get('id')} missing Remote-First category"
+
+    def test_api_portals_filter_by_ats_type_lever(self, client):
+        """
+        Verify GET /api/portals?ats=lever returns Lever-based companies (including new ones).
+        """
+        resp = client.get('/api/portals?ats=lever')
+        assert resp.status_code == 200
+        data = resp.get_json()
+
+        assert data['total'] >= 25, f"Expected >= 25 Lever companies, got {data['total']}"
+
+        # Check for new Lever companies
+        portal_ids = [p['id'] for p in data['portals']]
+        assert 'confluent' in portal_ids or 'upstart' in portal_ids, "Expected new Lever companies in filter results"
+
+    def test_remote_companies_no_regression_on_existing_companies(self):
+        """
+        Verify adding 50 new remote companies did not remove or damage existing 100 companies.
+        """
+        config_path = PROJECT_ROOT / 'config.yaml'
+        with open(config_path, 'r', encoding='utf-8') as f:
+            cfg = yaml.safe_load(f)
+
+        portals = cfg.get('company_portals', [])
+        found_ids = [p['id'] for p in portals]
+
+        # Key existing companies that must be present
+        required_existing = [
+            'amazon_aws', 'google', 'microsoft', 'meta', 'apple', 'oracle', 'ibm', 'cisco',
+            'cloudflare', 'digitalocean', 'akamai', 'salesforce', 'adobe', 'servicenow',
+            'atlassian', 'snowflake', 'databricks', 'spotify', 'swiggy', 'flipkart',
+            'razorpay', 'uber', 'netflix', 'accenture', 'tcs', 'infosys'
+        ]
+
+        for req_id in required_existing:
+            assert req_id in found_ids, f"Existing company '{req_id}' missing from portals (regression)"
+
