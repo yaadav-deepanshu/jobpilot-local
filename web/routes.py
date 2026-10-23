@@ -48,6 +48,27 @@ def _set_scrape_started(mode: str):
             'error': None,
         })
 
+
+def get_live_job_config() -> dict:
+    """Retrieve active configuration with automatic hot-reload from config.yaml"""
+    from pathlib import Path
+    try:
+        config_path = Path(current_app.root_path).parent / 'config.yaml'
+        mtime = os.path.getmtime(config_path) if config_path.exists() else 0
+        last_mtime = getattr(current_app, '_config_mtime', 0)
+        cached = current_app.config.get('JOB_CONFIG') or {}
+        # Hot-reload if file timestamp changed or if cached portals < 1000
+        if not cached or mtime > last_mtime or len(cached.get('company_portals', [])) < 1000:
+            if config_path.exists():
+                with open(config_path, 'r', encoding='utf-8') as f:
+                    new_cfg = yaml.safe_load(f) or {}
+                current_app.config['JOB_CONFIG'] = new_cfg
+                current_app._config_mtime = mtime
+                return new_cfg
+    except Exception as e:
+        logger.debug(f"Live config check note: {e}")
+    return current_app.config.get('JOB_CONFIG', {})
+
 def _set_scrape_progress(phase: str, count: int):
     with _status_lock:
         _scrape_state['current_phase'] = phase
@@ -252,7 +273,7 @@ def page_jobs():
 @main_bp.route('/websites-and-portals', strict_slashes=False)
 def page_portals():
     """100 Big Companies Portals & 24 Specialized Job Websites Directory"""
-    config = current_app.config.get('JOB_CONFIG', {})
+    config = get_live_job_config()
     c_mgr = CompanyPortalsManager(config)
     w_mgr = WebsitesManager(config)
 
@@ -283,13 +304,21 @@ def page_portals():
 def page_portal_jobs():
     """
     Direct Career Portals Job Postings Page
-    Scans & lists jobs from 100 Big Company Portals and 24 Tech Websites
+    Scans & lists jobs from 1,400+ Top Company Portals and 24 Tech Websites
     filtered for < 4 years experience and scored against Deepanshu Yadav's resume skills.
     """
-    config = current_app.config.get('JOB_CONFIG', {})
+    config = get_live_job_config()
     c_mgr = CompanyPortalsManager(config)
     categories = c_mgr.get_categories()
-    ats_types = ['workday', 'greenhouse', 'lever', 'smartrecruiters', 'taleo', 'successfactors', 'custom']
+    standard_ats = ['greenhouse', 'lever', 'ashby', 'smartrecruiters', 'workday', 'amazon_jobs', 'jobvite', 'taleo', 'successfactors', 'custom']
+    try:
+        db_ats = [row[0] for row in db.session.query(PortalJob.ats_type).distinct().all() if row[0]]
+    except Exception:
+        db_ats = []
+    ats_types = []
+    for a in standard_ats + sorted(db_ats):
+        if a and a not in ats_types:
+            ats_types.append(a)
 
     # Auto-seed initial top-company postings if table is empty so user gets instant value
     total_count = PortalJob.query.count()
@@ -607,7 +636,7 @@ def api_purge_unqualified():
 @api_bp.route('/companies', methods=['GET'], strict_slashes=False)
 def get_portals():
     """Return 100 Big Companies Job Portals with optional filtering"""
-    config = current_app.config.get('JOB_CONFIG', {})
+    config = get_live_job_config()
     mgr = CompanyPortalsManager(config)
     category = request.args.get('category')
     search = request.args.get('search') or request.args.get('q')
@@ -623,7 +652,7 @@ def get_portals():
 @api_bp.route('/website', methods=['GET'], strict_slashes=False)
 def get_websites():
     """Return 24 Specialized Tech & DevOps Job Websites with optional filtering"""
-    config = current_app.config.get('JOB_CONFIG', {})
+    config = get_live_job_config()
     mgr = WebsitesManager(config)
     category = request.args.get('category')
     search = request.args.get('search') or request.args.get('q')
@@ -639,7 +668,7 @@ def get_websites():
 @api_bp.route('/protals/stats', methods=['GET'], strict_slashes=False)
 def get_portals_stats():
     """Return summary metrics for company portals and specialized websites"""
-    config = current_app.config.get('JOB_CONFIG', {})
+    config = get_live_job_config()
     c_mgr = CompanyPortalsManager(config)
     w_mgr = WebsitesManager(config)
     return jsonify({
@@ -657,7 +686,7 @@ def get_portal_scanner(config=None):
     global _portal_scanner_obj
     with _portal_scanner_lock:
         if _portal_scanner_obj is None:
-            cfg = config or current_app.config.get('JOB_CONFIG', {})
+            cfg = config or get_live_job_config()
             _portal_scanner_obj = PortalJobsScanner(cfg)
         return _portal_scanner_obj
 
@@ -702,16 +731,18 @@ def get_portal_jobs():
     if min_score and min_score > 0:
         query = query.filter(PortalJob.match_score >= min_score)
 
-    # Filter: Text search
+    # Filter: Text search (supports multi-term matching across title, company, location, skills)
     if q:
-        term = f"%{q}%"
-        query = query.filter(
-            (PortalJob.title.ilike(term)) |
-            (PortalJob.company.ilike(term)) |
-            (PortalJob.location.ilike(term)) |
-            (PortalJob.matched_skills.ilike(term)) |
-            (PortalJob.description.ilike(term))
-        )
+        terms = [t.strip() for t in q.split() if t.strip()]
+        for t in terms:
+            term = f"%{t}%"
+            query = query.filter(
+                (PortalJob.title.ilike(term)) |
+                (PortalJob.company.ilike(term)) |
+                (PortalJob.location.ilike(term)) |
+                (PortalJob.matched_skills.ilike(term)) |
+                (PortalJob.description.ilike(term))
+            )
 
     # Sorting
     if sort_by == 'newest':
@@ -749,6 +780,8 @@ def trigger_portal_scan():
     mode = data.get('mode', 'all')
     category = data.get('category')
     portal_ids = data.get('portal_ids')
+    raw_query = data.get('query') or data.get('q') or request.args.get('q') or request.args.get('query')
+    query = raw_query.strip() if raw_query else None
 
     app_obj = current_app._get_current_object()
 
@@ -758,7 +791,8 @@ def trigger_portal_scan():
                 results = scanner.scan(
                     mode=mode,
                     category=category,
-                    portal_ids=portal_ids
+                    portal_ids=portal_ids,
+                    query=query
                 )
                 scanner.save_jobs_to_db(results, app=app_obj)
                 logger.info(f"✓ Background portal scan complete: saved {len(results)} jobs.")
@@ -768,10 +802,12 @@ def trigger_portal_scan():
     thread = threading.Thread(target=_run_scan_thread, daemon=True)
     thread.start()
 
+    msg = f"Started portal scan for '{query}' across company portals." if query else f"Started portal scan in mode '{mode}'."
     return jsonify({
         'status': 'started',
         'mode': mode,
-        'message': f"Started portal scan in mode '{mode}'."
+        'query': query,
+        'message': msg
     })
 
 @api_bp.route('/scan-portal-jobs/status', methods=['GET'], strict_slashes=False)

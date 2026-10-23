@@ -343,7 +343,7 @@
                         Enterprise <span class="jp-hero-title-accent">Company Portals & Job Boards</span>
                     </h1>
                     <p class="mb-0 text-light opacity-75" style="max-width: 720px; font-size: 15px;">
-                        Direct 1-click access to <strong>100 Big Company Career Portals</strong> (Amazon, Google, Microsoft, Swiggy, Flipkart, GCCs, SaaS)
+                        Direct 1-click access to <strong>{{ (stats.total_companies if stats else None) or (portals | length) }}+ Top Company Career Portals</strong> (Amazon, Google, Microsoft, OpenAI, Stripe, GCCs, SaaS)
                         and <strong>24 Specialized Tech & Remote Job Boards</strong> (Instahyre, Hirist, RemoteOK, KubeCareers, Hacker News).
                     </p>
                 </div>
@@ -430,14 +430,6 @@
                 </div>
                 <div class="col-md-6 d-flex gap-2 justify-content-md-end flex-wrap align-items-center">
                     <select id="category-filter-select" class="form-select jp-search-input" style="max-width: 280px;" onchange="filterPortals()">
-                        <option value="">All Categories</option>
-                    </select>
-                    <button class="btn btn-outline-secondary btn-sm px-3" onclick="resetFilters()">
-                        <i class="bi bi-arrow-counterclockwise"></i> Reset
-                    </button>
-                </div>
-            </div>
-        </div>
                         <option value="">All Categories</option>
                     </select>
                     <button class="btn btn-outline-secondary btn-sm px-3" onclick="resetFilters()">

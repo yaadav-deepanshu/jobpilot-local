@@ -538,13 +538,13 @@
                 <div>
                     <div class="jp-hero-badge">
                         <i class="bi bi-shield-check text-info"></i>
-                        <span>100 Big Companies + 24 Specialized Sites • Strict < 4y Experience Cap</span>
+                        <span>1,400+ Top Companies + 24 Specialized Sites • Strict < 4y Experience Cap</span>
                     </div>
                     <h1 class="jp-hero-title">
                         Enterprise Career Portal <span class="jp-hero-title-accent">Job Scanner</span>
                     </h1>
                     <p class="mb-0 text-light opacity-75" style="max-width: 740px; font-size: 15px;">
-                        Direct job openings discovered and scanned from official company career portals (Amazon, Google, Microsoft, Meta, Swiggy, Flipkart, FinTech GCCs, Top SaaS)
+                        Direct job openings discovered and scanned from 1,400+ official company career portals (Amazon, Google, Microsoft, Meta, OpenAI, Anthropic, Stripe, Vercel, Supabase, GCCs, Top SaaS)
                         and specialized tech boards. Strictly filtered for <strong>< 4 years experience</strong> and scored against <strong>Deepanshu Yadav's Cloud/DevOps resume</strong>.
                     </p>
                 </div>
@@ -604,19 +604,19 @@
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div>
                     <h5 class="fw-bold mb-1"><i class="bi bi-radar text-primary me-2"></i>Career Portal Scanner Engine</h5>
-                    <p class="text-muted small mb-0">Scan 100 Big Company ATS platforms and 24 Tech boards for fresh Cloud/DevOps openings.</p>
+                    <p class="text-muted small mb-0">Scan 1,400+ Company ATS platforms and 24 Tech boards for fresh Cloud/DevOps openings.</p>
                 </div>
                 <div class="d-flex gap-2 flex-wrap">
                     <div class="btn-group">
                         <button class="btn btn-primary fw-semibold px-3" id="btn-trigger-scan" onclick="triggerScan('quick')">
-                            <i class="bi bi-lightning-charge-fill me-1"></i> Quick Scan (Top 20)
+                            <i class="bi bi-lightning-charge-fill me-1"></i> Quick Scan (Top 30)
                         </button>
                         <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="visually-hidden">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow">
-                            <li><a class="dropdown-item fw-semibold" href="#" onclick="triggerScan('quick'); return false;"><i class="bi bi-lightning me-2 text-warning"></i>Quick Scan (Top 20 Big Companies)</a></li>
-                            <li><a class="dropdown-item fw-semibold" href="#" onclick="triggerScan('all'); return false;"><i class="bi bi-globe me-2 text-primary"></i>Full Scan (All 100 Portals + 24 Sites)</a></li>
+                            <li><a class="dropdown-item fw-semibold" href="#" onclick="triggerScan('quick'); return false;"><i class="bi bi-lightning me-2 text-warning"></i>Quick Scan (Top 30 Big Companies)</a></li>
+                            <li><a class="dropdown-item fw-semibold" href="#" onclick="triggerScan('all'); return false;"><i class="bi bi-globe me-2 text-primary"></i>Full Scan (All 1,400+ Portals & Sites)</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item text-danger fw-semibold" href="#" onclick="confirmClearJobs(); return false;"><i class="bi bi-trash3 me-2"></i>Clear Scanned Jobs</a></li>
                         </ul>
@@ -717,6 +717,37 @@
                 <div class="col-6 col-md-1">
                     <button class="btn btn-outline-secondary w-100" onclick="resetFilters()" title="Reset Filters">
                         <i class="bi bi-x-circle"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Keyword & Skill Search Pills -->
+            <div class="d-flex align-items-center gap-2 flex-wrap mt-3 pt-2 border-top">
+                <span class="text-secondary small fw-semibold text-uppercase" style="font-size: 11px;"><i class="bi bi-tags me-1"></i>Quick Search:</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold quick-search-pill" onclick="setQuickSearch('AWS')">AWS</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold quick-search-pill" onclick="setQuickSearch('Kubernetes')">Kubernetes</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold quick-search-pill" onclick="setQuickSearch('Terraform')">Terraform</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold quick-search-pill" onclick="setQuickSearch('Golang')">Golang</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold quick-search-pill" onclick="setQuickSearch('Python')">Python</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold quick-search-pill" onclick="setQuickSearch('DevOps')">DevOps</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold quick-search-pill" onclick="setQuickSearch('SRE')">SRE</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold quick-search-pill" onclick="setQuickSearch('Security')">Security</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold quick-search-pill" onclick="setQuickSearch('Remote')">Remote</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 fw-semibold quick-search-pill" onclick="setQuickSearch('Bengaluru')">Bengaluru</button>
+            </div>
+
+            <!-- Dynamic Search Info Banner -->
+            <div id="search-active-banner" class="alert alert-info py-2 px-3 mt-3 mb-0 d-none d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-info-circle-fill text-info"></i>
+                    <span id="search-active-text" class="small"></span>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-primary py-1 px-3 fw-semibold shadow-sm" id="btn-scan-current-query" onclick="scanCurrentSearchQuery()">
+                        <i class="bi bi-radar me-1"></i> Scan 1,400 Portals for this Query
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary py-1 px-2" onclick="clearSearchQuery()">
+                        <i class="bi bi-x"></i> Clear
                     </button>
                 </div>
             </div>
@@ -908,7 +939,48 @@
             document.getElementById('portal-category-select').value = 'all';
             document.getElementById('portal-ats-select').value = 'all';
             document.getElementById('portal-sort-select').value = 'score';
+            document.querySelectorAll('.quick-search-pill').forEach(function(pill) {
+                pill.classList.remove('btn-primary');
+                pill.classList.add('btn-outline-secondary');
+            });
+            const banner = document.getElementById('search-active-banner');
+            if (banner) banner.classList.add('d-none');
             setStatusFilter('all');
+        }
+
+        function setQuickSearch(term) {
+            const input = document.getElementById('portal-search-input');
+            if (input) {
+                input.value = term;
+                document.querySelectorAll('.quick-search-pill').forEach(function(pill) {
+                    if (pill.textContent.trim().toLowerCase() === term.toLowerCase()) {
+                        pill.classList.remove('btn-outline-secondary');
+                        pill.classList.add('btn-primary');
+                    } else {
+                        pill.classList.remove('btn-primary');
+                        pill.classList.add('btn-outline-secondary');
+                    }
+                });
+                loadPortalJobs(1, false);
+            }
+        }
+
+        function clearSearchQuery() {
+            const input = document.getElementById('portal-search-input');
+            if (input) input.value = '';
+            document.querySelectorAll('.quick-search-pill').forEach(function(pill) {
+                pill.classList.remove('btn-primary');
+                pill.classList.add('btn-outline-secondary');
+            });
+            const banner = document.getElementById('search-active-banner');
+            if (banner) banner.classList.add('d-none');
+            loadPortalJobs(1, false);
+        }
+
+        function scanCurrentSearchQuery() {
+            const input = document.getElementById('portal-search-input');
+            const q = input ? input.value.trim() : '';
+            triggerScan('all', q);
         }
 
         // Fetch & Render Portal Jobs
@@ -947,6 +1019,17 @@
                     const jobs = data.jobs || [];
                     totalPages = data.total_pages || data.pages || 1;
                     totalJobs = data.total || 0;
+
+                    const banner = document.getElementById('search-active-banner');
+                    const textEl = document.getElementById('search-active-text');
+                    if (q) {
+                        if (banner && textEl) {
+                            textEl.innerHTML = `Showing <strong>${totalJobs}</strong> portal jobs matching "<strong>${escapeHtml(q)}</strong>"`;
+                            banner.classList.remove('d-none');
+                        }
+                    } else if (banner) {
+                        banner.classList.add('d-none');
+                    }
 
                     if (append) {
                         const previousCount = loadedJobs.length;
@@ -1142,14 +1225,28 @@
             if (!container) return;
 
             if (!append && (!jobs || jobs.length === 0)) {
-                container.innerHTML = `
-                    <div class="text-center py-5 bg-white rounded-3 border" style="background: var(--jp-card-bg) !important;">
-                        <i class="bi bi-briefcase text-muted fs-1"></i>
-                        <h5 class="fw-bold mt-2">No Portal Jobs Found</h5>
-                        <p class="text-muted small">No jobs match the current filters. Click "Quick Scan" above to discover opportunities.</p>
+                const searchQ = (document.getElementById('portal-search-input') ? document.getElementById('portal-search-input').value.trim() : '');
+                let scanPrompt = '';
+                if (searchQ) {
+                    scanPrompt = `
+                        <p class="text-muted small mb-3">No stored jobs match "<strong>${escapeHtml(searchQ)}</strong>". You can run an on-demand targeted scan across all 1,400+ career portals for this exact query:</p>
+                        <button class="btn btn-primary fw-semibold px-4 shadow-sm" onclick="triggerScan('all', '${escapeHtml(searchQ)}')">
+                            <i class="bi bi-radar me-1"></i> Scan 1,400 Portals for "${escapeHtml(searchQ)}"
+                        </button>
+                    `;
+                } else {
+                    scanPrompt = `
+                        <p class="text-muted small mb-3">No jobs match the current filters. Click "Quick Scan" above to discover opportunities.</p>
                         <button class="btn btn-sm btn-primary fw-semibold" onclick="triggerScan('quick')">
                             <i class="bi bi-lightning-charge-fill me-1"></i> Scan Top Companies
                         </button>
+                    `;
+                }
+                container.innerHTML = `
+                    <div class="text-center py-5 bg-white rounded-3 border" style="background: var(--jp-card-bg) !important;">
+                        <i class="bi bi-search text-muted fs-1"></i>
+                        <h5 class="fw-bold mt-2">No Matching Portal Jobs Found</h5>
+                        ${scanPrompt}
                     </div>
                 `;
                 return;
@@ -1348,14 +1445,20 @@
         }
 
         // Trigger Scanner
-        function triggerScan(mode) {
+        function triggerScan(mode, customQuery) {
             const btn = document.getElementById('btn-trigger-scan');
             if (btn) btn.disabled = true;
+
+            const q = customQuery !== undefined ? customQuery : (document.getElementById('portal-search-input') ? document.getElementById('portal-search-input').value.trim() : '');
+            const payload = { mode: mode };
+            if (q) {
+                payload.query = q;
+            }
 
             fetch('/api/scan-portal-jobs', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mode: mode })
+                body: JSON.stringify(payload)
             })
             .then(function(res) { return res.json(); })
             .then(function(data) {
@@ -1415,7 +1518,10 @@
             if (bar) bar.style.width = `${status.progress_pct}%`;
 
             const statusText = document.getElementById('monitor-status-text');
-            if (statusText) statusText.textContent = `Scanning: ${status.current_company || 'Active'}`;
+            if (statusText) {
+                const targetText = status.query ? ` [Query: "${status.query}"]` : '';
+                statusText.textContent = `Scanning: ${status.current_company || 'Active'}${targetText}`;
+            }
 
             const ticker = document.getElementById('monitor-company-ticker');
             if (ticker) ticker.textContent = `Companies: ${status.companies_scanned} / ${status.total_companies}`;

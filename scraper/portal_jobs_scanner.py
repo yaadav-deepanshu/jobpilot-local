@@ -254,20 +254,25 @@ class PortalJobsScanner:
         portal_ids: Optional[List[str]] = None,
         max_jobs_per_company: int = 15,
         progress_callback: Optional[Callable[[str, int, int], None]] = None,
-        direct_only: bool = False
+        direct_only: bool = False,
+        query: Optional[str] = None
     ) -> List[Dict[str, Any]]:
         """
         Execute scan across company career portals and specialized sites.
         mode: 'all', 'quick' (top 20 companies), 'category', or 'custom'.
+        query: optional targeted keyword/title/technology to search for.
         Returns list of normalized, qualified jobs requiring < 4 years experience.
         """
+        clean_query = query.strip() if query else None
         with self._lock:
             self._is_running = True
             self._stop_requested = False
             self._status.update({
                 'running': True,
+                'mode': mode,
+                'query': clean_query or '',
                 'progress_pct': 0,
-                'current_company': 'Initializing scanner...',
+                'current_company': f"Initializing scanner for '{clean_query}'..." if clean_query else 'Initializing scanner...',
                 'companies_scanned': 0,
                 'total_companies': 0,
                 'jobs_found': 0,
@@ -277,7 +282,7 @@ class PortalJobsScanner:
                 'error': None
             })
 
-        logger.info(f"🚀 Starting Portal Jobs Scanner in mode='{mode}', category='{category}'")
+        logger.info(f"🚀 Starting Portal Jobs Scanner in mode='{mode}', category='{category}', query='{clean_query}'")
 
         # 1. Determine targets to scan
         targets: List[Dict[str, Any]] = []
@@ -309,69 +314,89 @@ class PortalJobsScanner:
         seen_urls: Set[str] = set()
 
         total = len(targets)
-        for idx, portal in enumerate(targets):
-            with self._lock:
+        discovered_jobs: List[Dict[str, Any]] = []
+        seen_urls: Set[str] = set()
+        seen_lock = threading.Lock()
+
+        def _process_company(portal):
+            if self._stop_requested:
+                return []
+            try:
+                return self._discover_portal_jobs(portal, max_jobs=max_jobs_per_company, query=clean_query)
+            except Exception as e:
+                logger.debug(f"Error scraping {portal.get('name')}: {e}")
+                return []
+
+        # High-speed concurrent scanning across ATS platforms with worker pool
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+        max_workers = min(12, max(len(targets), 1))
+        completed_count = 0
+
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_to_portal = {executor.submit(_process_company, p): p for p in targets}
+            for future in as_completed(future_to_portal):
                 if self._stop_requested:
                     logger.info("Scan stopped by user request.")
                     break
-                self._status['current_company'] = portal['name']
-                self._status['companies_scanned'] = idx + 1
-                self._status['progress_pct'] = int(((idx + 1) / max(total, 1)) * 100)
-
-            msg = f"Scanning {portal['name']} ({portal.get('ats_type', 'portal')})..."
-            logger.info(f"[{idx+1}/{total}] {msg}")
-
-            if progress_callback:
-                progress_callback(msg, len(discovered_jobs), idx + 1)
-
-            # Discover jobs for this company
-            company_jobs = self._discover_portal_jobs(portal, max_jobs=max_jobs_per_company)
-
-            # Process, filter, and score each job
-            for job in company_jobs:
-                url = job.get('url', '').strip()
-                if not url or url in seen_urls:
-                    continue
-
-                if direct_only and job.get('is_synthetic'):
-                    continue
-
-                seen_urls.add(url)
-                title = job.get('title', '').strip()
-                desc = job.get('description', '')
-
+                p = future_to_portal[future]
+                completed_count += 1
                 with self._lock:
-                    self._status['jobs_found'] += 1
+                    self._status['current_company'] = p['name']
+                    self._status['companies_scanned'] = completed_count
+                    self._status['progress_pct'] = int((completed_count / max(total, 1)) * 100)
 
-                # Check strict < 4 years experience qualification
-                is_qualified, exp_label, exp_max = self.is_qualified_experience(title, desc)
-                if not is_qualified:
-                    continue
+                if progress_callback:
+                    msg = f"Scanned {p['name']} ({p.get('ats_type', 'portal')})..."
+                    progress_callback(msg, len(discovered_jobs), completed_count)
 
-                # Match resume skills
-                matched_skills = self.match_resume_skills(f"{title} {desc}")
-                # Compute match score
-                score = self.calculate_match_score(matched_skills, title, desc)
-                if job.get('is_synthetic'):
-                    # Capped at 35% so synthetic search links never outrank real live requisitions
-                    score = min(score, 35)
-                else:
-                    # Verified direct live ATS requisition boost (+15 pts)
-                    score = min(score + 15, 98)
+                try:
+                    company_jobs = future.result() or []
+                except Exception as e:
+                    logger.debug(f"Scan future error for {p.get('name')}: {e}")
+                    company_jobs = []
 
-                job['experience_req'] = exp_label
-                job['experience_max'] = exp_max
-                job['matched_skills'] = matched_skills
-                job['match_score'] = score
-                job['skills_count'] = len(matched_skills)
+                # Process, filter, and score each job
+                for job in company_jobs:
+                    url = job.get('url', '').strip()
+                    with seen_lock:
+                        if not url or url in seen_urls:
+                            continue
+                        seen_urls.add(url)
 
-                discovered_jobs.append(job)
+                    if direct_only and job.get('is_synthetic'):
+                        continue
 
-                with self._lock:
-                    self._status['jobs_qualified'] = len(discovered_jobs)
+                    title = job.get('title', '').strip()
+                    desc = job.get('description', '')
 
-            # Short polite delay
-            time.sleep(0.05)
+                    with self._lock:
+                        self._status['jobs_found'] += 1
+
+                    # Check strict < 4 years experience qualification
+                    is_qualified, exp_label, exp_max = self.is_qualified_experience(title, desc)
+                    if not is_qualified:
+                        continue
+
+                    # Match resume skills
+                    matched_skills = self.match_resume_skills(f"{title} {desc}")
+                    # Compute match score
+                    score = self.calculate_match_score(matched_skills, title, desc)
+                    if job.get('is_synthetic'):
+                        score = min(score, 35)
+                    else:
+                        score = min(score + 15, 98)
+
+                    job['experience_req'] = exp_label
+                    job['experience_max'] = exp_max
+                    job['matched_skills'] = matched_skills
+                    job['match_score'] = score
+                    job['skills_count'] = len(matched_skills)
+
+                    with seen_lock:
+                        discovered_jobs.append(job)
+
+                    with self._lock:
+                        self._status['jobs_qualified'] = len(discovered_jobs)
 
         # Sort jobs by Match Score descending, then by date_posted descending
         discovered_jobs.sort(key=lambda j: (j.get('match_score', 0), len(j.get('matched_skills', []))), reverse=True)
@@ -386,7 +411,7 @@ class PortalJobsScanner:
         logger.info(f"✓ Portal scan complete: Discovered {len(discovered_jobs)} qualified jobs (<4y exp)")
         return discovered_jobs
 
-    def _discover_portal_jobs(self, portal: Dict[str, Any], max_jobs: int = 10) -> List[Dict[str, Any]]:
+    def _discover_portal_jobs(self, portal: Dict[str, Any], max_jobs: int = 10, query: Optional[str] = None) -> List[Dict[str, Any]]:
         """
         Retrieve postings for a specific company portal.
         Combines direct ATS APIs, structured feeds, and curated active listings.
@@ -410,7 +435,11 @@ class PortalJobsScanner:
             'coinbase': 'coinbase', 'discord': 'discord', 'grafanalabs': 'grafanalabs',
             'pagerduty': 'pagerduty', 'pinterest': 'pinterest', 'airtable': 'airtable',
             'instacart': 'instacart', 'datadog': 'datadog', 'lyft': 'lyft',
-            'robinhood': 'robinhood', 'scaleai': 'scaleai'
+            'robinhood': 'robinhood', 'scaleai': 'scaleai', 'deltek': 'deltek',
+            'questsoftware': 'questsoftware', 'docusign': 'docusign', 'workiva': 'workiva',
+            'himsandhers': 'himsandhers', 'goinstacare': 'goinstacare',
+            'abnormalsecurity': 'abnormalsecurity', 'beekeeper': 'beekeeper',
+            'faire': 'faire', 'vastdata': 'vastdata'
         }
         lever_map = {
             'spotify': 'spotify', 'cred': 'cred', 'meesho': 'meesho',
@@ -453,29 +482,29 @@ class PortalJobsScanner:
         }
 
         if p_id in gh_map or ats_type == 'greenhouse':
-            board_token = gh_map.get(p_id, p_id)
-            jobs = self._scrape_greenhouse(p_id, company, category, search_url or portal_url, board_token=board_token)
+            board_token = portal.get('board_token') or gh_map.get(p_id, p_id)
+            jobs = self._scrape_greenhouse(p_id, company, category, search_url or portal_url, board_token=board_token, query=query)
         elif p_id in lever_map or ats_type == 'lever':
-            comp_token = lever_map.get(p_id, p_id)
-            jobs = self._scrape_lever(p_id, company, category, search_url or portal_url, comp_token=comp_token)
+            comp_token = portal.get('board_token') or lever_map.get(p_id, p_id)
+            jobs = self._scrape_lever(p_id, company, category, search_url or portal_url, comp_token=comp_token, query=query)
         elif p_id in sr_map or ats_type == 'smartrecruiters':
-            comp_id = sr_map.get(p_id, p_id)
-            jobs = self._scrape_smartrecruiters(p_id, company, category, search_url or portal_url, comp_id=comp_id)
+            comp_id = portal.get('board_token') or sr_map.get(p_id, p_id)
+            jobs = self._scrape_smartrecruiters(p_id, company, category, search_url or portal_url, comp_id=comp_id, query=query)
         elif p_id in ashby_map or ats_type == 'ashby':
-            board_token = ashby_map.get(p_id, p_id)
-            jobs = self._scrape_ashby(p_id, company, category, search_url or portal_url, board_token=board_token)
+            board_token = portal.get('board_token') or ashby_map.get(p_id, p_id)
+            jobs = self._scrape_ashby(p_id, company, category, search_url or portal_url, board_token=board_token, query=query)
         elif p_id == 'amazon_aws' or ats_type == 'amazon_jobs':
-            jobs = self._scrape_amazon(p_id, company, category, search_url or portal_url)
+            jobs = self._scrape_amazon(p_id, company, category, search_url or portal_url, query=query)
         elif p_id in wd_map or ats_type == 'workday' or 'myworkdayjobs.com' in (search_url or portal_url):
             target_wd_url = wd_map.get(p_id, search_url or portal_url)
-            jobs = self._scrape_workday(p_id, company, category, target_wd_url)
+            jobs = self._scrape_workday(p_id, company, category, target_wd_url, query=query)
 
         # If direct ATS retrieval returned jobs, use them.
         # Portals without direct ATS APIs should not generate synthetic placeholder links.
         return jobs[:max_jobs]
 
-    def _scrape_greenhouse(self, p_id: str, company: str, category: str, base_url: str, board_token: str = None) -> List[Dict[str, Any]]:
-        """Query Greenhouse public boards API"""
+    def _scrape_greenhouse(self, p_id: str, company: str, category: str, base_url: str, board_token: str = None, query: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Query Greenhouse public boards API with optional targeted role/tech query"""
         import urllib.request
         import ssl
         ctx = ssl.create_default_context()
@@ -492,29 +521,40 @@ class PortalJobsScanner:
                     raw_jobs = data.get('jobs', [])
                     for rj in raw_jobs:
                         t = rj.get('title', '')
-                        if any(kw in t.lower() for kw in ['engineer', 'developer', 'devops', 'sre', 'cloud', 'platform', 'infrastructure', 'systems', 'operations', 'architect']):
-                            loc = rj.get('location', {}).get('name', 'Bengaluru / Remote')
-                            job_url = rj.get('absolute_url') or f"https://boards.greenhouse.io/{token}/jobs/{rj.get('id')}"
-                            desc = rj.get('content', '') or f"{t} opportunity at {company}"
-                            jobs.append({
-                                'portal_id': p_id,
-                                'company': company,
-                                'category': category,
-                                'ats_type': 'greenhouse',
-                                'title': t,
-                                'location': loc,
-                                'url': job_url,
-                                'description': desc,
-                                'date_posted': datetime.now(timezone.utc),
-                                'salary': 'Competitive Tech Salary',
-                                'job_type': 'Full-time'
-                            })
+                        desc = rj.get('content', '') or f"{t} opportunity at {company}"
+                        if query:
+                            q_low = query.lower()
+                            if q_low not in t.lower() and q_low not in desc.lower():
+                                continue
+                        else:
+                            if not any(kw in t.lower() for kw in ['engineer', 'developer', 'devops', 'sre', 'cloud', 'platform', 'infrastructure', 'systems', 'operations', 'architect']):
+                                continue
+                        loc = rj.get('location', {}).get('name', 'Bengaluru / Remote')
+                        gh_id = rj.get('id')
+                        # Always construct canonical direct Greenhouse board URL to prevent corporate wrapper/search homepages
+                        if gh_id:
+                            job_url = f"https://job-boards.greenhouse.io/{token}/jobs/{gh_id}"
+                        else:
+                            job_url = rj.get('absolute_url') or f"https://job-boards.greenhouse.io/{token}"
+                        jobs.append({
+                            'portal_id': p_id,
+                            'company': company,
+                            'category': category,
+                            'ats_type': 'greenhouse',
+                            'title': t,
+                            'location': loc,
+                            'url': job_url,
+                            'description': desc,
+                            'date_posted': datetime.now(timezone.utc),
+                            'salary': 'Competitive Tech Salary',
+                            'job_type': 'Full-time'
+                        })
         except Exception as e:
             logger.debug(f"Greenhouse API query skipped for {p_id}: {e}")
         return jobs
 
-    def _scrape_lever(self, p_id: str, company: str, category: str, base_url: str, comp_token: str = None) -> List[Dict[str, Any]]:
-        """Query Lever public API"""
+    def _scrape_lever(self, p_id: str, company: str, category: str, base_url: str, comp_token: str = None, query: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Query Lever public API with optional targeted role/tech query"""
         import urllib.request
         import ssl
         ctx = ssl.create_default_context()
@@ -530,30 +570,37 @@ class PortalJobsScanner:
                     data = json.loads(response.read().decode('utf-8'))
                     for rj in data:
                         t = rj.get('text', '')
-                        if any(kw in t.lower() for kw in ['engineer', 'developer', 'devops', 'sre', 'cloud', 'platform', 'infrastructure', 'systems', 'architect']):
-                            loc = rj.get('categories', {}).get('location', 'Bengaluru / Remote')
-                            job_url = rj.get('hostedUrl') or f"https://jobs.lever.co/{token}/{rj.get('id')}"
-                            desc = rj.get('descriptionPlain', '') or f"{t} opportunity at {company}"
-                            jobs.append({
-                                'portal_id': p_id,
-                                'company': company,
-                                'category': category,
-                                'ats_type': 'lever',
-                                'title': t,
-                                'location': loc,
-                                'url': job_url,
-                                'description': desc,
-                                'date_posted': datetime.now(timezone.utc),
-                                'salary': 'Competitive Tech Salary',
-                                'job_type': 'Full-time'
-                            })
+                        desc = rj.get('descriptionPlain', '') or f"{t} opportunity at {company}"
+                        if query:
+                            q_low = query.lower()
+                            if q_low not in t.lower() and q_low not in desc.lower():
+                                continue
+                        else:
+                            if not any(kw in t.lower() for kw in ['engineer', 'developer', 'devops', 'sre', 'cloud', 'platform', 'infrastructure', 'systems', 'architect']):
+                                continue
+                        loc = rj.get('categories', {}).get('location', 'Bengaluru / Remote')
+                        job_url = rj.get('hostedUrl') or f"https://jobs.lever.co/{token}/{rj.get('id')}"
+                        jobs.append({
+                            'portal_id': p_id,
+                            'company': company,
+                            'category': category,
+                            'ats_type': 'lever',
+                            'title': t,
+                            'location': loc,
+                            'url': job_url,
+                            'description': desc,
+                            'date_posted': datetime.now(timezone.utc),
+                            'salary': 'Competitive Tech Salary',
+                            'job_type': 'Full-time'
+                        })
         except Exception as e:
             logger.debug(f"Lever API query skipped for {p_id}: {e}")
         return jobs
 
-    def _scrape_smartrecruiters(self, p_id: str, company: str, category: str, base_url: str, comp_id: str = None) -> List[Dict[str, Any]]:
-        """Query SmartRecruiters public API"""
+    def _scrape_smartrecruiters(self, p_id: str, company: str, category: str, base_url: str, comp_id: str = None, query: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Query SmartRecruiters public API with optional targeted role/tech query"""
         import urllib.request
+        import urllib.parse
         import ssl
         ctx = ssl.create_default_context()
         ctx.check_hostname = False
@@ -561,7 +608,8 @@ class PortalJobsScanner:
         cid = comp_id or p_id
         jobs = []
         try:
-            api_url = f"https://api.smartrecruiters.com/v1/companies/{cid}/postings?limit=100"
+            q_param = f"&q={urllib.parse.quote_plus(query)}" if query else ""
+            api_url = f"https://api.smartrecruiters.com/v1/companies/{cid}/postings?limit=100{q_param}"
             req = urllib.request.Request(api_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
             with urllib.request.urlopen(req, timeout=5, context=ctx) as response:
                 if response.status == 200:
@@ -569,32 +617,37 @@ class PortalJobsScanner:
                     content = data.get('content', [])
                     for rj in content:
                         t = rj.get('name', '')
-                        if any(kw in t.lower() for kw in ['engineer', 'developer', 'devops', 'sre', 'cloud', 'platform', 'infrastructure', 'systems', 'architect']):
-                            loc_info = rj.get('location', {})
-                            city = loc_info.get('city', '')
-                            country = loc_info.get('country', '')
-                            loc = f"{city}, {country}".strip(', ') or "Bengaluru / Remote"
-                            job_id = rj.get('id')
-                            job_url = f"https://jobs.smartrecruiters.com/{cid}/{job_id}"
-                            desc = f"{t} opportunity at {company} ({loc}). Official requisition on SmartRecruiters."
-                            jobs.append({
-                                'portal_id': p_id,
-                                'company': company,
-                                'category': category,
-                                'ats_type': 'smartrecruiters',
-                                'title': t,
-                                'location': loc,
-                                'url': job_url,
-                                'description': desc,
-                                'date_posted': datetime.now(timezone.utc),
-                                'salary': 'Competitive Tech Salary',
-                                'job_type': 'Full-time'
-                            })
+                        if query:
+                            if query.lower() not in t.lower():
+                                continue
+                        else:
+                            if not any(kw in t.lower() for kw in ['engineer', 'developer', 'devops', 'sre', 'cloud', 'platform', 'infrastructure', 'systems', 'architect']):
+                                continue
+                        loc_info = rj.get('location', {})
+                        city = loc_info.get('city', '')
+                        country = loc_info.get('country', '')
+                        loc = f"{city}, {country}".strip(', ') or "Bengaluru / Remote"
+                        job_id = rj.get('id')
+                        job_url = f"https://jobs.smartrecruiters.com/{cid}/{job_id}"
+                        desc = f"{t} opportunity at {company} ({loc}). Official requisition on SmartRecruiters."
+                        jobs.append({
+                            'portal_id': p_id,
+                            'company': company,
+                            'category': category,
+                            'ats_type': 'smartrecruiters',
+                            'title': t,
+                            'location': loc,
+                            'url': job_url,
+                            'description': desc,
+                            'date_posted': datetime.now(timezone.utc),
+                            'salary': 'Competitive Tech Salary',
+                            'job_type': 'Full-time'
+                        })
         except Exception as e:
             logger.debug(f"SmartRecruiters API query skipped for {p_id}: {e}")
         return jobs
 
-    def _scrape_ashby(self, p_id: str, company: str, category: str, base_url: str, board_token: str = None) -> List[Dict[str, Any]]:
+    def _scrape_ashby(self, p_id: str, company: str, category: str, base_url: str, board_token: str = None, query: Optional[str] = None) -> List[Dict[str, Any]]:
         """Query Ashby public posting API to retrieve live job postings with exact requisition URLs"""
         import urllib.request
         import ssl
@@ -615,8 +668,12 @@ class PortalJobsScanner:
                     now = datetime.now(timezone.utc)
                     for rj in data.get('jobs', []):
                         t = rj.get('title', '')
-                        if not any(kw in t.lower() for kw in ['engineer', 'developer', 'devops', 'sre', 'cloud', 'platform', 'infrastructure', 'systems', 'architect', 'analyst', 'tech', 'software', 'site reliability']):
-                            continue
+                        if query:
+                            if query.lower() not in t.lower():
+                                continue
+                        else:
+                            if not any(kw in t.lower() for kw in ['engineer', 'developer', 'devops', 'sre', 'cloud', 'platform', 'infrastructure', 'systems', 'architect', 'analyst', 'tech', 'software', 'site reliability']):
+                                continue
                         direct_url = rj.get('jobUrl') or f"https://jobs.ashbyhq.com/{token}/{rj.get('id')}"
                         loc = rj.get('location', 'Bengaluru / Remote')
                         desc = f"{t} opportunity at {company}. Direct career application on official Ashby requisition page."
@@ -637,18 +694,21 @@ class PortalJobsScanner:
             logger.debug(f"Ashby API query skipped for {p_id}: {e}")
         return jobs
 
-    def _scrape_amazon(self, p_id: str, company: str, category: str, base_url: str) -> List[Dict[str, Any]]:
-        """Query Amazon Jobs public JSON search API"""
+    def _scrape_amazon(self, p_id: str, company: str, category: str, base_url: str, query: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Query Amazon Jobs public JSON search API with optional targeted query"""
         import urllib.request
+        import urllib.parse
         import ssl
         ctx = ssl.create_default_context()
         ctx.check_hostname = False
         ctx.verify_mode = ssl.CERT_NONE
         jobs = []
         seen = set()
-        for q in ['DevOps', 'Cloud', 'Infrastructure', 'Systems']:
+        search_terms = [query] if query else ['DevOps', 'Cloud', 'Infrastructure', 'Systems']
+        for q in search_terms:
             try:
-                api_url = f"https://www.amazon.jobs/en/search.json?base_query={q}&country=IND&result_limit=25"
+                q_enc = urllib.parse.quote_plus(q)
+                api_url = f"https://www.amazon.jobs/en/search.json?base_query={q_enc}&country=IND&result_limit=25"
                 req = urllib.request.Request(api_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
                 with urllib.request.urlopen(req, timeout=5, context=ctx) as response:
                     if response.status == 200:
@@ -681,7 +741,7 @@ class PortalJobsScanner:
                 logger.debug(f"Amazon Jobs API query error: {e}")
         return jobs
 
-    def _scrape_workday(self, p_id: str, company: str, category: str, base_url: str) -> List[Dict[str, Any]]:
+    def _scrape_workday(self, p_id: str, company: str, category: str, base_url: str, query: Optional[str] = None) -> List[Dict[str, Any]]:
         """Query Workday public CXS jobs API to retrieve actual live job postings with exact requisition URLs"""
         import urllib.request
         import ssl
@@ -703,12 +763,13 @@ class PortalJobsScanner:
             }
 
             # Query Workday across domain search terms (Workday CXS enforces max limit of 20)
-            for query in ['DevOps', 'Cloud', 'Infrastructure', 'Systems', '']:
+            search_terms = [query] if query else ['DevOps', 'Cloud', 'Infrastructure', 'Systems', '']
+            for search_term in search_terms:
                 payload = json.dumps({
                     "appliedFacets": {},
                     "limit": 20,
                     "offset": 0,
-                    "searchText": query
+                    "searchText": search_term
                 }).encode('utf-8')
                 req = urllib.request.Request(api_url, data=payload, headers=headers)
                 try:
@@ -721,8 +782,12 @@ class PortalJobsScanner:
                                     continue
                                 seen_ext.add(ext)
                                 t = rj.get('title', '')
-                                if not any(kw in t.lower() for kw in ['engineer', 'developer', 'devops', 'sre', 'cloud', 'platform', 'infrastructure', 'systems', 'architect', 'analyst', 'tech', 'software', 'site reliability']):
-                                    continue
+                                if query:
+                                    if query.lower() not in t.lower():
+                                        continue
+                                else:
+                                    if not any(kw in t.lower() for kw in ['engineer', 'developer', 'devops', 'sre', 'cloud', 'platform', 'infrastructure', 'systems', 'architect', 'analyst', 'tech', 'software', 'site reliability']):
+                                        continue
                                 direct_url = f"https://{tenant}.{host}.myworkdayjobs.com/en-US/{site}{ext}"
                                 loc = rj.get('locationsText', 'Bengaluru / Remote')
                                 jobs.append({
@@ -846,9 +911,6 @@ class PortalJobsScanner:
             ]
             return redhat_reqs[idx % len(redhat_reqs)]
 
-        if idx == 0:
-            return base_url.strip()
-
         parsed = urllib.parse.urlparse(base_url.strip())
         qs = urllib.parse.parse_qs(parsed.query)
 
@@ -875,9 +937,16 @@ class PortalJobsScanner:
             new_qs[found_key] = [kw]
             new_query = urllib.parse.urlencode(new_qs, doseq=True)
             return urllib.parse.urlunparse((parsed.scheme, parsed.netloc, parsed.path, parsed.params, new_query, parsed.fragment))
-        else:
-            # Clean base URL without injecting unsupported parameters
+
+        # If base_url already points to a direct job posting path (e.g. /job/, /jobs/, /positions/) or search results (/results)
+        if any(term in parsed.path for term in ['/job/', '/jobs/', '/positions/', '/listing/', '/results']):
             return base_url.strip()
+
+        # Specialize query so it never lands on a naked homepage
+        new_qs = dict(qs)
+        new_qs['q'] = [kw]
+        new_query = urllib.parse.urlencode(new_qs, doseq=True)
+        return urllib.parse.urlunparse((parsed.scheme, parsed.netloc, parsed.path, parsed.params, new_query, parsed.fragment))
 
     def save_jobs_to_db(self, jobs: List[Dict[str, Any]], app=None) -> int:
         """

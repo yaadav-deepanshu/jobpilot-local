@@ -1,0 +1,2441 @@
+# Job Finder Configuration
+# Your profile and search preferences
+
+profile:
+  name: "Deepanshu Yadav"
+  email: "yaadav.deepanshu@gmail.com"
+  phone: "+91 8728081860"
+  linkedin_url: "https://linkedin.com/in/yourprofile"
+  resume_file: "resume.pdf"
+
+search:
+  roles:
+    - "Cloud Engineer"
+    - "DevOps Engineer"
+    - "Site Reliability Engineer"
+    - "SRE"
+    - "AWS Cloud Engineer"
+    - "Azure Cloud Engineer"
+    - "GCP Cloud Engineer"
+    - "Google Cloud Engineer"
+    - "System Engineer"
+    - "Platform Engineer"
+    - "Infrastructure Engineer"
+    - "Cloud Support Engineer"
+    - "DevSecOps Engineer"
+    - "Cloud Operations Engineer"
+    - "Cloud Operations Architect"
+    - "Cloud Architect"
+    - "DevOps Architect"
+    - "Cloud Solutions Architect"
+    - "Infrastructure Operations Architect"
+    - "Forward Deployed Systems Engineer"
+    - "Forward Deployed Engineer"
+
+  keywords:
+    # 1. Primary Cloud Providers & Multi-Cloud
+    - "cloud"
+    - "aws"
+    - "amazon web services"
+    - "azure"
+    - "microsoft azure"
+    - "gcp"
+    - "google cloud"
+    - "google cloud platform"
+    - "multi-cloud"
+    - "hybrid cloud"
+
+    # 2. AWS Cloud Services (Resume & AWS Certified Developer Stack)
+    - "ec2"
+    - "s3"
+    - "lambda"
+    - "iam"
+    - "aws sso"
+    - "vpc"
+    - "route 53"
+    - "route53"
+    - "cloudwatch"
+    - "cloudtrail"
+    - "sqs"
+    - "sns"
+    - "elasticache"
+    - "opensearch"
+    - "ecs"
+    - "ecr"
+    - "eks"
+    - "codepipeline"
+    - "codebuild"
+    - "codedeploy"
+    - "waf"
+    - "kms"
+    - "secrets manager"
+    - "cloudformation"
+    - "alb"
+    - "nlb"
+    - "elb"
+
+    # 3. Azure Cloud Services & Ecosystem
+    - "azure devops"
+    - "aks"
+    - "azure kubernetes service"
+    - "azure active directory"
+    - "entra id"
+    - "azure blob storage"
+    - "azure monitor"
+    - "arm templates"
+    - "bicep"
+    - "azure functions"
+    - "azure virtual network"
+    - "azure key vault"
+    - "application gateway"
+    - "azure resource manager"
+    - "azure container instances"
+
+    # 4. GCP Cloud Services & Ecosystem
+    - "gke"
+    - "google kubernetes engine"
+    - "cloud run"
+    - "cloud functions"
+    - "cloud storage"
+    - "cloud build"
+    - "cloud compute"
+    - "google vpc"
+    - "cloud pub/sub"
+    - "cloud monitoring"
+    - "cloud logging"
+    - "google cloud armor"
+
+    # 5. Infrastructure as Code (IaC) & Configuration Management
+    - "terraform"
+    - "terragrunt"
+    - "ansible"
+    - "ansible playbook"
+    - "puppet"
+    - "chef"
+    - "pulumi"
+    - "iac"
+    - "infrastructure as code"
+    - "packer"
+    - "vagrant"
+    - "configuration management"
+
+    # 6. Containers, Orchestration & Service Mesh
+    - "docker"
+    - "docker compose"
+    - "dockerfile"
+    - "kubernetes"
+    - "k8s"
+    - "helm"
+    - "helm charts"
+    - "openshift"
+    - "containerd"
+    - "podman"
+    - "istio"
+    - "linkerd"
+    - "ingress"
+    - "cni"
+    - "containerization"
+
+    # 7. CI/CD, Build Automation & GitOps
+    - "ci/cd"
+    - "cicd"
+    - "continuous integration"
+    - "continuous deployment"
+    - "continuous delivery"
+    - "gitops"
+    - "jenkins"
+    - "github actions"
+    - "gitlab"
+    - "gitlab ci"
+    - "argocd"
+    - "flux"
+    - "fluxcd"
+    - "bitbucket pipelines"
+    - "circleci"
+    - "build automation"
+
+    # 8. Scripting, Programming & Operating Systems
+    - "linux"
+    - "ubuntu"
+    - "redhat"
+    - "centos"
+    - "bash"
+    - "shell"
+    - "shell scripting"
+    - "python"
+    - "golang"
+    - "go"
+    - "git"
+    - "sql"
+    - "powershell"
+    - "yaml"
+    - "json"
+
+    # 9. Observability, Monitoring, Logging & Telemetry
+    - "prometheus"
+    - "grafana"
+    - "datadog"
+    - "elk"
+    - "elk stack"
+    - "elasticsearch"
+    - "logstash"
+    - "kibana"
+    - "splunk"
+    - "new relic"
+    - "dynatrace"
+    - "opentelemetry"
+    - "distributed tracing"
+    - "pagerduty"
+    - "incident management"
+
+    # 10. Cloud Security, Networking & Access Management
+    - "devsecops"
+    - "zero trust"
+    - "cloud security"
+    - "network security"
+    - "security groups"
+    - "network acls"
+    - "nacl"
+    - "subnets"
+    - "load balancing"
+    - "load balancer"
+    - "vpn"
+    - "dns"
+    - "tls"
+    - "ssl"
+    - "sso"
+    - "single sign-on"
+
+    # 11. Site Reliability, Architecture & Platform Engineering
+    - "sre"
+    - "site reliability"
+    - "site reliability engineering"
+    - "sli"
+    - "slo"
+    - "sla"
+    - "error budgets"
+    - "platform engineering"
+    - "internal developer platform"
+    - "idp"
+    - "microservices"
+    - "distributed systems"
+    - "high availability"
+    - "disaster recovery"
+    - "chaos engineering"
+    - "cloudops"
+    - "sysops"
+
+  location: "Bengaluru"
+  remote: true
+  hybrid: true
+
+  # Job filters
+  max_applicants: 100
+  min_experience_years: 0
+  max_experience_years: 4
+
+  exclude_keywords:
+    - "internship"
+    - "volunteer"
+    - "unpaid"
+    - "part-time"
+    - "principal"
+    - "director"
+    - "manager"
+    - "staff"
+    - "head of"
+
+  salary_min: 0
+  salary_max: 0
+
+platforms:
+  linkedin:
+    enabled: true
+    search_url: "https://www.linkedin.com/jobs/search/"
+
+  indeed:
+    enabled: true
+    country: "IN"
+
+  naukri:
+    enabled: true
+
+  glassdoor:
+    enabled: true
+
+  zip_recruiter:
+    enabled: true
+
+  google:
+    enabled: true
+
+  bayt:
+    enabled: true
+
+  wellfound:
+    enabled: true
+
+  cutshort:
+    enabled: true
+
+  foundit:
+    enabled: true
+
+  # Additional Tech, DevOps & Remote Platforms (20+ New Websites)
+  instahyre:
+    enabled: true
+  hirist:
+    enabled: true
+  remoteok:
+    enabled: true
+  weworkremotely:
+    enabled: true
+  devopsjobboard:
+    enabled: true
+  kubecareers:
+    enabled: true
+  arc_dev:
+    enabled: true
+  geektrust:
+    enabled: true
+  hasjob:
+    enabled: true
+  otta:
+    enabled: true
+  dice:
+    enabled: true
+  simplyhired:
+    enabled: true
+  hacker_news:
+    enabled: true
+  levels_fyi:
+    enabled: true
+  relocate_me:
+    enabled: true
+  flexjobs:
+    enabled: true
+  remotive:
+    enabled: true
+  jobspresso:
+    enabled: true
+  adzuna:
+    enabled: true
+  techcareers:
+    enabled: true
+  devopsroles:
+    enabled: true
+
+ai:
+  enabled: true
+  provider: "anthropic"
+
+  # For Anthropic Claude
+  anthropic_api_key: "${CLAUDE_API_KEY}"
+  anthropic_model: "claude-3-5-sonnet-20241022"
+
+  # For OpenAI GPT
+  openai_api_key: "${OPENAI_API_KEY}"
+  openai_model: "gpt-4"
+
+  # Resume tailoring settings
+  resume_tailoring:
+    enabled: true
+    strategy: "keyword_match"
+
+app:
+  host: "127.0.0.1"
+  port: 5050
+  debug: false
+  db_file: "jobs.db"
+
+scheduler:
+  enabled: true
+  scrape_interval_hours: 6
+  timezone: "Asia/Kolkata"
+
+
+# ====================================================================
+# Specialized Tech & Remote Job Websites (24 Websites)
+# ====================================================================
+websites:
+- id: instahyre
+  name: Instahyre
+  category: India Tech & Product
+  url: https://www.instahyre.com
+  search_url: https://www.instahyre.com/jobs-in-bengaluru-for-devops/
+  description: AI-driven tech hiring platform in India with top product companies
+    (Swiggy, Flipkart, Uber, Razorpay).
+  target_roles:
+  - DevOps Engineer
+  - Cloud Engineer
+  - SRE
+  - Platform Engineer
+  region: India
+- id: hirist
+  name: Hirist
+  category: India Tech & Product
+  url: https://www.hirist.tech
+  search_url: https://www.hirist.tech/c/devops-jobs.html
+  description: Dedicated engineering job portal specifically for software, cloud,
+    and DevOps roles in India.
+  target_roles:
+  - DevOps
+  - Cloud Architect
+  - Site Reliability Engineer
+  - AWS Engineer
+  region: India
+- id: cutshort
+  name: Cutshort
+  category: India Tech & Product
+  url: https://cutshort.io
+  search_url: https://cutshort.io/jobs/devops-jobs-in-bangalore
+  description: AI-powered recruitment network popular in India for product engineering
+    and fast recruiter turnaround.
+  target_roles:
+  - DevOps Engineer
+  - Cloud Engineer
+  - SRE
+  region: India
+- id: geektrust
+  name: Geektrust
+  category: India Tech & Product
+  url: https://www.geektrust.com
+  search_url: https://www.geektrust.com/jobs
+  description: Skill-based tech challenges connecting engineers directly with vetted
+    product firms without resume filtering.
+  target_roles:
+  - DevOps
+  - Backend / Cloud
+  - Infrastructure
+  region: India
+- id: hasjob
+  name: Hasjob
+  category: India Tech & Product
+  url: https://hasjob.co
+  search_url: https://hasjob.co/?q=devops
+  description: Community-driven job board by HasGeek featuring niche tech roles, open-source
+    teams, and tech startups.
+  target_roles:
+  - DevOps
+  - SysAdmin
+  - Cloud Infrastructure
+  region: India
+- id: foundit
+  name: Foundit (Monster India)
+  category: India Tech & Product
+  url: https://www.foundit.in
+  search_url: https://www.foundit.in/srp/results?query=Cloud%20DevOps&locations=Bangalore
+  description: Enterprise and mid-market hiring platform covering IT systems, cloud
+    migration, and operations.
+  target_roles:
+  - Cloud Engineer
+  - DevOps Engineer
+  - AWS Engineer
+  region: India
+- id: devopsjobboard
+  name: DevOpsJobs.io
+  category: DevOps & Cloud Specialist
+  url: https://devopsjobs.io
+  search_url: https://devopsjobs.io/jobs?q=cloud
+  description: Dedicated exclusively to DevOps, Cloud, and SRE roles across AWS, GCP,
+    Azure, and Kubernetes.
+  target_roles:
+  - DevOps Engineer
+  - Cloud Engineer
+  - SRE
+  - Kubernetes Engineer
+  region: Global & Remote
+- id: kubecareers
+  name: KubeCareers
+  category: DevOps & Cloud Specialist
+  url: https://kube.careers
+  search_url: https://kube.careers/?q=kubernetes
+  description: Specializes exclusively in Kubernetes, Cloud-Native, and container
+    infrastructure engineering roles.
+  target_roles:
+  - Kubernetes Administrator
+  - Cloud Platform Engineer
+  - DevOps
+  region: Global & Remote
+- id: devopsroles
+  name: DevOpsRoles
+  category: DevOps & Cloud Specialist
+  url: https://devopsroles.com
+  search_url: https://devopsroles.com/
+  description: Curated listings for site reliability engineers, infrastructure engineers,
+    and CI/CD specialists.
+  target_roles:
+  - SRE
+  - DevOps Engineer
+  - Platform Engineer
+  region: Global & Remote
+- id: remoteok
+  name: Remote OK
+  category: Global Remote-First
+  url: https://remoteok.com
+  search_url: https://remoteok.com/remote-devops-jobs
+  description: High-volume aggregator for global remote software, DevOps, and cloud
+    infrastructure roles.
+  target_roles:
+  - DevOps
+  - Cloud
+  - SRE
+  - Sysadmin
+  region: Global Remote
+- id: weworkremotely
+  name: We Work Remotely
+  category: Global Remote-First
+  url: https://weworkremotely.com
+  search_url: https://weworkremotely.com/categories/remote-devops-sysadmin-jobs
+  description: One of the largest global remote boards with active DevOps, sysadmin,
+    and backend engineering sections.
+  target_roles:
+  - DevOps / Sysadmin
+  - Cloud Engineer
+  - Backend Engineering
+  region: Global Remote
+- id: arc_dev
+  name: Arc.dev
+  category: Global Remote-First
+  url: https://arc.dev
+  search_url: https://arc.dev/remote-jobs/devops
+  description: Vetted global remote developer and DevOps talent network with top international
+    tech companies.
+  target_roles:
+  - Remote DevOps Engineer
+  - Cloud Architect
+  - AWS Engineer
+  region: Global Remote
+- id: remotive
+  name: Remotive
+  category: Global Remote-First
+  url: https://remotive.com
+  search_url: https://remotive.com/remote-jobs/devops
+  description: Curated remote tech job board with dedicated DevOps, cloud computing,
+    and sysadmin categories.
+  target_roles:
+  - DevOps
+  - Infrastructure Engineer
+  - SRE
+  region: Global Remote
+- id: jobspresso
+  name: Jobspresso
+  category: Global Remote-First
+  url: https://jobspresso.co
+  search_url: https://jobspresso.co/remote-devops-jobs/
+  description: Curated remote tech careers in DevOps, systems engineering, and cloud
+    operations.
+  target_roles:
+  - DevOps
+  - Systems Engineer
+  - Cloud Architect
+  region: Global Remote
+- id: flexjobs
+  name: FlexJobs
+  category: Global Remote-First
+  url: https://www.flexjobs.com
+  search_url: https://www.flexjobs.com/search?search=DevOps
+  description: Hand-screened remote, hybrid, and flexible tech jobs with verified
+    employers.
+  target_roles:
+  - Cloud Engineer
+  - DevOps Engineer
+  - SRE
+  region: Global & US/Remote
+- id: wellfound
+  name: Wellfound (AngelList Talent)
+  category: Startup & High-Growth
+  url: https://wellfound.com
+  search_url: https://wellfound.com/role/l/devops-engineer/bengaluru
+  description: Leading startup ecosystem board with direct access to engineering founders,
+    CTOs, and equity transparency.
+  target_roles:
+  - DevOps Engineer
+  - Cloud Architect
+  - SRE
+  - Infrastructure Engineer
+  region: Global & India
+- id: otta
+  name: Otta (Welcome to the Jungle)
+  category: Startup & High-Growth
+  url: https://app.otta.com
+  search_url: https://app.otta.com/jobs?roles=devops
+  description: Personalized, candidate-centric board matching engineers to fast-growing
+    tech firms and unicorns.
+  target_roles:
+  - DevOps Engineer
+  - Cloud Engineer
+  - Platform Engineer
+  region: Global & UK/EU/US
+- id: hacker_news
+  name: Hacker News (Who is Hiring?)
+  category: Startup & High-Growth
+  url: https://news.ycombinator.com
+  search_url: https://hnhiring.me/?q=devops+OR+cloud
+  description: Monthly Y Combinator community threads with direct posts from engineering
+    hiring managers at top tech companies.
+  target_roles:
+  - DevOps
+  - SRE
+  - Cloud Infrastructure
+  - Kubernetes
+  region: Global
+- id: levels_fyi
+  name: Levels.fyi Jobs
+  category: Startup & High-Growth
+  url: https://www.levels.fyi/jobs
+  search_url: https://www.levels.fyi/jobs?jobFamily=devops&location=bengaluru
+  description: High-compensation tech and engineering jobs with verified salary compensation
+    bands.
+  target_roles:
+  - DevOps Engineer
+  - Site Reliability Engineer
+  - Cloud Engineer
+  region: Global & India
+- id: relocate_me
+  name: Relocate.me
+  category: Startup & High-Growth
+  url: https://relocate.me
+  search_url: https://relocate.me/search?q=devops
+  description: Verified international tech jobs offering relocation packages and visa
+    sponsorship.
+  target_roles:
+  - DevOps Engineer
+  - Cloud Engineer
+  - SRE
+  region: Abroad / Relocation
+- id: dice
+  name: Dice
+  category: Mainstream & Enterprise Tech
+  url: https://www.dice.com
+  search_url: https://www.dice.com/jobs?q=Cloud%20DevOps
+  description: Premier tech-only career platform specializing in enterprise infrastructure,
+    cloud, and cybersecurity.
+  target_roles:
+  - Cloud Engineer
+  - DevOps Engineer
+  - Systems Engineer
+  region: Global & US/Remote
+- id: simplyhired
+  name: SimplyHired
+  category: Mainstream & Enterprise Tech
+  url: https://www.simplyhired.com
+  search_url: https://www.simplyhired.co.in/search?q=DevOps+Cloud&l=Bengaluru
+  description: Comprehensive job aggregator indexing thousands of tech positions across
+    multiple domains.
+  target_roles:
+  - DevOps Engineer
+  - Cloud Support Engineer
+  - SRE
+  region: India & Global
+- id: adzuna
+  name: Adzuna
+  category: Mainstream & Enterprise Tech
+  url: https://www.adzuna.in
+  search_url: https://www.adzuna.in/search?q=DevOps+Cloud&w=Bengaluru
+  description: Smart job search engine bringing together tech job listings across
+    India and 16 international markets.
+  target_roles:
+  - DevOps Engineer
+  - Cloud Infrastructure
+  - Systems Engineer
+  region: India & Global
+- id: techcareers
+  name: TechCareers
+  category: Mainstream & Enterprise Tech
+  url: https://www.techcareers.com
+  search_url: https://www.techcareers.com/jobs?q=DevOps%20Cloud
+  description: Specialized job portal focusing on enterprise IT, networking, cloud
+    systems, and infrastructure.
+  target_roles:
+  - Cloud Engineer
+  - DevOps Engineer
+  - Network / Cloud Specialist
+  region: Global
+
+
+# ====================================================================
+# Big Company Career Portals (100 Top Companies)
+# ====================================================================
+company_portals:
+- id: amazon_aws
+  name: Amazon / AWS
+  category: Cloud Hyperscalers & Infrastructure
+  portal_url: https://www.amazon.jobs
+  search_url: https://www.amazon.jobs/en/search?base_query=DevOps+Cloud&loc_query=Bengaluru%2C+India
+  ats_type: amazon_jobs
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Chennai
+  - Delhi NCR
+  - Seattle
+  - Remote
+  description: Primary creator and operator of Amazon Web Services cloud infrastructure.
+- id: microsoft
+  name: Microsoft
+  category: Cloud Hyperscalers & Infrastructure
+  portal_url: https://careers.microsoft.com
+  search_url: https://careers.microsoft.com/us/en/search-results?keywords=DevOps%20Cloud%20Azure&location=Bengaluru,%20Karnataka,%20India
+  ats_type: microsoft_careers
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Noida
+  - Redmond
+  - Remote
+  description: Microsoft Azure cloud computing platform and enterprise software.
+- id: google
+  name: Google / Alphabet
+  category: Cloud Hyperscalers & Infrastructure
+  portal_url: https://careers.google.com
+  search_url: https://careers.google.com/jobs/results/?q=DevOps%20SRE%20Cloud&location=Bengaluru,%20India
+  ats_type: google_careers
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Gurugram
+  - Mountain View
+  - Remote
+  description: Google Cloud Platform (GCP), Kubernetes, and Site Reliability Engineering
+    originators.
+- id: meta
+  name: Meta
+  category: Cloud Hyperscalers & Infrastructure
+  portal_url: https://www.metacareers.com
+  search_url: https://www.metacareers.com/jobs?q=Production%20Engineer%20DevOps
+  ats_type: meta_careers
+  locations:
+  - Bengaluru
+  - Gurugram
+  - Menlo Park
+  - Remote
+  description: Hyperscale social infrastructure, Production Engineering, and distributed
+    systems.
+- id: apple
+  name: Apple
+  category: Cloud Hyperscalers & Infrastructure
+  portal_url: https://jobs.apple.com
+  search_url: https://jobs.apple.com/en-in/search?search=Cloud%20DevOps%20SRE&location=bengaluru-BENG
+  ats_type: apple_jobs
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Cupertino
+  - Remote
+  description: iCloud services, distributed systems infrastructure, and multi-cloud
+    platform engineering.
+- id: oracle
+  name: Oracle
+  category: Cloud Hyperscalers & Infrastructure
+  portal_url: https://www.oracle.com/corporate/careers
+  search_url: https://careers.oracle.com/jobs/#en/sites/jobsearch/requisitions?keyword=Cloud%20DevOps&location=Bengaluru
+  ats_type: oracle_cloud_recruiting
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Pune
+  - Austin
+  - Remote
+  description: Oracle Cloud Infrastructure (OCI), autonomous databases, and enterprise
+    systems.
+- id: ibm
+  name: IBM
+  category: Cloud Hyperscalers & Infrastructure
+  portal_url: https://www.ibm.com/careers
+  search_url: https://www.ibm.com/careers/search?q=DevOps%20Cloud&location=Bangalore
+  ats_type: ibm_brassring
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Pune
+  - Armonk
+  - Remote
+  description: Hybrid cloud architecture, Red Hat OpenShift ecosystem, and AI infrastructure.
+- id: cisco
+  name: Cisco
+  category: Cloud Hyperscalers & Infrastructure
+  portal_url: https://www.cisco.com/c/en/us/about/careers.html
+  search_url: https://jobs.cisco.com/jobs/SearchJobs/Cloud%20DevOps?21178=%5B169482%5D
+  ats_type: cisco_jobs
+  locations:
+  - Bengaluru
+  - San Jose
+  - Remote
+  description: Global cloud networking, security, observability (AppDynamics), and
+    infrastructure.
+- id: broadcom_vmware
+  name: Broadcom / VMware
+  category: Cloud Hyperscalers & Infrastructure
+  portal_url: https://www.broadcom.com/company/careers
+  search_url: https://broadcom.wd1.myworkdayjobs.com/External_Career?q=DevOps%20Cloud
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Pune
+  - Palo Alto
+  - Remote
+  description: Virtualization, Tanzu Kubernetes, cloud foundation, and enterprise
+    infrastructure.
+- id: redhat
+  name: Red Hat
+  category: Cloud Hyperscalers & Infrastructure
+  portal_url: https://www.redhat.com/en/jobs
+  search_url: https://careers.redhat.com/search-jobs/Cloud%20DevOps/Bangalore/India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Pune
+  - Raleigh
+  - Remote
+  description: Enterprise Linux (RHEL), OpenShift container platform, and Ansible
+    automation.
+- id: cloudflare
+  name: Cloudflare
+  category: Cloud Hyperscalers & Infrastructure
+  portal_url: https://www.cloudflare.com/careers
+  search_url: https://www.cloudflare.com/careers/jobs/?department=Engineering&location=Bengaluru%2C+India
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - Austin
+  - San Francisco
+  - Remote
+  description: Global edge network, Workers serverless, cloud security, and CDN infrastructure.
+- id: digitalocean
+  name: DigitalOcean
+  category: Cloud Hyperscalers & Infrastructure
+  portal_url: https://www.digitalocean.com/careers
+  search_url: https://www.digitalocean.com/careers/open-positions?department=Engineering
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - New York
+  - Remote
+  description: Developer-friendly cloud infrastructure, Droplets, Kubernetes, and
+    managed databases.
+- id: akamai
+  name: Akamai Technologies
+  category: Cloud Hyperscalers & Infrastructure
+  portal_url: https://www.akamai.com/careers
+  search_url: https://akamai.wd1.myworkdayjobs.com/Akamai_Careers?q=Cloud%20DevOps&locationCountry=India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Cambridge
+  - Remote
+  description: Global distributed cloud computing, content delivery, and cybersecurity
+    network.
+- id: netapp
+  name: NetApp
+  category: Cloud Hyperscalers & Infrastructure
+  portal_url: https://www.netapp.com/company/careers
+  search_url: https://careers.netapp.com/search/?q=Cloud+DevOps&locationsearch=Bangalore
+  ats_type: successfactors
+  locations:
+  - Bengaluru
+  - San Jose
+  - Remote
+  description: Intelligent data infrastructure, hybrid cloud storage, and Spot cloud
+    automation.
+- id: salesforce
+  name: Salesforce
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://www.salesforce.com/company/careers/
+  search_url: https://salesforce.wd1.myworkdayjobs.com/External_Career_Site?q=DevOps%20Cloud&locationCountry=India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - San Francisco
+  - Remote
+  description: CRM cloud leader running massive multi-tenant AWS and Hyperforce architecture.
+- id: adobe
+  name: Adobe
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://www.adobe.com/careers.html
+  search_url: https://adobe.wd5.myworkdayjobs.com/external_experienced?q=DevOps%20Cloud&locationCountry=India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Noida
+  - San Jose
+  - Remote
+  description: Creative Cloud and Experience Cloud hyperscale distributed infrastructure.
+- id: servicenow
+  name: ServiceNow
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://www.servicenow.com/company/careers.html
+  search_url: https://careers.servicenow.com/jobs?keywords=Cloud%20DevOps&location=Hyderabad,%20India
+  ats_type: smartrecruiters
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Santa Clara
+  - Remote
+  description: Enterprise cloud platform automating digital workflows for global Fortune
+    500s.
+- id: atlassian
+  name: Atlassian
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://www.atlassian.com/company/careers
+  search_url: https://www.atlassian.com/company/careers/all-jobs?location=Bengaluru&search=SRE%20DevOps
+  ats_type: lever
+  locations:
+  - Bengaluru
+  - Sydney
+  - Remote
+  description: Jira, Confluence, Bitbucket, and developer productivity cloud platforms
+    on AWS.
+- id: intuit
+  name: Intuit
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://jobs.intuit.com
+  search_url: https://jobs.intuit.com/search-jobs/DevOps%20Cloud/Bangalore/India
+  ats_type: intuit_careers
+  locations:
+  - Bengaluru
+  - Mountain View
+  - Remote
+  description: TurboTax, QuickBooks, and Mint financial platforms with massive Kubernetes/AWS
+    scale.
+- id: sap
+  name: SAP
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://jobs.sap.com
+  search_url: https://jobs.sap.com/search/?q=Cloud+DevOps&locationsearch=Bangalore
+  ats_type: successfactors
+  locations:
+  - Bengaluru
+  - Pune
+  - Walldorf
+  - Remote
+  description: Enterprise cloud ERP and business AI solutions powering global supply
+    chains.
+- id: workday
+  name: Workday
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://www.workday.com/en-us/company/careers.html
+  search_url: https://workday.wd5.myworkdayjobs.com/workday?q=Cloud%20DevOps&locationCountry=India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Pune
+  - Pleasanton
+  - Remote
+  description: Financial management and human capital cloud software platforms.
+- id: snowflake
+  name: Snowflake
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://careers.snowflake.com
+  search_url: https://careers.snowflake.com/us/en/search-results?keywords=DevOps%20SRE%20Cloud
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - Pune
+  - San Mateo
+  - Remote
+  description: Data Cloud enabling multi-cloud data warehousing across AWS, Azure,
+    and GCP.
+- id: databricks
+  name: Databricks
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://www.databricks.com/company/careers
+  search_url: https://www.databricks.com/company/careers/open-positions?department=Engineering
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - San Francisco
+  - Remote
+  description: Data and AI company creating Apache Spark, Lakehouse, and cloud analytics.
+- id: splunk
+  name: Splunk (Cisco)
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://www.splunk.com/en_us/careers.html
+  search_url: https://www.splunk.com/en_us/careers/search-jobs.html?keyword=Cloud%20DevOps
+  ats_type: jobvite
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - San Francisco
+  - Remote
+  description: Observability, SIEM, and big data telemetry analysis cloud platform.
+- id: paloaltonetworks
+  name: Palo Alto Networks
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://www.paloaltonetworks.com/company/careers
+  search_url: https://jobs.paloaltonetworks.com/en/jobs/?search=Cloud+DevOps&location=Bangalore
+  ats_type: smartrecruiters
+  locations:
+  - Bengaluru
+  - Santa Clara
+  - Remote
+  description: Global cybersecurity leader, Prisma Cloud, and DevSecOps solutions.
+- id: crowdstrike
+  name: CrowdStrike
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://www.crowdstrike.com/careers
+  search_url: https://crowdstrike.wd5.myworkdayjobs.com/crowdstrikecareers?q=DevOps%20Cloud
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Pune
+  - Austin
+  - Remote
+  description: Falcon cloud-native endpoint and cloud workload protection hyperscaler.
+- id: hashicorp
+  name: HashiCorp (IBM)
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://www.hashicorp.com/careers
+  search_url: https://www.hashicorp.com/careers/open-positions?department=Engineering
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - San Francisco
+  - Remote
+  description: Founders of Terraform, Vault, Consul, Nomad, and Packer infrastructure
+    tools.
+- id: twilio
+  name: Twilio
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://www.twilio.com/en-us/company/jobs
+  search_url: https://www.twilio.com/en-us/company/jobs?search=DevOps%20Cloud
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - San Francisco
+  - Remote
+  description: Cloud communications platform, APIs, and customer engagement microservices
+    on AWS.
+- id: mongodb
+  name: MongoDB
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://www.mongodb.com/careers
+  search_url: https://www.mongodb.com/careers/jobs?search=Cloud%20DevOps
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - Gurugram
+  - New York
+  - Remote
+  description: Modern document database platform and MongoDB Atlas multi-cloud database
+    service.
+- id: elastic
+  name: Elastic
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://www.elastic.co/about/careers
+  search_url: https://www.elastic.co/about/careers/search?q=DevOps%20SRE
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - Mountain View
+  - Remote
+  description: Elasticsearch, Logstash, Kibana (ELK Stack) search and telemetry solutions.
+- id: zoom
+  name: Zoom
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://careers.zoom.us
+  search_url: https://careers.zoom.us/jobs/search?q=DevOps%20Cloud
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - San Jose
+  - Remote
+  description: Video communications cloud handling billions of minutes of real-time
+    traffic.
+- id: slack
+  name: Slack (Salesforce)
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://slack.com/careers
+  search_url: https://slack.com/careers/search?q=DevOps%20SRE
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - San Francisco
+  - Remote
+  description: Workplace collaboration platform with high-reliability AWS cloud infrastructure.
+- id: box
+  name: Box
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://www.box.com/careers
+  search_url: https://www.box.com/careers?search=Cloud%20DevOps
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - Redwood City
+  - Remote
+  description: Cloud content management, secure file sharing, and workflow platform.
+- id: dropbox
+  name: Dropbox
+  category: Top-Tier SaaS & Enterprise Software
+  portal_url: https://jobs.dropbox.com
+  search_url: https://jobs.dropbox.com/all-jobs?search=DevOps%20Infrastructure
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - San Francisco
+  - Remote
+  description: Cloud file storage and collaboration platform operating custom petabyte-scale
+    infrastructure.
+- id: jpmorgan
+  name: JPMorgan Chase & Co.
+  category: Global Capability Centers & FinTech
+  portal_url: https://careers.jpmorgan.com
+  search_url: https://careers.jpmorgan.com/global/en/job-search?keywords=Cloud%20DevOps&location=Bengaluru
+  ats_type: oracle_cloud
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Mumbai
+  - New York
+  - Remote
+  description: Largest US bank running major AWS cloud transformation and Site Reliability
+    Engineering.
+- id: goldmansachs
+  name: Goldman Sachs
+  category: Global Capability Centers & FinTech
+  portal_url: https://www.goldmansachs.com/careers
+  search_url: https://www.goldmansachs.com/careers/search-jobs/#/search?keyword=Cloud%20DevOps&location=Bengaluru
+  ats_type: gs_custom
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - New York
+  - Remote
+  description: Premier investment bank with heavy cloud infrastructure, Kubernetes,
+    and automated DevOps.
+- id: morganstanley
+  name: Morgan Stanley
+  category: Global Capability Centers & FinTech
+  portal_url: https://www.morganstanley.com/people-opportunities/experienced-professionals
+  search_url: https://morganstanley.tal.net/vx/lang-en-GB/candidate/jobboard/vacancy/1/adv/
+  ats_type: tal_net
+  locations:
+  - Bengaluru
+  - Mumbai
+  - New York
+  - Remote
+  description: Global financial services leader driving enterprise multi-cloud adoption.
+- id: barclays
+  name: Barclays
+  category: Global Capability Centers & FinTech
+  portal_url: https://search.jobs.barclays
+  search_url: https://search.jobs.barclays/search-jobs/Cloud%20DevOps/India
+  ats_type: taleo
+  locations:
+  - Bengaluru
+  - Pune
+  - London
+  - Remote
+  description: British multinational universal bank with technology centers in Bengaluru
+    and Pune.
+- id: wellsfargo
+  name: Wells Fargo
+  category: Global Capability Centers & FinTech
+  portal_url: https://www.wellsfargojobs.com
+  search_url: https://www.wellsfargojobs.com/en/jobs/?search=Cloud+DevOps&location=Bangalore
+  ats_type: icims
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - San Francisco
+  - Remote
+  description: Major US financial institution operating large-scale secure cloud platforms
+    in India.
+- id: americanexpress
+  name: American Express
+  category: Global Capability Centers & FinTech
+  portal_url: https://www.americanexpress.com/en-us/careers/
+  search_url: https://aexp.eightfold.ai/careers?query=Cloud%20DevOps&location=Bengaluru
+  ats_type: eightfold
+  locations:
+  - Bengaluru
+  - Gurugram
+  - New York
+  - Remote
+  description: Global payments network with modern cloud platforms, Kafka, and microservices.
+- id: fidelity
+  name: Fidelity Investments
+  category: Global Capability Centers & FinTech
+  portal_url: https://jobs.fidelity.com
+  search_url: https://jobs.fidelity.com/search-jobs/Cloud%20DevOps/India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Chennai
+  - Boston
+  - Remote
+  description: Multinational financial services corporation with massive tech hub
+    in Bengaluru.
+- id: citi
+  name: Citi
+  category: Global Capability Centers & FinTech
+  portal_url: https://jobs.citi.com
+  search_url: https://jobs.citi.com/search-jobs/Cloud%20DevOps/India
+  ats_type: taleo
+  locations:
+  - Bengaluru
+  - Pune
+  - Chennai
+  - Mumbai
+  - Remote
+  description: Global banking institution scaling hybrid cloud and automated CI/CD
+    security.
+- id: deutschebank
+  name: Deutsche Bank
+  category: Global Capability Centers & FinTech
+  portal_url: https://careers.db.com
+  search_url: https://careers.db.com/professionals/search-roles/#/search?keyword=Cloud%20DevOps&location=Bengaluru
+  ats_type: db_careers
+  locations:
+  - Bengaluru
+  - Pune
+  - Frankfurt
+  - Remote
+  description: Leading European investment bank partnering with Google Cloud for financial
+    tech.
+- id: hsbc
+  name: HSBC
+  category: Global Capability Centers & FinTech
+  portal_url: https://www.hsbc.com/careers
+  search_url: https://mycareer.hsbc.com/en_GB/external/SearchJobs/?keyword=Cloud%20DevOps&country=India
+  ats_type: successfactors
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Pune
+  - London
+  - Remote
+  description: International banking and financial services organization operating
+    globally.
+- id: standardchartered
+  name: Standard Chartered
+  category: Global Capability Centers & FinTech
+  portal_url: https://www.sc.com/en/careers/
+  search_url: https://jobs.standardchartered.com/search/?q=Cloud+DevOps
+  ats_type: standardchartered_jobs
+  locations:
+  - Bengaluru
+  - Chennai
+  - London
+  - Remote
+  description: Cross-border banking organization with prominent tech development centers
+    in India.
+- id: blackrock
+  name: BlackRock
+  category: Global Capability Centers & FinTech
+  portal_url: https://careers.blackrock.com
+  search_url: https://careers.blackrock.com/job-search-results/?keyword=Cloud%20DevOps&location=Gurugram
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Gurugram
+  - Mumbai
+  - New York
+  - Remote
+  description: World's largest asset manager running the Aladdin financial operating
+    system.
+- id: visa
+  name: Visa
+  category: Global Capability Centers & FinTech
+  portal_url: https://corporate.visa.com/en/careers.html
+  search_url: https://smartrecruiters.com/Visa/jobs?search=Cloud%20DevOps
+  ats_type: smartrecruiters
+  locations:
+  - Bengaluru
+  - Foster City
+  - Remote
+  description: Global digital payments processing tens of thousands of transaction
+    messages per second.
+- id: mastercard
+  name: Mastercard
+  category: Global Capability Centers & FinTech
+  portal_url: https://careers.mastercard.com
+  search_url: https://mastercard.wd1.myworkdayjobs.com/CorporateCareers?q=Cloud%20DevOps&locationCountry=India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Pune
+  - Gurugram
+  - Purchase
+  - Remote
+  description: Payments technology leader expanding cloud engineering hubs across
+    India.
+- id: paypal
+  name: PayPal
+  category: Global Capability Centers & FinTech
+  portal_url: https://careers.pypl.com
+  search_url: https://paypal.wd1.myworkdayjobs.com/paypal-jobs?q=Cloud%20DevOps&locationCountry=India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Chennai
+  - San Jose
+  - Remote
+  description: Global digital payments platform pioneer managing high-throughput microservices.
+- id: stripe
+  name: Stripe
+  category: Global Capability Centers & FinTech
+  portal_url: https://stripe.com/jobs
+  search_url: https://stripe.com/jobs/search?q=Infrastructure%20DevOps
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - San Francisco
+  - Remote
+  description: Financial infrastructure for the internet, operating rock-solid AWS
+    availability.
+- id: capitalone
+  name: Capital One
+  category: Global Capability Centers & FinTech
+  portal_url: https://www.capitalonecareers.com
+  search_url: https://www.capitalonecareers.com/search-jobs/Cloud%20DevOps
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - McLean
+  - Remote
+  description: Pioneering financial institution that completed a 100% cloud migration
+    to AWS.
+- id: bnymellon
+  name: BNY Mellon
+  category: Global Capability Centers & FinTech
+  portal_url: https://jobs.bnymellon.com
+  search_url: https://jobs.bnymellon.com/jobs?keywords=Cloud%20DevOps&location=India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Pune
+  - Chennai
+  - New York
+  - Remote
+  description: America's oldest bank managing critical financial market infrastructure.
+- id: swiggy
+  name: Swiggy
+  category: High-Growth Tech & Unicorns
+  portal_url: https://www.swiggy.com/careers
+  search_url: https://www.swiggy.com/careers?department=Engineering
+  ats_type: swiggy_careers
+  locations:
+  - Bengaluru
+  - Remote
+  description: India's premier on-demand convenience platform (SafeKill, ECS, Terraform,
+    AWS).
+- id: flipkart
+  name: Flipkart
+  category: High-Growth Tech & Unicorns
+  portal_url: https://www.flipkartcareers.com
+  search_url: https://www.flipkartcareers.com/#!/searchjobs?keywords=DevOps%20Cloud
+  ats_type: flipkart_jobs
+  locations:
+  - Bengaluru
+  - Remote
+  description: India's leading e-commerce ecosystem with massive scale distributed
+    systems.
+- id: zomato
+  name: Zomato
+  category: High-Growth Tech & Unicorns
+  portal_url: https://www.zomato.com/careers
+  search_url: https://www.zomato.com/careers?department=Technology
+  ats_type: custom
+  locations:
+  - Gurugram
+  - Bengaluru
+  - Remote
+  description: Food delivery and quick commerce (Blinkit) operating high-scale cloud
+    platforms.
+- id: phonepe
+  name: PhonePe
+  category: High-Growth Tech & Unicorns
+  portal_url: https://www.phonepe.com/careers/
+  search_url: https://www.phonepe.com/careers/openings/?dept=Technology
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - Pune
+  - Remote
+  description: India's leading digital payments app processing billions of UPI transactions.
+- id: razorpay
+  name: Razorpay
+  category: High-Growth Tech & Unicorns
+  portal_url: https://razorpay.com/jobs
+  search_url: https://razorpay.com/jobs/?department=Engineering
+  ats_type: lever
+  locations:
+  - Bengaluru
+  - Remote
+  description: Fintech unicorn providing full-stack payment gateway and banking APIs
+    on AWS.
+- id: uber
+  name: Uber
+  category: High-Growth Tech & Unicorns
+  portal_url: https://www.uber.com/us/en/careers
+  search_url: https://www.uber.com/global/en/careers/list/?keywords=DevOps%20SRE&location=IND-Bengaluru
+  ats_type: uber_careers
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - San Francisco
+  - Remote
+  description: Global mobility platform operating massive microservice mesh and SRE
+    teams in Bengaluru.
+- id: airbnb
+  name: Airbnb
+  category: High-Growth Tech & Unicorns
+  portal_url: https://careers.airbnb.com
+  search_url: https://careers.airbnb.com/positions/?department=Engineering
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - San Francisco
+  - Remote
+  description: Global travel marketplace known for Kubernetes, service-oriented architecture,
+    and Terraform.
+- id: netflix
+  name: Netflix
+  category: High-Growth Tech & Unicorns
+  portal_url: https://jobs.netflix.com
+  search_url: https://jobs.netflix.com/search?q=Cloud%20DevOps%20SRE
+  ats_type: netflix_jobs
+  locations:
+  - Los Gatos
+  - Remote
+  description: Pioneer of Chaos Engineering (Simian Army), cloud streaming, and microservices
+    on AWS.
+- id: spotify
+  name: Spotify
+  category: High-Growth Tech & Unicorns
+  portal_url: https://www.lifeatspotify.com
+  search_url: https://www.lifeatspotify.com/jobs?q=Cloud%20DevOps%20SRE
+  ats_type: lever
+  locations:
+  - Stockholm
+  - New York
+  - London
+  - Remote
+  description: Audio streaming platform and creators of Backstage open developer portal.
+- id: cred
+  name: Cred
+  category: High-Growth Tech & Unicorns
+  portal_url: https://cred.club/careers
+  search_url: https://cred.club/careers?department=Engineering
+  ats_type: lever
+  locations:
+  - Bengaluru
+  - Remote
+  description: High-growth fintech unicorn for credit card rewards with cutting-edge
+    AWS microservices.
+- id: meesho
+  name: Meesho
+  category: High-Growth Tech & Unicorns
+  portal_url: https://www.meesho.io/careers
+  search_url: https://www.meesho.io/careers?department=Tech
+  ats_type: lever
+  locations:
+  - Bengaluru
+  - Remote
+  description: Social e-commerce platform with large-scale distributed Kubernetes
+    architectures.
+- id: zepto
+  name: Zepto
+  category: High-Growth Tech & Unicorns
+  portal_url: https://www.zepto.com/careers
+  search_url: https://www.zepto.com/careers
+  ats_type: lever
+  locations:
+  - Bengaluru
+  - Mumbai
+  - Remote
+  description: Rapidly expanding quick-commerce unicorn in India running microservices
+    on AWS.
+- id: inmobi
+  name: InMobi
+  category: High-Growth Tech & Unicorns
+  portal_url: https://www.inmobi.com/company/careers
+  search_url: https://www.inmobi.com/company/careers?dept=Engineering
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - Remote
+  description: AdTech and consumer intelligence platform handling petabytes of real-time
+    cloud data.
+- id: freshworks
+  name: Freshworks
+  category: High-Growth Tech & Unicorns
+  portal_url: https://www.freshworks.com/company/careers
+  search_url: https://www.freshworks.com/company/careers/job-openings/?search=Cloud%20DevOps
+  ats_type: smartrecruiters
+  locations:
+  - Bengaluru
+  - Chennai
+  - San Mateo
+  - Remote
+  description: SaaS unicorn offering customer engagement and IT service management
+    software.
+- id: browserstack
+  name: BrowserStack
+  category: High-Growth Tech & Unicorns
+  portal_url: https://www.browserstack.com/careers
+  search_url: https://www.browserstack.com/careers?department=Engineering
+  ats_type: lever
+  locations:
+  - Bengaluru
+  - Mumbai
+  - Dublin
+  - Remote
+  description: World's leading software testing platform running hundreds of thousands
+    of cloud devices.
+- id: postman
+  name: Postman
+  category: High-Growth Tech & Unicorns
+  portal_url: https://www.postman.com/company/careers
+  search_url: https://www.postman.com/company/careers/open-positions/?department=Engineering
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - San Francisco
+  - Remote
+  description: API collaboration platform used by over 30 million developers worldwide.
+- id: ola
+  name: Ola
+  category: High-Growth Tech & Unicorns
+  portal_url: https://www.olaelectric.com/careers
+  search_url: https://www.olaelectric.com/careers?dept=Engineering
+  ats_type: custom
+  locations:
+  - Bengaluru
+  - Remote
+  description: Mobility and electric vehicle technology platforms headquartered in
+    Bengaluru.
+- id: makemytrip
+  name: MakeMyTrip
+  category: High-Growth Tech & Unicorns
+  portal_url: https://careers.makemytrip.com
+  search_url: https://careers.makemytrip.com/search-jobs?q=DevOps%20Cloud
+  ats_type: custom
+  locations:
+  - Bengaluru
+  - Gurugram
+  - Remote
+  description: India's largest online travel platform operating scalable multi-cloud
+    microservices.
+- id: nykaa
+  name: Nykaa
+  category: High-Growth Tech & Unicorns
+  portal_url: https://www.nykaa.com/careers
+  search_url: https://www.nykaa.com/careers?dept=Tech
+  ats_type: custom
+  locations:
+  - Bengaluru
+  - Mumbai
+  - Remote
+  description: E-commerce and beauty consumer tech platform scaling containerized
+    cloud systems.
+- id: delhivery
+  name: Delhivery
+  category: High-Growth Tech & Unicorns
+  portal_url: https://www.delhivery.com/careers
+  search_url: https://www.delhivery.com/careers?dept=Technology
+  ats_type: custom
+  locations:
+  - Bengaluru
+  - Gurugram
+  - Remote
+  description: Supply chain logistics technology unicorn operating real-time cloud
+    routing algorithms.
+- id: accenture
+  name: Accenture
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://www.accenture.com/careers
+  search_url: https://www.accenture.com/in-en/careers/jobsearch?jk=DevOps%20Cloud&sb=1
+  ats_type: accenture_jobs
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Pune
+  - Chennai
+  - Remote
+  description: AWS Premier Tier Partner and global leader in enterprise digital transformation.
+- id: tcs
+  name: Tata Consultancy Services (TCS)
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://www.tcs.com/careers
+  search_url: https://www.tcs.com/careers/india
+  ats_type: tcs_careers
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Mumbai
+  - Chennai
+  - Remote
+  description: India's largest multinational IT services and consulting company.
+- id: infosys
+  name: Infosys
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://www.infosys.com/careers.html
+  search_url: https://career.infosys.com/joblist?skills=DevOps%20Cloud
+  ats_type: infosys_careers
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Pune
+  - Mysore
+  - Remote
+  description: Global leader in next-generation digital services and consulting.
+- id: wipro
+  name: Wipro
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://careers.wipro.com
+  search_url: https://careers.wipro.com/careers-home/jobs?keywords=Cloud%20DevOps&location=Bangalore
+  ats_type: successfactors
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Pune
+  - Chennai
+  - Remote
+  description: Information technology, consulting, and business process services company.
+- id: cognizant
+  name: Cognizant
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://www.cognizant.com/careers
+  search_url: https://careers.cognizant.com/global/en/search-results?keywords=Cloud%20DevOps&location=Bangalore
+  ats_type: cognizant_careers
+  locations:
+  - Bengaluru
+  - Chennai
+  - Hyderabad
+  - Pune
+  - Remote
+  description: Global IT consulting firm delivering modern cloud infrastructure and
+    DevOps.
+- id: capgemini
+  name: Capgemini
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://www.capgemini.com/careers
+  search_url: https://www.capgemini.com/in-en/careers/job-search/?search=Cloud%20DevOps&country=in-en
+  ats_type: successfactors
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Pune
+  - Mumbai
+  - Remote
+  description: Global consulting and technology services provider with major India
+    hubs.
+- id: ltimindtree
+  name: LTIMindtree
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://www.ltimindtree.com/careers/
+  search_url: https://www.ltm.com/careers
+  ats_type: ltm_careers
+  locations:
+  - Bengaluru
+  - Mumbai
+  - Pune
+  - Chennai
+  - Remote
+  description: Global technology consulting and digital solutions enterprise.
+- id: hcltech
+  name: HCLTech
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://www.hcltech.com/careers
+  search_url: https://www.hcltech.com/careers/search-jobs?keywords=Cloud%20DevOps&location=Bengaluru
+  ats_type: hcl_careers
+  locations:
+  - Bengaluru
+  - Noida
+  - Chennai
+  - Hyderabad
+  - Remote
+  description: Global technology company specializing in digital, engineering, and
+    cloud services.
+- id: techmahindra
+  name: Tech Mahindra
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://careers.techmahindra.com
+  search_url: https://careers.techmahindra.com/JobSearch.aspx?keyword=Cloud%20DevOps
+  ats_type: custom
+  locations:
+  - Bengaluru
+  - Pune
+  - Hyderabad
+  - Chennai
+  - Remote
+  description: Provider of digital transformation, consulting, and business re-engineering
+    services.
+- id: slalom
+  name: Slalom
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://www.slalom.com/careers
+  search_url: https://www.slalom.com/careers/search?q=Cloud%20DevOps
+  ats_type: jobvite
+  locations:
+  - Seattle
+  - London
+  - Remote
+  description: Global purpose-led consulting firm and top-tier AWS & Azure cloud partner.
+- id: rackspace
+  name: Rackspace Technology
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://www.rackspace.com/careers
+  search_url: https://rackspace.wd1.myworkdayjobs.com/Careers?q=Cloud%20DevOps
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - San Antonio
+  - Remote
+  description: End-to-end multicloud technology solutions company across AWS, Azure,
+    and GCP.
+- id: dxctechnology
+  name: DXC Technology
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://www.dxc.com/us/en/about-us/careers
+  search_url: https://dxc.wd1.myworkdayjobs.com/DXC_Jobs?q=Cloud%20DevOps&locationCountry=India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Ashburn
+  - Remote
+  description: Global IT services company modernizing enterprise cloud applications.
+- id: deloitte
+  name: Deloitte
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://careers.deloitte.com/
+  search_url: https://careers.deloitte.com/jobs/search?q=Cloud+DevOps
+  ats_type: deloitte_careers
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Mumbai
+  - New York
+  - Remote
+  description: Major global professional services network driving cloud strategy and
+    implementation.
+- id: pwc
+  name: PwC
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://www.pwc.in/careers.html
+  search_url: https://pwc.wd3.myworkdayjobs.com/Global_Experienced_Careers?q=Cloud%20DevOps
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Kolkata
+  - Mumbai
+  - Remote
+  description: Multinational professional services brand with premier cloud transformation
+    practices.
+- id: ey
+  name: EY (Ernst & Young)
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://careers.ey.com/
+  search_url: https://careers.ey.com/ey/search/?q=Cloud+DevOps
+  ats_type: successfactors
+  locations:
+  - Bengaluru
+  - Gurugram
+  - Hyderabad
+  - Remote
+  description: Global professional services company with large technology delivery
+    centers in India.
+- id: kpmg
+  name: KPMG
+  category: Global IT Consultancies & Cloud Partners
+  portal_url: https://kpmg.com/careers
+  search_url: https://kpmgcareers.com/search-jobs?q=Cloud%20DevOps&loc=India
+  ats_type: taleo
+  locations:
+  - Bengaluru
+  - Mumbai
+  - Gurugram
+  - Remote
+  description: Multinational professional services firm providing cloud advisory and
+    implementation.
+- id: nvidia
+  name: Nvidia
+  category: Semiconductor & Hardware Giants
+  portal_url: https://www.nvidia.com/en-us/about-nvidia/careers
+  search_url: https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite?q=Cloud%20DevOps&locationCountry=India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Pune
+  - Santa Clara
+  - Remote
+  description: Accelerated computing leader, AI infrastructure, and DGX Cloud systems.
+- id: intel
+  name: Intel
+  category: Semiconductor & Hardware Giants
+  portal_url: https://jobs.intel.com
+  search_url: https://jobs.intel.com/en/search-jobs/Cloud%20DevOps/India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Santa Clara
+  - Remote
+  description: Semiconductor titan developing data center hardware, edge compute,
+    and cloud platforms.
+- id: amd
+  name: AMD
+  category: Semiconductor & Hardware Giants
+  portal_url: https://www.amd.com/en/corporate/careers.html
+  search_url: https://careers.amd.com/careers-home/jobs?keywords=Cloud%20DevOps&location=Bangalore
+  ats_type: successfactors
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Santa Clara
+  - Remote
+  description: High-performance computing, EPYC server processors, and AI cloud acceleration.
+- id: qualcomm
+  name: Qualcomm
+  category: Semiconductor & Hardware Giants
+  portal_url: https://www.qualcomm.com/company/careers
+  search_url: https://qualcomm.wd5.myworkdayjobs.com/External?q=Cloud%20DevOps&locationCountry=India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - San Diego
+  - Remote
+  description: Wireless technology, 5G infrastructure, and cloud-connected edge systems.
+- id: texas_instruments
+  name: Texas Instruments
+  category: Semiconductor & Hardware Giants
+  portal_url: https://careers.ti.com
+  search_url: https://careers.ti.com/search-jobs/Cloud%20Software/India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Dallas
+  - Remote
+  description: Semiconductor design company with massive R&D facility in Bengaluru.
+- id: westerndigital
+  name: Western Digital
+  category: Semiconductor & Hardware Giants
+  portal_url: https://www.westerndigital.com/company/careers
+  search_url: https://jobs.smartrecruiters.com/WesternDigital/jobs?search=Cloud%20DevOps
+  ats_type: smartrecruiters
+  locations:
+  - Bengaluru
+  - San Jose
+  - Remote
+  description: Data storage solutions, cloud data centers, and flash memory technology.
+- id: dell
+  name: Dell Technologies
+  category: Semiconductor & Hardware Giants
+  portal_url: https://jobs.dell.com
+  search_url: https://jobs.dell.com/search-jobs/Cloud%20DevOps/India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Hyderabad
+  - Round Rock
+  - Remote
+  description: Enterprise cloud infrastructure, servers, and multicloud data protection.
+- id: hp
+  name: HP Inc.
+  category: Semiconductor & Hardware Giants
+  portal_url: https://jobs.hp.com
+  search_url: https://jobs.hp.com/search-jobs/Cloud%20DevOps/India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Palo Alto
+  - Remote
+  description: Personal computing and enterprise solutions with significant Bengaluru
+    R&D operations.
+- id: ericsson
+  name: Ericsson
+  category: Semiconductor & Hardware Giants
+  portal_url: https://www.ericsson.com/en/careers
+  search_url: https://jobs.ericsson.com/search/?q=Cloud+DevOps&locationsearch=Bangalore
+  ats_type: successfactors
+  locations:
+  - Bengaluru
+  - Noida
+  - Gurugram
+  - Stockholm
+  - Remote
+  description: Telecommunications and 5G cloud infrastructure technology company.
+- id: nokia
+  name: Nokia
+  category: Semiconductor & Hardware Giants
+  portal_url: https://www.nokia.com/about-us/careers
+  search_url: https://careers.nokia.com/jobs/search?q=Cloud+DevOps&location=Bangalore
+  ats_type: taleo
+  locations:
+  - Bengaluru
+  - Chennai
+  - Espoo
+  - Remote
+  description: Global network infrastructure, cloud-native core software, and 5G connectivity.
+- id: juniper
+  name: Juniper Networks
+  category: Semiconductor & Hardware Giants
+  portal_url: https://www.juniper.net/us/en/company/careers.html
+  search_url: https://juniper.wd1.myworkdayjobs.com/Careers?q=Cloud%20DevOps&locationCountry=India
+  ats_type: workday
+  locations:
+  - Bengaluru
+  - Sunnyvale
+  - Remote
+  description: AI-driven cloud networking, routing, switching, and cybersecurity.
+- id: arista
+  name: Arista Networks
+  category: Semiconductor & Hardware Giants
+  portal_url: https://www.arista.com/en/company/careers
+  search_url: https://www.arista.com/en/company/careers?location=Bengaluru&search=Cloud%20DevOps
+  ats_type: greenhouse
+  locations:
+  - Bengaluru
+  - Santa Clara
+  - Remote
+  description: Pioneers in software-driven cloud networking for hyperscale data centers.
+
+# 50 New Remote-First Companies (100% Remote Hiring)
+- id: deltek
+  name: Deltek
+  category: Remote-First SaaS & Enterprise
+  portal_url: https://careers.deltek.com
+  search_url: https://boards-api.greenhouse.io/v1/boards/deltek/jobs
+  ats_type: greenhouse
+  locations:
+  - Remote
+  - USA
+  - Global
+  description: Enterprise software for project-based businesses. 100% remote hiring.
+- id: confluent
+  name: Confluent
+  category: Remote-First Infrastructure & Data
+  portal_url: https://www.confluent.io/careers
+  search_url: https://jobs.lever.co/confluent
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Europe
+  description: Apache Kafka streaming platform. 100% remote positions.
+- id: cengage_group
+  name: Cengage Group
+  category: Remote-First EdTech & Publishing
+  portal_url: https://cengage.com/careers
+  search_url: https://cengage.wd1.myworkdayjobs.com/External
+  ats_type: workday
+  locations:
+  - Remote
+  - USA
+  - Boston
+  description: Education and learning platforms. Remote tech roles available.
+- id: quest_software
+  name: Quest Software
+  category: Remote-First Enterprise Software
+  portal_url: https://careers.quest.com
+  search_url: https://boards-api.greenhouse.io/v1/boards/quest/jobs
+  ats_type: greenhouse
+  locations:
+  - Remote
+  - USA
+  - Global
+  description: Enterprise systems management software. 100% remote positions.
+- id: upstart
+  name: Upstart
+  category: Remote-First FinTech
+  portal_url: https://upstart.com/careers
+  search_url: https://jobs.lever.co/upstart
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - San Mateo
+  description: AI-powered lending platform. Remote engineering roles.
+- id: hims_hers
+  name: Hims & Hers
+  category: Remote-First HealthTech
+  portal_url: https://careers.forhims.com
+  search_url: https://boards-api.greenhouse.io/v1/boards/himshers/jobs
+  ats_type: greenhouse
+  locations:
+  - Remote
+  - USA
+  - Denver
+  description: Telehealth and wellness. Remote tech positions.
+- id: usergems
+  name: UserGems
+  category: Remote-First B2B SaaS
+  portal_url: https://usergems.com/careers
+  search_url: https://jobs.lever.co/usergems
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Global
+  description: Account intelligence platform. 100% remote.
+- id: abnormal_security
+  name: Abnormal Security
+  category: Remote-First Cybersecurity
+  portal_url: https://www.abnormalsecurity.com/careers
+  search_url: https://boards-api.greenhouse.io/v1/boards/abnormalsecurity/jobs
+  ats_type: greenhouse
+  locations:
+  - Remote
+  - USA
+  - San Francisco
+  description: Email security AI. Remote engineering opportunities.
+- id: cash_app
+  name: Cash App (Square)
+  category: Remote-First FinTech
+  portal_url: https://cash.app/careers
+  search_url: https://jobs.smartrecruiters.com/Square
+  ats_type: smartrecruiters
+  locations:
+  - Remote
+  - USA
+  - San Francisco
+  description: Square Cash mobile payments. Remote tech roles.
+- id: logicgate
+  name: LogicGate
+  category: Remote-First Enterprise SaaS
+  portal_url: https://www.logicgate.com/careers
+  search_url: https://jobs.lever.co/logicgate
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Chicago
+  description: Risk and compliance SaaS. 100% remote positions.
+- id: faire
+  name: Faire
+  category: Remote-First E-Commerce
+  portal_url: https://www.faire.com/careers
+  search_url: https://boards-api.greenhouse.io/v1/boards/faire/jobs
+  ats_type: greenhouse
+  locations:
+  - Remote
+  - USA
+  - San Francisco
+  description: B2B marketplace for retail. Remote engineering roles.
+- id: renaissance
+  name: Renaissance Learning
+  category: Remote-First EdTech
+  portal_url: https://www.renaissance.com/careers
+  search_url: https://renaissance.wd5.myworkdayjobs.com/en-US/jobs
+  ats_type: workday
+  locations:
+  - Remote
+  - USA
+  - Wisconsin
+  description: K-12 software solutions. Remote tech positions.
+- id: rec_room
+  name: Rec Room
+  category: Remote-First Gaming & VR
+  portal_url: https://recroom.com/careers
+  search_url: https://boards-api.greenhouse.io/v1/boards/recroom/jobs
+  ats_type: greenhouse
+  locations:
+  - Remote
+  - Canada
+  - Global
+  description: Social VR platform. Remote engineering opportunities.
+- id: vgs
+  name: VGS Inc
+  category: Remote-First Cybersecurity
+  portal_url: https://www.vgs.com/careers
+  search_url: https://jobs.lever.co/vgs
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Global
+  description: Payment data security. 100% remote.
+- id: vast_data
+  name: VAST Data
+  category: Remote-First Infrastructure & Storage
+  portal_url: https://www.vastdata.com/careers
+  search_url: https://boards-api.greenhouse.io/v1/boards/vastdata/jobs
+  ats_type: greenhouse
+  locations:
+  - Remote
+  - USA
+  - Israel
+  description: All-flash data platform. Remote tech roles.
+- id: sorcero
+  name: Sorcero
+  category: Remote-First AI & HealthTech
+  portal_url: https://www.sorcero.com/careers
+  search_url: https://jobs.lever.co/sorcero
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Boston
+  description: Medical AI and NLP. Remote engineering positions.
+- id: mcgraw_hill
+  name: McGraw Hill
+  category: Remote-First EdTech & Publishing
+  portal_url: https://careers.mheducation.com
+  search_url: https://mh-edu.wd3.myworkdayjobs.com/External
+  ats_type: workday
+  locations:
+  - Remote
+  - USA
+  - Columbus
+  description: Educational content and platforms. Remote tech roles.
+- id: patreon
+  name: Patreon
+  category: Remote-First Creator Economy
+  portal_url: https://www.patreon.com/careers
+  search_url: https://jobs.lever.co/patreon
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - San Francisco
+  description: Creator funding platform. 100% remote engineering.
+- id: beekeeper
+  name: Beekeeper
+  category: Remote-First Enterprise Communication
+  portal_url: https://www.beekeeper.io/careers
+  search_url: https://boards-api.greenhouse.io/v1/boards/beekeeper/jobs
+  ats_type: greenhouse
+  locations:
+  - Remote
+  - Switzerland
+  - Global
+  description: Frontline worker platform. Remote tech positions.
+- id: upwork
+  name: Upwork
+  category: Remote-First Freelance Platform
+  portal_url: https://www.upwork.com/careers
+  search_url: https://boards-api.greenhouse.io/v1/boards/upwork/jobs
+  ats_type: greenhouse
+  locations:
+  - Remote
+  - USA
+  - Global
+  description: Freelance marketplace. Remote engineering roles.
+- id: docusign
+  name: DocuSign
+  category: Remote-First Enterprise SaaS
+  portal_url: https://www.docusign.com/careers
+  search_url: https://boards-api.greenhouse.io/v1/boards/docusign/jobs
+  ats_type: greenhouse
+  locations:
+  - Remote
+  - USA
+  - San Francisco
+  description: Digital signature and contract management. 100% remote.
+- id: dealhub
+  name: DealHub.io
+  category: Remote-First SaaS for Sales
+  portal_url: https://www.dealhub.io/careers
+  search_url: https://jobs.lever.co/dealhub
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Global
+  description: Deal management platform. Remote tech roles.
+- id: census
+  name: Census
+  category: Remote-First Data Platform
+  portal_url: https://www.getcensus.com/careers
+  search_url: https://jobs.lever.co/census
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Global
+  description: Data warehouse integration. 100% remote positions.
+- id: intrado
+  name: Intrado
+  category: Remote-First Telecom & Cloud
+  portal_url: https://www.intrado.com/careers
+  search_url: https://intrado.wd1.myworkdayjobs.com/External
+  ats_type: workday
+  locations:
+  - Remote
+  - USA
+  - Omaha
+  description: Cloud communications. Remote engineering roles.
+- id: funded_club
+  name: Funded Club
+  category: Remote-First FinTech
+  portal_url: https://www.funded.club/careers
+  search_url: https://jobs.lever.co/fundedclub
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Global
+  description: Equity crowdfunding platform. Remote tech positions.
+- id: workiva
+  name: Workiva
+  category: Remote-First Enterprise Data
+  portal_url: https://www.workiva.com/careers
+  search_url: https://boards-api.greenhouse.io/v1/boards/workiva/jobs
+  ats_type: greenhouse
+  locations:
+  - Remote
+  - USA
+  - Ames Iowa
+  description: Data and compliance platform. 100% remote.
+- id: missionwired
+  name: MissionWired
+  category: Remote-First NonProfit Tech
+  portal_url: https://www.missionwired.org/careers
+  search_url: https://jobs.lever.co/missionwired
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Washington DC
+  description: Nonprofit fundraising technology. Remote roles.
+- id: workera
+  name: Workera
+  category: Remote-First AI & EdTech
+  portal_url: https://www.workera.ai/careers
+  search_url: https://jobs.lever.co/workera
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Global
+  description: AI skills assessment platform. Remote engineering.
+- id: jenius_bank
+  name: Jenius Bank
+  category: Remote-First FinTech
+  portal_url: https://www.jenius.com/careers
+  search_url: https://jenius.wd1.myworkdayjobs.com/External
+  ats_type: workday
+  locations:
+  - Remote
+  - Indonesia
+  - Asia
+  description: Digital banking. Remote tech roles.
+- id: goinstacare
+  name: GoInstaCare
+  category: Remote-First HealthTech
+  portal_url: https://www.goinstacare.com/careers
+  search_url: https://boards-api.greenhouse.io/v1/boards/goinstacare/jobs
+  ats_type: greenhouse
+  locations:
+  - Remote
+  - India
+  - Global
+  description: Instant healthcare platform. Remote positions.
+- id: uplers
+  name: Uplers
+  category: Remote-First Talent & Outsourcing
+  portal_url: https://www.uplers.com/careers
+  search_url: https://jobs.lever.co/uplers
+  ats_type: lever
+  locations:
+  - Remote
+  - India
+  - Global
+  description: Remote talent marketplace. 100% remote engineering.
+- id: quantum
+  name: Quantum Corporation
+  category: Remote-First Storage & Data
+  portal_url: https://www.quantum.com/careers
+  search_url: https://quantum.wd5.myworkdayjobs.com/External
+  ats_type: workday
+  locations:
+  - Remote
+  - USA
+  - San Jose
+  description: Data storage and management. Remote tech roles.
+- id: kemecon
+  name: Kemecon
+  category: Remote-First Engineering Staffing
+  portal_url: http://kemecon.com/careers
+  search_url: http://kemecon.com/careers
+  ats_type: portal
+  locations:
+  - Remote
+  - Global
+  description: Engineering recruitment. Remote positions available.
+- id: appcues
+  name: Appcues
+  category: Remote-First Product Experience
+  portal_url: https://www.appcues.com/careers
+  search_url: https://boards-api.greenhouse.io/v1/boards/appcues/jobs
+  ats_type: greenhouse
+  locations:
+  - Remote
+  - USA
+  - Boston
+  description: Product analytics and engagement. Remote roles.
+- id: arkency
+  name: Arkency
+  category: Remote-First Software & Consulting
+  portal_url: https://arkency.com/careers
+  search_url: https://jobs.lever.co/arkency
+  ats_type: lever
+  locations:
+  - Remote
+  - Europe
+  - Global
+  description: Ruby on Rails consulting. 100% remote team.
+- id: automattic
+  name: Automattic
+  category: Remote-First Web Platforms
+  portal_url: https://automattic.com/careers
+  search_url: https://jobs.lever.co/automattic
+  ats_type: lever
+  locations:
+  - Remote
+  - Global
+  - Distributed
+  description: WordPress.com and Jetpack. Fully distributed.
+- id: awesomemotive
+  name: Awesome Motive
+  category: Remote-First WordPress & SaaS
+  portal_url: https://www.awesomemotive.com/careers
+  search_url: https://jobs.lever.co/awesomemotive
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Global
+  description: WordPress plugins and tools. 100% remote.
+- id: buffer
+  name: Buffer
+  category: Remote-First Social Media Tools
+  portal_url: https://buffer.com/careers
+  search_url: https://jobs.lever.co/buffer
+  ats_type: lever
+  locations:
+  - Remote
+  - Global
+  - Distributed
+  description: Social media management. Fully distributed team.
+- id: constructor
+  name: Constructor.io
+  category: Remote-First Search & Discovery
+  portal_url: https://www.constructor.io/careers
+  search_url: https://jobs.lever.co/constructorio
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Global
+  description: E-commerce search platform. Remote roles.
+- id: contra
+  name: Contra
+  category: Remote-First Independent Professionals
+  portal_url: https://contra.com/careers
+  search_url: https://jobs.lever.co/contra
+  ats_type: lever
+  locations:
+  - Remote
+  - Global
+  description: Freelancer platform for creatives. Remote positions.
+- id: doist
+  name: Doist
+  category: Remote-First Productivity Tools
+  portal_url: https://doist.com/careers
+  search_url: https://jobs.lever.co/doist
+  ats_type: lever
+  locations:
+  - Remote
+  - Global
+  - Distributed
+  description: Todoist and Twist makers. Fully remote.
+- id: duckduckgo
+  name: DuckDuckGo
+  category: Remote-First Privacy & Search
+  portal_url: https://duckduckgo.com/careers
+  search_url: https://jobs.lever.co/duckduckgo
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Global
+  description: Privacy-focused search engine. Remote roles.
+- id: bold
+  name: Bold (Fintech)
+  category: Remote-First Fintech & Payments
+  portal_url: https://bold.io/careers
+  search_url: https://jobs.lever.co/bold
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Global
+  description: Payment processing platform. Remote engineering.
+- id: cloudbeds
+  name: Cloudbeds
+  category: Remote-First Hospitality Tech
+  portal_url: https://www.cloudbeds.com/careers
+  search_url: https://jobs.lever.co/cloudbeds
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Europe
+  description: Property management software. Remote positions.
+- id: mentorsity
+  name: Mentorsity
+  category: Remote-First EdTech
+  portal_url: https://www.mentorsity.com/careers
+  search_url: https://jobs.lever.co/mentorsity
+  ats_type: lever
+  locations:
+  - Remote
+  - USA
+  - Global
+  description: Mentorship platform. Remote tech roles.
+- id: expert_thinking
+  name: Expert Thinking
+  category: Remote-First Knowledge Platform
+  portal_url: https://www.expertthinking.com/careers
+  search_url: https://jobs.lever.co/expertthinking
+  ats_type: lever
+  locations:
+  - Remote
+  - Global
+  description: Expert network platform. Remote positions.
+- id: ivisa
+  name: iVisa
+  category: Remote-First Travel & Immigration
+  portal_url: https://www.ivisa.com/careers
+  search_url: https://ivisa.breezy.hr
+  ats_type: breezy
+  locations:
+  - Remote
+  - Global
+  description: Visa services platform. Remote tech roles.
+- id: affordmate
+  name: Affordmate
+  category: Remote-First FinTech
+  portal_url: http://www.affordmate.com/careers
+  search_url: http://www.affordmate.com/careers
+  ats_type: portal
+  locations:
+  - Remote
+  - Global
+  description: Financial services platform. Remote positions.
+- id: xapobank
+  name: Xapo Bank
+  category: Remote-First Crypto & Banking
+  portal_url: http://www.xapobank.com/careers
+  search_url: http://www.xapobank.com/careers
+  ats_type: portal
+  locations:
+  - Remote
+  - Global
+  description: Bitcoin banking services. Remote roles.
+- id: symetra
+  name: Symetra
+  category: Remote-First Insurance & FinTech
+  portal_url: http://www.symetra.com/careers
+  search_url: https://symetra.wd1.myworkdayjobs.com/External
+  ats_type: workday
+  locations:
+  - Remote
+  - USA
+  - Bellevue
+  description: Insurance company. Remote tech positions.
